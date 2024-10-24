@@ -40,15 +40,8 @@ const AppMenu = () => {
             label: 'Prime Blocks',
             items: [
                 { label: 'Free Blocks', icon: 'pi pi-fw pi-eye', to: '/blocks', badge: 'NEW' },
-                { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: 'https://blocks.primereact.org', target: '_blank' }
             ]
-        },
-        {
-            label: 'Utilities',
-            items: [
-                { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', to: '/utilities/icons' },                
-            ]
-        },
+        },       
         {
             label: 'Pages',
             icon: 'pi pi-fw pi-briefcase',
