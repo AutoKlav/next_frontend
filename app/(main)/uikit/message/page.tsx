@@ -2,13 +2,10 @@
 import React, { useRef, useState } from 'react';
 import { Toast } from 'primereact/toast';
 import { Messages } from 'primereact/messages';
-import { Message } from 'primereact/message';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-const MessagesDemo = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+const MessagesDemo = () => {    
     const toast = useRef<Toast>(null);
     const message = useRef<Messages>(null);
 
@@ -90,27 +87,7 @@ const MessagesDemo = () => {
                     </div>
                     <Messages ref={message} />
                 </div>
-            </div>
-
-            <div className="col-12 lg:col-8">
-                <div className="card">
-                    <h5>Inline</h5>
-                    <div className="flex align-items-center flex-wrap gap-2 mb-3">
-                        <label htmlFor="username1" className="col-fixed w-9rem">
-                            Username
-                        </label>
-                        <InputText id="username1" value={username} onChange={(e) => setUsername(e.target.value)} required className="p-invalid" />
-                        <Message severity="error" text="Username is required" />
-                    </div>
-                    <div className="flex align-items-center flex-wrap gap-2">
-                        <label htmlFor="email" className="col-fixed w-9rem">
-                            Email
-                        </label>
-                        <InputText id="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="p-invalid" />
-                        <Message severity="error" />
-                    </div>
-                </div>
-            </div>
+            </div>            
 
             <div className="col-12 lg:col-4">
                 <div className="card">
