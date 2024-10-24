@@ -1,38 +1,31 @@
 {
-  "name": "autoklav-frontend",
-  "version": "0.1.0",
+  "name": "sakai-react",
+  "version": "10.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "proto:generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./src --grpc_out=grpc_js:./src proto/autoklav.proto"
+    "format": "prettier --write \"{app,demo,layout,types}/**/*.{js,ts,tsx,d.ts}\"",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@fontsource/inter": "^5.0.8",
-    "@grpc/grpc-js": "^1.9.3",
-    "@mui/icons-material": "^5.14.11",
-    "@mui/joy": "^5.0.0-beta.8",
-    "@mui/material": "^5.14.11",
-    "@types/node": "20.6.3",
-    "@types/react": "18.2.22",
-    "@types/react-dom": "18.2.7",
-    "autoprefixer": "10.4.16",
-    "eslint": "8.49.0",
-    "eslint-config-next": "13.5.2",
-    "google-protobuf": "^3.21.2",
-    "grpc-tools": "^1.12.4",
-    "iron-session": "^6.3.1",
-    "next": "13.5.2",
-    "postcss": "8.4.30",
+    "@types/node": "20.3.1",
+    "@types/react": "18.2.12",
+    "@types/react-dom": "18.2.5",
+    "chart.js": "4.2.1",
+    "next": "13.4.8",
+    "primeflex": "^3.3.1",
+    "primeicons": "^6.0.1",
+    "primereact": "10.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "sonner": "^1.0.3",
-    "swr": "^2.2.4",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.2.2"
+    "typescript": "5.1.3"
+  },
+  "devDependencies": {
+    "eslint": "8.43.0",
+    "eslint-config-next": "13.4.6",
+    "prettier": "^2.8.8",
+    "sass": "^1.63.4"
   }
 }
