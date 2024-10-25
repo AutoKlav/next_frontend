@@ -5,7 +5,7 @@ import {
   StateMachineValues,
   Status,
   Variables,
-} from "@/interfaces/grpc";
+} from "@/types/grpc";
 import { gRpcCall } from "./client";
 
 const Messages = require("@/proto/autoklav_pb");
