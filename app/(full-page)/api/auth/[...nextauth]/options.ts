@@ -10,7 +10,7 @@ export const options: NextAuthOptions = {
           // You can specify whatever fields you are expecting to be submitted.
           // e.g. domain, username, password, 2FA token, etc.
           credentials: {
-            username: { label: "Username", type: "text", placeholder: "jsmith" },
+            username: { label: "Username", type: "text" },
             password: { label: "Password", type: "password" }
           },
           async authorize(credentials, req) {
@@ -42,8 +42,8 @@ export const options: NextAuthOptions = {
           }
         })
       ],
-      // pages: {
-      //   signIn: '/auth/login', // Custom sign-in page path
-      // }
+      pages: {
+        //signIn: '/auth/login',
+      }
 }
 
