@@ -12,8 +12,14 @@ const AppMenu = () => {
 
     const model: AppMenuItem[] = [
         {
-            label: 'Home',
-            items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+            label: '',
+            items: [                
+                { label: 'Pocetna', icon: 'pi pi-fw pi-home', to: '/' },
+                { label: 'Nadzorna ploca', icon: 'pi pi-fw pi-th-large', to: '/dashboard' },
+                { label: 'Graf', icon: 'pi pi-fw pi-chart-bar', to: '/chart' },
+                { label: 'Povijest', icon: 'pi pi-fw pi-calendar', to: '/history' },
+                { label: 'Postavke', icon: 'pi pi-fw pi-cog', to: '/settings' },
+            ],
         },
         {
             label: 'UI Components',
