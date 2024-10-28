@@ -5,7 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { useState } from "react";
 import React from 'react';
 
-const EmptyPage = () => {
+const SettingsPage = () => {
     const [inputNumberValue, setInputNumberValue] = useState<number | null>(
         null
     );
@@ -44,4 +44,4 @@ const EmptyPage = () => {
     );
 };
 
-export default EmptyPage;
+export default SettingsPage;
