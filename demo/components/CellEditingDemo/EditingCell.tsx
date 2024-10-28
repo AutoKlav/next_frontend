@@ -3,6 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
+import { CSSProperties } from 'react';
 
 export default function RowEditingDemo() {
     const [products, setProducts] = useState([
@@ -55,7 +56,7 @@ export default function RowEditingDemo() {
                         key: field,
                         field: field,
                         header: header,
-                        style: { width: '25%', textAlign: field !== 'label' && field !=='pinName' ? 'center' : 'left' },
+                        style: { width: '25%', textAlign: field !== 'label' && field !== 'pinName' ? 'center' as CSSProperties['textAlign'] : 'left' as CSSProperties['textAlign'] },
                         editor: editable ? (options: any) => cellEditor(options) : undefined
                     };
 
