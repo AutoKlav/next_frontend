@@ -53,14 +53,13 @@ export default function RowEditingDemo() {
             <DataTable value={products} editMode="row" dataKey="id" onRowEditComplete={onRowEditComplete} tableStyle={{ minWidth: '50rem' }}>
                 {columns.map(({ field, header, editable }) => {
                     const columnProps = {
-                        key: field,
                         field: field,
                         header: header,
                         style: { width: '25%', textAlign: field !== 'label' && field !== 'pinName' ? 'center' as CSSProperties['textAlign'] : 'left' as CSSProperties['textAlign'] },
                         editor: editable ? (options: any) => cellEditor(options) : undefined
                     };
 
-                    return <Column {...columnProps} />;
+                    return <Column key={field} {...columnProps} />;
                 })}
                 <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
             </DataTable>
