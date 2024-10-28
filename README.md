@@ -1,15 +1,7 @@
-## Installation
+## Bun installation
 
-To install dependencies, run:
+`bash npm install -g bun`
 
-```sh
-yarn install
-```
+## Install dependencies
 
-## Development
-
-To start the development server, run:
-
-```sh
-yarn dev
-```
+`bash bun install --pure-lockfile`
