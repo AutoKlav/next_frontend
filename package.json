@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --write \"{app,demo,layout,types}/**/*.{js,ts,tsx,d.ts}\"",
-    "lint": "next lint",
-    "proto:generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./demo --grpc_out=grpc_js:./demo ./proto/autoklav.proto"
+    "lint": "tsc --noEmit | next lint",
+    "proto:generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./demo --grpc_out=grpc_js:./demo ./proto/autoklav.proto",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.12.2",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.6",
+    "husky": "^8.0.0",
     "prettier": "^2.8.8",
     "sass": "^1.63.4"
   },
