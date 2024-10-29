@@ -1,7 +1,7 @@
 "use client";
 
 import CellEditingDemo from '@/demo/components/CellEditingDemo/EditingCell';
-import { useState } from "react";
+import ConfigTable from '@/demo/components/CellEditingDemo/GlobalTable';
 import React from 'react';
 
 const SettingsPage = () => {
@@ -9,6 +9,9 @@ const SettingsPage = () => {
         <div className="grid">            
             <div className='col-12'>
                 <CellEditingDemo />
+            </div>
+            <div className='col-12'>
+                <ConfigTable />
             </div>
         </div>
     );
