@@ -23,7 +23,7 @@ const NotFoundPage = () => {
                                 <i className="pi pi-fw pi-question-circle text-50 text-2xl"></i>
                             </span>
                             <span className="ml-4 flex flex-column">
-                                <span className="text-900 lg:text-xl font-medium mb-1">Pocetna</span>
+                                <span className="text-900 lg:text-xl font-medium mb-1">Početna</span>
                                 <span className="text-600 lg:text-lg">Kliknite ovdje da se vratite na pocetnu stranicu.</span>
                             </span>
                         </Link>                        
