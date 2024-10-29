@@ -41,14 +41,13 @@ export default function ConfigTable() {
             <DataTable value={config} editMode="row" dataKey="id" onRowEditComplete={onRowEditComplete} tableStyle={{ minWidth: '50rem' }}>
                 {columns.map(({ field, header, editable }) => {
                     const columnProps = {
-                        key: field,
                         field: field,
                         header: header,
                         style: { width: '50%', textAlign: field === 'value1' ? 'center' as CSSProperties['textAlign'] : 'left' as CSSProperties['textAlign'] },
                         editor: editable ? (options: any) => cellEditor(options) : undefined
                     };
 
-                    return <Column {...columnProps} />;
+                    return <Column key={field} {...columnProps} />;
                 })}
                 <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
             </DataTable>
