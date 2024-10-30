@@ -16,9 +16,24 @@ const AppMenu = () => {
             items: [                
                 { label: 'Početna', icon: 'pi pi-fw pi-home', to: '/' },
                 { label: 'Nadzorna ploca', icon: 'pi pi-fw pi-th-large', to: '/dashboard' },
-                { label: 'Graf', icon: 'pi pi-fw pi-chart-bar', to: '/chart' },
-                { label: 'Povijest', icon: 'pi pi-fw pi-calendar', to: '/history' },
-                { label: 'Postavke', icon: 'pi pi-fw pi-cog', to: '/settings' },
+                { label: 'Graf', icon: 'pi pi-fw pi-chart-bar', to: '/chart' },                
+                { label: 'Povijest', icon: 'pi pi-fw pi-calendar', to: '/history' },                
+                {
+                    label: 'Postavke',
+                    icon: 'pi pi-fw pi-cog',
+                    items: [
+                        {
+                            label: 'Kalibracija senzora',
+                            icon: 'pi pi-fw pi-wrench', // Changed icon
+                            to: '/settings/calibration'
+                        },
+                        {
+                            label: 'Globalne varijable',
+                            icon: 'pi pi-fw pi-sliders-h', // Changed icon
+                            to: '/settings/globals'
+                        },
+                    ]
+                }
             ],
         },
         {
@@ -96,7 +111,7 @@ const AppMenu = () => {
     return (
         <MenuProvider>
             <ul className="layout-menu">
-                {model.map((item, i) => {
+                {model.map((item, i) => {                    
                     return !item?.seperator ? <AppMenuitem item={item} root={true} index={i} key={item.label} /> : <li className="menu-separator"></li>;
                 })}                
             </ul>
