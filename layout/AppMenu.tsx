@@ -24,12 +24,12 @@ const AppMenu = () => {
                     items: [
                         {
                             label: 'Kalibracija senzora',
-                            icon: 'pi pi-fw pi-sign-in',
+                            icon: 'pi pi-fw pi-wrench', // Changed icon
                             to: '/settings/calibration'
                         },
                         {
                             label: 'Globalne varijable',
-                            icon: 'pi pi-fw pi-sign-in',
+                            icon: 'pi pi-fw pi-sliders-h', // Changed icon
                             to: '/settings/globals'
                         },
                     ]

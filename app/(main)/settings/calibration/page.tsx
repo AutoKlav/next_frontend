@@ -1,16 +1,16 @@
+"use client";
+
+import GlobalsTable from '@/demo/components/CellEditingDemo/GlobalTable';
 import React from 'react';
 
-const EmptyPage = () => {
+const CalibrationPage = () => {
     return (
-        <div className="grid">
-            <div className="col-12">
-                <div className="card">
-                    <h5>Empty Page</h5>
-                    <p>Use this page to start from scratch and place your custom content.</p>
-                </div>
+        <div className="grid">                        
+            <div className='col-12'>
+                <GlobalsTable />
             </div>
         </div>
     );
 };
 
-export default EmptyPage;
+export default CalibrationPage;

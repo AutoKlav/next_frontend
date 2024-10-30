@@ -1,16 +1,11 @@
 import React from 'react';
 
-const EmptyPage = () => {
+const GlobalsPage = () => {
     return (
-        <div className="grid">
-            <div className="col-12">
-                <div className="card">
-                    <h5>Empty Page</h5>
-                    <p>Use this page to start from scratch and place your custom content.</p>
-                </div>
-            </div>
+        <div className="grid">            
+      
         </div>
     );
 };
 
-export default EmptyPage;
+export default GlobalsPage;
