@@ -6,6 +6,7 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
+import AuthProvider from './(full-page)/api/context/AuthProvider';
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -19,7 +20,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </head>
             <body>
                 <PrimeReactProvider>
-                    <LayoutProvider>{children}</LayoutProvider>
+                    <LayoutProvider>
+                        <AuthProvider>
+                            {children}
+                        </AuthProvider>
+                    </LayoutProvider>
                 </PrimeReactProvider>
             </body>
         </html>

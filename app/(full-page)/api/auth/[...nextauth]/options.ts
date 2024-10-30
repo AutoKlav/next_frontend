@@ -10,12 +10,19 @@ export const options: NextAuthOptions = {
           // You can specify whatever fields you are expecting to be submitted.
           // e.g. domain, username, password, 2FA token, etc.
           credentials: {
-            username: { label: "Username", type: "text" },
-            password: { label: "Password", type: "password" }
+            username: { label: "Korisnicko ime", type: "text" },
+            password: { label: "Lozinka", type: "password" }
           },
           async authorize(credentials, req) {
               
             const users = [
+              {
+                id: '0',
+                name: 'Grmi',
+                email: 'grmi@grmi.com',
+                password: 'grmi',
+                role:'grmi'
+              },
               {
                 id: '1',
                 name: 'Admin',
@@ -42,8 +49,20 @@ export const options: NextAuthOptions = {
           }
         })
       ],
+      callbacks: {
+        // Ref: https://authjs.dev/guides/basics/role-based-access-control#persisting-the-role
+        async jwt({ token, user }) {
+            if (user) token.role = user.role
+            return token
+        },
+        // If you want to use the role in client components
+        async session({ session, token }) {
+            if (session?.user) session.user.role = token.role
+            return session
+        },
+      },
       pages: {
-        //signIn: '/auth/login',
+      //signIn: '/auth/login',
       }
 }
 
