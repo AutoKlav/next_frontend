@@ -1,54 +1,71 @@
-import React, { useRef } from "react";
-import { Stepper, StepperRefAttributes } from 'primereact/stepper';
-import { StepperPanel } from 'primereact/stepperpanel';
+import React, { useState } from "react";
 import { Button } from 'primereact/button';
 import { Steps } from 'primereact/steps';
+import { FloatLabel } from 'primereact/floatlabel';
+import { InputText } from "primereact/inputtext";
 
 const FullStepper = () => {
-    const stepperRef = useRef<StepperRefAttributes | null>(null);
+    const [currentStep, setCurrentStep] = useState(0); // Starting at the first step
+    const [value, setValue] = useState('');
+
     const items = [
         {
-            label: 'Personal Info'
+            label: 'Očitanje najmanje vrijednosti'
         },
         {
-            label: 'Reservation'
+            label: 'Očitanje najveće vrijednosti'
         },
         {
-            label: 'Review'
+            label: 'Rezultat kalibracije'
         }
     ];
 
+    const handleNext = () => {
+        if (currentStep < items.length - 1) {
+            setCurrentStep(currentStep + 1);
+        }
+    };
+
+    const handleBack = () => {
+        if (currentStep > 0) {
+            setCurrentStep(currentStep - 1);
+        }
+    };
+
     return (
-        <div className="card flex justify-content-center">
-            <div style={{ flexBasis: '50rem' }}>
-                <Steps model={items} />
-                <Stepper ref={stepperRef}>
-                    <StepperPanel header="Header I">
-                        <div className="flex flex-column h-12rem">
-                            <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content I</div>
-                        </div>
-                        <div className="flex pt-4 justify-content-end">
-                            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current?.nextCallback()} />
-                        </div>
-                    </StepperPanel>
-                    <StepperPanel header="Header II">
-                        <div className="flex flex-column h-12rem">
-                            <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content II</div>
-                        </div>
-                        <div className="flex pt-4 justify-content-between">
-                            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" onClick={() => stepperRef.current?.prevCallback()} />
-                            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current?.nextCallback()} />
-                        </div>
-                    </StepperPanel>
-                    <StepperPanel header="Header III">
-                        <div className="flex flex-column h-12rem">
-                            <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content III</div>
-                        </div>
-                        <div className="flex pt-4 justify-content-start">
-                            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" onClick={() => stepperRef.current?.prevCallback()} />
-                        </div>
-                    </StepperPanel>
-                </Stepper>
+        <div className="card">
+            <div style={{ flexBasis: '50rem' }} className="flex flex-column gap-4">
+                <Steps model={items} activeIndex={currentStep} />
+
+                <FloatLabel className="mt-3">
+                    <InputText 
+                        id="username" 
+                        value={value} 
+                        onChange={(e) => setValue(e.target.value)} 
+                    />
+                    <label htmlFor="username">Upiši najmanju vrijednost</label>
+                </FloatLabel>
+
+                {/* Conditional rendering for buttons */}
+                <div className="flex justify-content-between align-items-center gap-2">
+                    {currentStep > 0 && (
+                        <Button 
+                            label="Back" 
+                            severity="secondary" 
+                            icon="pi pi-arrow-left" 
+                            onClick={handleBack} 
+                        />
+                    )}
+                    {currentStep < items.length - 1 && (
+                        <Button 
+                            label="Next" 
+                            icon="pi pi-arrow-right" 
+                            iconPos="right" 
+                            onClick={handleNext} 
+                            className="ml-auto" 
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
