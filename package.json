@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "format": "prettier --write \"{app,demo,layout,types}/**/*.{js,ts,tsx,d.ts}\"",
-    "lint": "next lint",
+    "lint": "tsc --noEmit && next lint",
     "proto:generate": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./demo --grpc_out=grpc_js:./demo ./proto/autoklav.proto",
     "prepare": "husky install"
   },
