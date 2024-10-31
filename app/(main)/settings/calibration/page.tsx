@@ -1,13 +1,13 @@
 "use client";
 
-import GlobalsTable from '@/demo/components/CellEditingDemo/GlobalTable';
+import FullStepper from '@/demo/components/Stepper/FullStepper';
 import React from 'react';
 
 const CalibrationPage = () => {
     return (
         <div className="grid">                        
             <div className='col-12'>
-                <GlobalsTable />
+                <FullStepper />
             </div>
         </div>
     );

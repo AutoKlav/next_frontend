@@ -1,8 +1,8 @@
 "use client";
 
-import { Tag } from "primereact/tag";
+import { Chip } from 'primereact/chip';
 
-enum Severity {
+export enum Severity {
     Success = "success",
     Info = "info",
     Warning = "warning",
@@ -14,7 +14,7 @@ const firstColumn = (name:string, severity: Severity) => {
     <div className="card mb-0">
         <div className="flex justify-content-between mb-3">
             <div>                            
-                {renderTag(severity)}
+                {RenderState(severity)}
                 <div className="text-900 font-medium text-xl">{name}</div>
             </div>                        
         </div>                    
@@ -60,31 +60,24 @@ const thirdColumn = (time:string, severity: Severity) => {
                 </div>
             </div>;
 }
-const renderTag = (severity: Severity) => {
-    switch (severity) {
-        case Severity.Success:
-            return <Tag className="mb-3" icon="pi pi-check" severity="success" value="Proces je završio"></Tag>;
-            
-        case Severity.Info:
-             return <Tag className="mb-3" icon="pi pi-info-circle" severity="info" value="Spremno za početak"></Tag>;
-        case Severity.Warning:
-            return <Tag className="mb-3" icon="pi pi-exclamation-triangle" severity="warning" value="Proces je u izvođenju"></Tag>;
-            
-        case Severity.Danger:
-            return <Tag className="mb-3" icon="pi pi-times" severity="danger" value="Greška u izvođenju"></Tag>;
-                
-            
-        default:
-            return <div className="col-4">
-                Wrong severity
-                </div>;
-
-    }
-};
+export const RenderState = (severity: Severity) => {
+        switch (severity) {
+            case Severity.Success:
+                return <Chip label="Proces je završio" icon="pi pi-check" className="bg-green-700 text-900 text-xs font-small mb-3" />;
+            case Severity.Info:
+                return <Chip label="Spremno za početak" icon="pi pi-info-circle" className="bg-blue-500 text-900 text-xs font-small mb-3" />;
+            case Severity.Warning:
+                return <Chip label="Proces je u izvođenju" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-xs font-small mb-3" />;
+            case Severity.Danger:
+                return <Chip label="Greška u izvođenju" icon="pi pi-times" className="bg-red-700 text-900 text-xs font-small mb-3" />;
+            default:
+                return null;
+        }
+    };
 
 const StatusHeader = () => {
 
-    const severity = Severity.Success;
+    const severity = Severity.Danger;
     const name = "Grah 500g";
     const timeSecond = "00:30:00";
     const timeThird = "00:30:00";
