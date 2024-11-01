@@ -4,14 +4,33 @@ import { Steps } from 'primereact/steps';
 import { ProgressBar } from 'primereact/progressbar';
 import { InputNumber } from "primereact/inputnumber";
 import { Toast } from 'primereact/toast';
+
+const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
+    if (x1x2.length !== 2 || y1y2.length !== 2) {
+        console.error('Invalid input arrays. Both arrays must contain exactly two elements.');
+        return;
+    }
+
+    const [x1, x2] = x1x2;
+    const [y1, y2] = y1y2;
+
+    const m = (y2 - y1) / (x2 - x1);
+    const b = y1 - m * x1;
+
+    console.log(`Line equation: y = ${m}x + ${b}`);
+};
+
 const FullStepper = () => {
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const inputValue = useRef(0);
-    const minMaxValues = useRef<number[]>([]); 
+    const y1y2 = useRef<number[]>([]); 
+    const x1x2 = useRef<number[]>([4,6]);
+
+
     const toast = useRef<Toast>(null);
-    console.log('minMaxValues', minMaxValues.current);
+    console.log('minMaxValues', y1y2.current);
     const items = [
         { label: 'Očitanje najmanje vrijednosti' },
         { label: 'Očitanje najveće vrijednosti' },
@@ -44,7 +63,7 @@ const FullStepper = () => {
                 setLoading(false);
                 setProgress(0);
 
-                minMaxValues.current[currentStep] = Number(inputValue.current) || 0;
+                y1y2.current[currentStep] = Number(inputValue.current) || 0;
                 
                 // Clear the input after saving
                 inputValue.current = 0; 
