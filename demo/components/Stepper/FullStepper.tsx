@@ -126,7 +126,29 @@ const FullStepper = () => {
                             />
                             </div>                        
                     )}
-                </div>                
+                </div>
+                {currentStep === 2 && (
+                <div className="flex flex-row gap-2">
+                    <div className="flex flex-column gap-2">
+                    <label>Minimalna kalibrirana vrijednost</label>
+                    <InputNumber 
+                        value={1033}
+                        readOnly
+                        className="p-inputtext-md p-1"
+                        style={{ borderRadius: '13px' }} 
+                    />
+                    </div>
+                    <div className="flex flex-column gap-2">
+                    <label>Maksimalna kalibrirana vrijednost</label>
+                    <InputNumber 
+                        value={1033}
+                        readOnly
+                        className="p-inputtext-md p-1"
+                        style={{ borderRadius: '13px' }} 
+                    />
+                    </div>
+                </div>
+                )}
 
                 {/* Navigation Buttons */}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
