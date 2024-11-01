@@ -1,24 +1,59 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from 'primereact/button';
 import { Steps } from 'primereact/steps';
 import { ProgressBar } from 'primereact/progressbar';
-import { FloatLabel } from 'primereact/floatlabel';
-import { InputText } from "primereact/inputtext";
-
+import { InputNumber } from "primereact/inputnumber";
+import { Toast } from 'primereact/toast';
 const FullStepper = () => {
     const [currentStep, setCurrentStep] = useState(0);
-    const [value, setValue] = useState('');
-
+    const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const inputValue = useRef(0);
+    const minMaxValues = useRef<number[]>([]); 
+    const toast = useRef<Toast>(null);
+    console.log('minMaxValues', minMaxValues.current);
     const items = [
         { label: 'Očitanje najmanje vrijednosti' },
         { label: 'Očitanje najveće vrijednosti' },
-        { label: 'Rezultat kalibracije' }
+        { label: 'Rezultati kalibracije' }
     ];
 
+    const showWarn = () => {
+        toast.current?.show({
+            severity: 'warn',
+            summary: 'Vrijednost nije unesena',
+            detail: 'Molimo unesite vrijednost',
+            life: 3000
+        });
+    };
+
     const handleNext = () => {
-        if (currentStep < items.length - 1) {
-            setCurrentStep((prevStep) => prevStep + 1);
+        if(!inputValue.current) {
+            showWarn();
+            return;
         }
+
+        setLoading(true);
+        let progressValue = 0;
+
+        const interval = setInterval(() => {
+            progressValue += 20;
+            setProgress(progressValue);
+            if (progressValue >= 100) {
+                clearInterval(interval);
+                setLoading(false);
+                setProgress(0);
+
+                minMaxValues.current[currentStep] = Number(inputValue.current) || 0;
+                
+                // Clear the input after saving
+                inputValue.current = 0; 
+
+                if (currentStep < items.length - 1) {
+                    setCurrentStep((prevStep) => prevStep + 1);
+                }
+            }
+        }, 1000);
     };
 
     const handleBack = () => {
@@ -27,35 +62,52 @@ const FullStepper = () => {
         }
     };
 
-    // Dynamic placeholder and label text based on step
-    const stepContent = [
-        "Upiši najmanju vrijednost",
-        "Upiši najveću vrijednost",
-        "Rezultat kalibracije prikazan ovdje"
-    ];
-
-    return (
+    return (        
         <div className="card p-7 shadow-lg rounded-lg">
             <div className="flex flex-column gap-3">
-                
+                <Toast ref={toast} />    
                 {/* Step Indicator */}
                 <Steps model={items} activeIndex={currentStep} className="mb-2" />
                 
                 {/* Progress Bar */}
-                <ProgressBar value={(currentStep + 1) * (100 / items.length)} showValue={false} className="mb-3" />
+                <ProgressBar 
+                    value={Math.round((currentStep + 1) * (100 / items.length) + progress / items.length)} 
+                    showValue={true}  
+                    style={{ height: '24px', borderRadius: '50px', color: 'white' }} 
+                    className="mb-3" 
+                />
 
-                {/* Input Field */}
-                <FloatLabel className="mt-2">
-                    <InputText 
-                        id={`step-input-${currentStep}`} 
-                        value={value}
-                        type="number"
-                        onChange={(e) => setValue(e.target.value)} 
-                        className="p-inputtext-lg p-3"
-                        style={{ borderRadius: '13px' }} 
-                    />
-                    <label htmlFor={`step-input-${currentStep}`}>{stepContent[currentStep]}</label>
-                </FloatLabel>
+                <div className="flex flex-row gap-1">
+                    <div className="flex flex-column gap-2">
+                        {/* Input Fields */}
+                        {currentStep !== 2 ? (
+                            <>
+                            <label>Upišite najmanju vrijednost</label>
+                            <InputNumber                        
+                                key={currentStep} // Unique key to reset input
+                                defaultValue={inputValue.current} // Clear value on next step
+                                onChange={(e) => (inputValue.current = e.value ? e.value : 0)}                        
+                                mode="decimal"
+                                showButtons
+                                className="p-inputtext-md p-1"
+                                style={{ borderRadius: '13px' }}>                            
+                            </InputNumber>
+                            </>
+                        ): null}                   
+                        
+                        </div>                
+                        {loading && (
+                            <div className="flex flex-column gap-2">
+                            <label>Očitana vrijednost</label>
+                            <InputNumber 
+                                value={1033}
+                                readOnly
+                                className="p-inputtext-md p-1"
+                                style={{ borderRadius: '13px' }} 
+                            />
+                            </div>                        
+                    )}
+                </div>                
 
                 {/* Navigation Buttons */}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
@@ -72,15 +124,16 @@ const FullStepper = () => {
                         <Button 
                             label="Next" 
                             icon="pi pi-arrow-right" 
-                            iconPos="right" 
+                            iconPos={loading ? "left" : "right"} 
                             onClick={handleNext} 
                             className="p-button  md:w-auto p-button-rounded p-2 ml-auto"
+                            loading={loading}                            
                         />
                     )}
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default FullStepper;
