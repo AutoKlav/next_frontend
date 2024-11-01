@@ -1,57 +1,139 @@
-import React, { useRef } from "react";
-import { Stepper, StepperRefAttributes } from 'primereact/stepper';
-import { StepperPanel } from 'primereact/stepperpanel';
+import React, { useRef, useState } from "react";
 import { Button } from 'primereact/button';
 import { Steps } from 'primereact/steps';
-
+import { ProgressBar } from 'primereact/progressbar';
+import { InputNumber } from "primereact/inputnumber";
+import { Toast } from 'primereact/toast';
 const FullStepper = () => {
-    const stepperRef = useRef<StepperRefAttributes | null>(null);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const inputValue = useRef(0);
+    const minMaxValues = useRef<number[]>([]); 
+    const toast = useRef<Toast>(null);
+    console.log('minMaxValues', minMaxValues.current);
     const items = [
-        {
-            label: 'Personal Info'
-        },
-        {
-            label: 'Reservation'
-        },
-        {
-            label: 'Review'
-        }
+        { label: 'Očitanje najmanje vrijednosti' },
+        { label: 'Očitanje najveće vrijednosti' },
+        { label: 'Rezultati kalibracije' }
     ];
 
-    return (
-        <div className="card flex justify-content-center">
-            <div style={{ flexBasis: '50rem' }}>
-                <Steps model={items} />
-                <Stepper ref={stepperRef}>
-                    <StepperPanel header="Header I">
-                        <div className="flex flex-column h-12rem">
-                            <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content I</div>
-                        </div>
-                        <div className="flex pt-4 justify-content-end">
-                            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current?.nextCallback()} />
-                        </div>
-                    </StepperPanel>
-                    <StepperPanel header="Header II">
-                        <div className="flex flex-column h-12rem">
-                            <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content II</div>
-                        </div>
-                        <div className="flex pt-4 justify-content-between">
-                            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" onClick={() => stepperRef.current?.prevCallback()} />
-                            <Button label="Next" icon="pi pi-arrow-right" iconPos="right" onClick={() => stepperRef.current?.nextCallback()} />
-                        </div>
-                    </StepperPanel>
-                    <StepperPanel header="Header III">
-                        <div className="flex flex-column h-12rem">
-                            <div className="border-2 border-dashed surface-border border-round surface-ground flex-auto flex justify-content-center align-items-center font-medium">Content III</div>
-                        </div>
-                        <div className="flex pt-4 justify-content-start">
-                            <Button label="Back" severity="secondary" icon="pi pi-arrow-left" onClick={() => stepperRef.current?.prevCallback()} />
-                        </div>
-                    </StepperPanel>
-                </Stepper>
+    const showWarn = () => {
+        toast.current?.show({
+            severity: 'warn',
+            summary: 'Vrijednost nije unesena',
+            detail: 'Molimo unesite vrijednost',
+            life: 3000
+        });
+    };
+
+    const handleNext = () => {
+        if(!inputValue.current) {
+            showWarn();
+            return;
+        }
+
+        setLoading(true);
+        let progressValue = 0;
+
+        const interval = setInterval(() => {
+            progressValue += 20;
+            setProgress(progressValue);
+            if (progressValue >= 100) {
+                clearInterval(interval);
+                setLoading(false);
+                setProgress(0);
+
+                minMaxValues.current[currentStep] = Number(inputValue.current) || 0;
+                
+                // Clear the input after saving
+                inputValue.current = 0; 
+
+                if (currentStep < items.length - 1) {
+                    setCurrentStep((prevStep) => prevStep + 1);
+                }
+            }
+        }, 1000);
+    };
+
+    const handleBack = () => {
+        if (currentStep > 0) {
+            setCurrentStep((prevStep) => prevStep - 1);
+        }
+    };
+
+    return (        
+        <div className="card p-7 shadow-lg rounded-lg">
+            <div className="flex flex-column gap-3">
+                <Toast ref={toast} />    
+                {/* Step Indicator */}
+                <Steps model={items} activeIndex={currentStep} className="mb-2" />
+                
+                {/* Progress Bar */}
+                <ProgressBar 
+                    value={Math.round((currentStep + 1) * (100 / items.length) + progress / items.length)} 
+                    showValue={true}  
+                    style={{ height: '24px', borderRadius: '50px', color: 'white' }} 
+                    className="mb-3" 
+                />
+
+                <div className="flex flex-row gap-1">
+                    <div className="flex flex-column gap-2">
+                        {/* Input Fields */}
+                        {currentStep !== 2 ? (
+                            <>
+                            <label>Upišite najmanju vrijednost</label>
+                            <InputNumber                        
+                                key={currentStep} // Unique key to reset input
+                                defaultValue={inputValue.current} // Clear value on next step
+                                onChange={(e) => (inputValue.current = e.value ? e.value : 0)}                        
+                                mode="decimal"
+                                showButtons
+                                className="p-inputtext-md p-1"
+                                style={{ borderRadius: '13px' }}>                            
+                            </InputNumber>
+                            </>
+                        ): null}                   
+                        
+                        </div>                
+                        {loading && (
+                            <div className="flex flex-column gap-2">
+                            <label>Očitana vrijednost</label>
+                            <InputNumber 
+                                value={1033}
+                                readOnly
+                                className="p-inputtext-md p-1"
+                                style={{ borderRadius: '13px' }} 
+                            />
+                            </div>                        
+                    )}
+                </div>                
+
+                {/* Navigation Buttons */}
+                <div className="flex justify-content-between align-items-center gap-4 mt-4">
+                    {currentStep !== 0 && (
+                        <Button 
+                            label="Back" 
+                            icon="pi pi-arrow-left" 
+                            className="p-button-secondary w-full md:w-auto p-button-rounded p-2"
+                            onClick={handleBack}                       
+                        />
+                    )}
+                    
+                    {currentStep < items.length - 1 && (
+                        <Button 
+                            label="Next" 
+                            icon="pi pi-arrow-right" 
+                            iconPos={loading ? "left" : "right"} 
+                            onClick={handleNext} 
+                            className="p-button  md:w-auto p-button-rounded p-2 ml-auto"
+                            loading={loading}                            
+                        />
+                    )}
+                </div>
             </div>
         </div>
     );
-}
+};
 
 export default FullStepper;
