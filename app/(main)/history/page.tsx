@@ -5,7 +5,6 @@ import { FilterMatchMode } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 
 export default function BasicFilterDemo() {
     const processes = [
@@ -20,6 +19,7 @@ export default function BasicFilterDemo() {
         name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
     });
     const [loading, setLoading] = useState(false);
+    const [selectedProcesses, setSelectedProcesses] = useState<any[]>([]);
 
     const graphBodyTemplate = () => {
         return <Button icon="pi pi-chart-line" className="p-button-text p-button-plain" />;
@@ -31,8 +31,18 @@ export default function BasicFilterDemo() {
     return (
         <div className="card">
             <h2>Povijest procesa</h2>            
-            <DataTable value={processes} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
-                >
+            <DataTable 
+                value={processes} 
+                paginator 
+                rows={10} 
+                dataKey="id" 
+                filters={filters} 
+                filterDisplay="row" 
+                loading={loading}
+                selection={selectedProcesses}
+                onSelectionChange={(e) => setSelectedProcesses(e.value)}
+            >
+                <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
                 <Column field="name" header="Ime procesa" filter filterPlaceholder="Search by name" style={{ maxWidth: '250px' }} />
                 <Column field="startTime" header="Vrijeme pocetka" style={{ maxWidth: '200px' }} />
                 <Column field="duration" header="Duljina trajanja (s)"  bodyStyle={{ textAlign: 'center' }} />
