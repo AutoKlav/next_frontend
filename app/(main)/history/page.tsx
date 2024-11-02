@@ -52,15 +52,29 @@ export default function BasicFilterDemo() {
             <div className="flex justify-content-between">
                 <Button type="button" icon="pi pi-filter-slash" label="Obriši filter" outlined onClick={clearFilter1} />
                 <div className='flex justify-content-between gap-3'>
-                    <Button icon="pi pi-print" className="p-button-text p-button-plain" size='large' />
-                    <Button icon="pi pi-chart-line" className="p-button-text p-button-plain" size='large' />
+                    {selectedProcesses.length > 0 && (
+                        <>
+                            <Button icon="pi pi-print" className="p-button-text p-button-plain" size='large' onClick={handlePrint} />
+                            <Button icon="pi pi-chart-line" className="p-button-text p-button-plain" size='large' onClick={handleGraph} />
+                        </>
+                    )}
                     <span className="p-input-icon-left">
-                    <i className="pi pi-search" style={{ fontSize: '20px', top: '55%', transform: 'translateY(-50%)' }} />
-                        <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Filtriraj procese" style={{borderRadius:'11px'}}/>
+                        <i className="pi pi-search" style={{ fontSize: '20px', top: '55%', transform: 'translateY(-50%)' }} />
+                        <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Filtriraj procese" style={{ borderRadius: '11px' }} />
                     </span>
                 </div>
             </div>
         );
+    };
+
+    const handlePrint = () => {
+        console.log('Print processes:', selectedProcesses);
+        // Add your print logic here
+    };
+
+    const handleGraph = () => {
+        console.log('Graph processes:', selectedProcesses);
+        // Add your graph logic here
     };
 
     const header = renderHeader1();
