@@ -5,6 +5,7 @@ import { FilterMatchMode } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 
 export default function BasicFilterDemo() {
     const processes = [
@@ -22,11 +23,25 @@ export default function BasicFilterDemo() {
     const [selectedProcesses, setSelectedProcesses] = useState<any[]>([]);
 
     const graphBodyTemplate = () => {
-        return <Button icon="pi pi-chart-line" className="p-button-text p-button-plain" />;
     };
-    const printerBodyTemplate = () => {
-        return <Button icon="pi pi-print" className="p-button-text p-button-plain" />;
+    
+    const renderHeader1 = () => {
+        return (
+            <div className="flex justify-content-between">
+                <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined />
+                <div className='flex justify-content-between gap-3'>
+                <Button icon="pi pi-print" className="p-button-text p-button-plain" size='large'/>
+                <Button icon="pi pi-chart-line" className="p-button-text p-button-plain" size='large'/>
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search" />
+                    <InputText placeholder="Filtriraj procese" />
+                </span>
+                </div>
+            </div>
+        );
     };
+
+    const header = renderHeader1();
 
     return (
         <div className="card">
@@ -36,18 +51,15 @@ export default function BasicFilterDemo() {
                 paginator 
                 rows={10} 
                 dataKey="id" 
-                filters={filters} 
-                filterDisplay="row" 
                 loading={loading}
                 selection={selectedProcesses}
                 onSelectionChange={(e) => setSelectedProcesses(e.value)}
+                header={header}
             >
                 <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
-                <Column field="name" header="Ime procesa" filter filterPlaceholder="Search by name" style={{ maxWidth: '250px' }} />
+                <Column field="name" header="Ime procesa" style={{ maxWidth: '250px' }} />
                 <Column field="startTime" header="Vrijeme pocetka" style={{ maxWidth: '200px' }} />
-                <Column field="duration" header="Duljina trajanja (s)"  bodyStyle={{ textAlign: 'center' }} />
-                <Column body={graphBodyTemplate} header="Graf" style={{ maxWidth: '100px' }} />
-                <Column body={printerBodyTemplate} header="Printanje" style={{ maxWidth: '100px' }} />
+                <Column field="duration" header="Duljina trajanja (s)" />
             </DataTable>
         </div>
     );
