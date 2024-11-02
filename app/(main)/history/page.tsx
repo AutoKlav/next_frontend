@@ -55,8 +55,8 @@ export default function BasicFilterDemo() {
                     <Button icon="pi pi-print" className="p-button-text p-button-plain" size='large' />
                     <Button icon="pi pi-chart-line" className="p-button-text p-button-plain" size='large' />
                     <span className="p-input-icon-left">
-                        <i className="pi pi-search" />
-                        <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Filtriraj procese" />
+                    <i className="pi pi-search" style={{ fontSize: '20px', top: '55%', transform: 'translateY(-50%)' }} />
+                        <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Filtriraj procese" style={{borderRadius:'11px'}}/>
                     </span>
                 </div>
             </div>
