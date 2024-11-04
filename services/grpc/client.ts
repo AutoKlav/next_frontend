@@ -14,9 +14,10 @@ export const gRpcCall = <T>(method: string, data: any) => {
   return new Promise<T>((resolve, reject) => {
     client[method](data, (err: GrpcError, response: any) => {
       if (err) {
+        console.log(err.message);
         reject(err);
       }
-      resolve(response.toObject());
+      resolve(response);
     });
   });
 };

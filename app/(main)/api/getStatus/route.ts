@@ -1,9 +1,6 @@
-
-
+// api/getStatus/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-
 import { getStatus } from "@/services/grpc";
-
 
 export async function GET(req: NextRequest) {
   try {
