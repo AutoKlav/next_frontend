@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { Calendar } from 'primereact/calendar';
 
 export default function BasicFilterDemo() {
     const processes = [
@@ -42,6 +43,10 @@ export default function BasicFilterDemo() {
             name: {
                 operator: FilterOperator.AND,
                 constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }]
+            },
+            startTime: {
+                operator: FilterOperator.AND,
+                constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }]
             }
         });
         setGlobalFilterValue1('');
@@ -58,10 +63,7 @@ export default function BasicFilterDemo() {
                             <Button icon="pi pi-chart-line" className="p-button-text p-button-plain" size='large' onClick={handleGraph} />
                         </>
                     )}
-                    <span className="p-input-icon-left">
-                        <i className="pi pi-search" style={{ fontSize: '20px', top: '55%', transform: 'translateY(-50%)' }} />
-                        <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Filtriraj procese" style={{ borderRadius: '11px' }} />
-                    </span>
+                    <InputText value={globalFilterValue1} onChange={onGlobalFilterChange1} placeholder="Filtriraj procese" style={{ borderRadius: '11px' }} />
                 </div>
             </div>
         );
@@ -77,12 +79,39 @@ export default function BasicFilterDemo() {
         // Add your graph logic here
     };
 
-    const header = renderHeader1();
+    const dateFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
+        return (
+            <Calendar
+                value={options.value}
+                onChange={(e) => options.filterCallback(e.value, options.index)}
+                dateFormat="yy-mm-dd"
+                placeholder="Select a date"
+                className="p-column-filter"
+            />
+        );
+    };
+
+    const formatDate = (value: string) => {
+        const date = new Date(value);
+        return date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+
+    const dateBodyTemplate = (rowData: { startTime: string }) => {
+        return formatDate(rowData.startTime);
+    };
+
+    const header = renderHeader1();    
 
     return (
         <div className="card">
             <h2>Povijest procesa</h2>
             <DataTable
+                className="p-datatable-gridlines"
+                showGridlines
                 value={processes}
                 paginator
                 rows={10}
@@ -97,7 +126,8 @@ export default function BasicFilterDemo() {
             >
                 <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
                 <Column field="name" header="Ime procesa" filter filterPlaceholder="Search by name" style={{ maxWidth: '250px' }} />
-                <Column field="startTime" header="Vrijeme pocetka" style={{ maxWidth: '200px' }} />
+                {/* TODO Fix date filter */}
+                <Column field="startTime" header="Vrijeme pocetka" style={{ maxWidth: '200px' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column field="duration" header="Duljina trajanja (s)" />
             </DataTable>
         </div>

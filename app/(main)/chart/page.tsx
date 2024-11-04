@@ -2,8 +2,12 @@ import LineChart from '@/demo/components/Charts/LineChart';
 import React from 'react';
 
 const ChartPage = () => {
+
     return (
-        <LineChart />
+        <div>
+            <h1>Status:</h1>
+            <LineChart />
+        </div>
     );
 };
 
