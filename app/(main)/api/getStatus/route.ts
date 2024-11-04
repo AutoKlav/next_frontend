@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getStatus } from "@/services/grpc";
 
 export async function GET(req: NextRequest) {
-  try {
+  try 
+  {
     const status = await getStatus();
-    console.log("Direct gRPC response:", status);
 
     return new NextResponse(JSON.stringify(status), {
       status: 200,
