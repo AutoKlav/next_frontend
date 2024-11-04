@@ -8,10 +8,11 @@ import {
 } from "@/types/grpc";
 import { gRpcCall } from "./client";
 
-const Messages = require("@/proto/autoklav_pb");
+const Messages = require("./autoklav_pb");
 
 // Status
 export const getStatus = () => {
+  console.log("Calling gRpcCall in getStatus...");
   const data = new Messages.Empty();
 
   return gRpcCall<Status>("getStatus", data);

@@ -4,80 +4,80 @@
 var grpc = require('@grpc/grpc-js');
 var services_grpc_autoklav_pb = require('../../services/grpc/autoklav_pb.js');
 
-function serialize_Autoklav_Empty(arg) {
+function serialize_autoklav_Empty(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.Empty)) {
-    throw new Error('Expected argument of type Autoklav.Empty');
+    throw new Error('Expected argument of type autoklav.Empty');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_Autoklav_Empty(buffer_arg) {
+function deserialize_autoklav_Empty(buffer_arg) {
   return services_grpc_autoklav_pb.Empty.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_Autoklav_SensorValues(arg) {
+function serialize_autoklav_SensorValues(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.SensorValues)) {
-    throw new Error('Expected argument of type Autoklav.SensorValues');
+    throw new Error('Expected argument of type autoklav.SensorValues');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_Autoklav_SensorValues(buffer_arg) {
+function deserialize_autoklav_SensorValues(buffer_arg) {
   return services_grpc_autoklav_pb.SensorValues.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_Autoklav_SetVariable(arg) {
+function serialize_autoklav_SetVariable(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.SetVariable)) {
-    throw new Error('Expected argument of type Autoklav.SetVariable');
+    throw new Error('Expected argument of type autoklav.SetVariable');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_Autoklav_SetVariable(buffer_arg) {
+function deserialize_autoklav_SetVariable(buffer_arg) {
   return services_grpc_autoklav_pb.SetVariable.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_Autoklav_StartProcessRequest(arg) {
+function serialize_autoklav_StartProcessRequest(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.StartProcessRequest)) {
-    throw new Error('Expected argument of type Autoklav.StartProcessRequest');
+    throw new Error('Expected argument of type autoklav.StartProcessRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_Autoklav_StartProcessRequest(buffer_arg) {
+function deserialize_autoklav_StartProcessRequest(buffer_arg) {
   return services_grpc_autoklav_pb.StartProcessRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_Autoklav_StateMachineValues(arg) {
+function serialize_autoklav_StateMachineValues(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.StateMachineValues)) {
-    throw new Error('Expected argument of type Autoklav.StateMachineValues');
+    throw new Error('Expected argument of type autoklav.StateMachineValues');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_Autoklav_StateMachineValues(buffer_arg) {
+function deserialize_autoklav_StateMachineValues(buffer_arg) {
   return services_grpc_autoklav_pb.StateMachineValues.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_Autoklav_Status(arg) {
+function serialize_autoklav_Status(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.Status)) {
-    throw new Error('Expected argument of type Autoklav.Status');
+    throw new Error('Expected argument of type autoklav.Status');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_Autoklav_Status(buffer_arg) {
+function deserialize_autoklav_Status(buffer_arg) {
   return services_grpc_autoklav_pb.Status.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_Autoklav_Variables(arg) {
+function serialize_autoklav_Variables(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.Variables)) {
-    throw new Error('Expected argument of type Autoklav.Variables');
+    throw new Error('Expected argument of type autoklav.Variables');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_Autoklav_Variables(buffer_arg) {
+function deserialize_autoklav_Variables(buffer_arg) {
   return services_grpc_autoklav_pb.Variables.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
@@ -85,85 +85,85 @@ function deserialize_Autoklav_Variables(buffer_arg) {
 var AutoklavService = exports.AutoklavService = {
   // Status
 getStatus: {
-    path: '/Autoklav.Autoklav/getStatus',
+    path: '/autoklav.Autoklav/getStatus',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.Empty,
     responseType: services_grpc_autoklav_pb.Status,
-    requestSerialize: serialize_Autoklav_Empty,
-    requestDeserialize: deserialize_Autoklav_Empty,
-    responseSerialize: serialize_Autoklav_Status,
-    responseDeserialize: deserialize_Autoklav_Status,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
   },
   // Global variables
 getVariables: {
-    path: '/Autoklav.Autoklav/getVariables',
+    path: '/autoklav.Autoklav/getVariables',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.Empty,
     responseType: services_grpc_autoklav_pb.Variables,
-    requestSerialize: serialize_Autoklav_Empty,
-    requestDeserialize: deserialize_Autoklav_Empty,
-    responseSerialize: serialize_Autoklav_Variables,
-    responseDeserialize: deserialize_Autoklav_Variables,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_Variables,
+    responseDeserialize: deserialize_autoklav_Variables,
   },
   setVariable: {
-    path: '/Autoklav.Autoklav/setVariable',
+    path: '/autoklav.Autoklav/setVariable',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.SetVariable,
     responseType: services_grpc_autoklav_pb.Status,
-    requestSerialize: serialize_Autoklav_SetVariable,
-    requestDeserialize: deserialize_Autoklav_SetVariable,
-    responseSerialize: serialize_Autoklav_Status,
-    responseDeserialize: deserialize_Autoklav_Status,
+    requestSerialize: serialize_autoklav_SetVariable,
+    requestDeserialize: deserialize_autoklav_SetVariable,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
   },
   // Process
 startProcess: {
-    path: '/Autoklav.Autoklav/startProcess',
+    path: '/autoklav.Autoklav/startProcess',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.StartProcessRequest,
     responseType: services_grpc_autoklav_pb.Status,
-    requestSerialize: serialize_Autoklav_StartProcessRequest,
-    requestDeserialize: deserialize_Autoklav_StartProcessRequest,
-    responseSerialize: serialize_Autoklav_Status,
-    responseDeserialize: deserialize_Autoklav_Status,
+    requestSerialize: serialize_autoklav_StartProcessRequest,
+    requestDeserialize: deserialize_autoklav_StartProcessRequest,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
   },
   stopProcess: {
-    path: '/Autoklav.Autoklav/stopProcess',
+    path: '/autoklav.Autoklav/stopProcess',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.Empty,
     responseType: services_grpc_autoklav_pb.Status,
-    requestSerialize: serialize_Autoklav_Empty,
-    requestDeserialize: deserialize_Autoklav_Empty,
-    responseSerialize: serialize_Autoklav_Status,
-    responseDeserialize: deserialize_Autoklav_Status,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
   },
   // Sensor
 getSensorValues: {
-    path: '/Autoklav.Autoklav/getSensorValues',
+    path: '/autoklav.Autoklav/getSensorValues',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.Empty,
     responseType: services_grpc_autoklav_pb.SensorValues,
-    requestSerialize: serialize_Autoklav_Empty,
-    requestDeserialize: deserialize_Autoklav_Empty,
-    responseSerialize: serialize_Autoklav_SensorValues,
-    responseDeserialize: deserialize_Autoklav_SensorValues,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_SensorValues,
+    responseDeserialize: deserialize_autoklav_SensorValues,
   },
   // StateMachine
 getStateMachineValues: {
-    path: '/Autoklav.Autoklav/getStateMachineValues',
+    path: '/autoklav.Autoklav/getStateMachineValues',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.Empty,
     responseType: services_grpc_autoklav_pb.StateMachineValues,
-    requestSerialize: serialize_Autoklav_Empty,
-    requestDeserialize: deserialize_Autoklav_Empty,
-    responseSerialize: serialize_Autoklav_StateMachineValues,
-    responseDeserialize: deserialize_Autoklav_StateMachineValues,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_StateMachineValues,
+    responseDeserialize: deserialize_autoklav_StateMachineValues,
   },
 };
 

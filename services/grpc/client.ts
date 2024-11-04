@@ -10,6 +10,7 @@ const client = new AutoklavClient(
 );
 
 export const gRpcCall = <T>(method: string, data: any) => {
+  console.log(`gRpcCall invoked. Method: ${method}, Data:`, data);
   return new Promise<T>((resolve, reject) => {
     client[method](data, (err: GrpcError, response: any) => {
       if (err) {
