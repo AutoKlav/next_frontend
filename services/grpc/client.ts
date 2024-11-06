@@ -18,7 +18,7 @@ export const gRpcCall = <T>(method: string, data: any) => {
         response = err ? { errorsstring: err.message } : response.toObject();
         resolve(response as T);
       } catch (e) {
-        console.error(e);
+        console.log(e);
         resolve({ errorsstring: "Error in gRpcCall, this shouldn't happen" } as T);
       }
     });
