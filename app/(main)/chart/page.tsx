@@ -3,11 +3,10 @@ import React from 'react';
 import { getStatusAction } from '../actions/statusAction';
 
 const ChartPage = async () => {
-    const actionData = await getStatusAction();
-    console.log(actionData);
+    const actionData = await getStatusAction();    
     return (
         <div>
-            <h1>Status: {actionData.code} {actionData.errors} {actionData.errorsstring}</h1>
+            <h1>Status: {actionData?.code} {actionData?.errors} {actionData?.errorsstring}</h1>
             <LineChart />
         </div>
     );
