@@ -11,7 +11,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 const AppMenuitem = (props: AppMenuItemProps) => {
     const pathname = usePathname();
-    const searchParams = useSearchParams();
+    //const searchParams = useSearchParams();
     const { activeMenu, setActiveMenu } = useContext(MenuContext);
     const item = props.item;
     const key = props.parentKey ? props.parentKey + '-' + props.index : String(props.index);
@@ -26,7 +26,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
     useEffect(() => {
         onRouteChange(pathname);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname, searchParams]);
+    }, [pathname,  ]);//searchParams]);
 
     const itemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         //avoid processing disabled items

@@ -3,7 +3,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEventListener, useMountEffect, useUnmountEffect } from 'primereact/hooks';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, Suspense } from 'react';
 import { classNames } from 'primereact/utils';
 import AppSidebar from './AppSidebar';
 import AppTopbar from './AppTopbar';
@@ -35,11 +35,16 @@ const Layout = ({ children }: ChildContainerProps) => {
     });
 
     const pathname = usePathname();
-    const searchParams = useSearchParams();
-    useEffect(() => {
-        hideMenu();
-        hideProfileMenu();
-    }, [pathname, searchParams]);
+
+    const SearchParamsComponent = () => {
+        const searchParams = useSearchParams();
+        useEffect(() => {
+            hideMenu();
+            hideProfileMenu();
+        }, [pathname, searchParams]);
+        
+        return null;  // Return null since we only use the hook's effects
+    };
 
     const [bindProfileMenuOutsideClickListener, unbindProfileMenuOutsideClickListener] = useEventListener({
         type: 'click',
@@ -134,6 +139,10 @@ const Layout = ({ children }: ChildContainerProps) => {
                 <AppConfig />
                 <div className="layout-mask"></div>
             </div>
+            {/* Wrapping SearchParamsComponent in Suspense */}
+            <Suspense fallback={<div>Loading...</div>}>
+                <SearchParamsComponent />
+            </Suspense>
         </React.Fragment>
     );
 };
