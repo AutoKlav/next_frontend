@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, Suspense } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { MenuContext } from './context/menucontext';
 import { AppMenuItemProps } from '@/types';
@@ -81,4 +81,10 @@ const AppMenuitem = (props: AppMenuItemProps) => {
     );
 };
 
-export default AppMenuitem;
+const AppMenuitemWithSuspense = (props: AppMenuItemProps) => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <AppMenuitem {...props} />
+    </Suspense>
+);
+
+export default AppMenuitemWithSuspense;

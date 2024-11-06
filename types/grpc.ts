@@ -12,7 +12,7 @@ export interface Empty {}
 export interface Status {
   code: number;
   errors: number;
-  errorsString: string;
+  errorsstring: string;
 }
 
 // Variables message

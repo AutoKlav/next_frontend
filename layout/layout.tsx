@@ -3,7 +3,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEventListener, useMountEffect, useUnmountEffect } from 'primereact/hooks';
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, Suspense } from 'react';
 import { classNames } from 'primereact/utils';
 import AppSidebar from './AppSidebar';
 import AppTopbar from './AppTopbar';
@@ -12,6 +12,24 @@ import { LayoutContext } from './context/layoutcontext';
 import { PrimeReactContext } from 'primereact/api';
 import { ChildContainerProps, LayoutState, AppTopbarRef } from '@/types';
 import { usePathname, useSearchParams } from 'next/navigation';
+
+// Define prop types for SearchParamsComponent
+interface SearchParamsComponentProps {
+    hideMenu: () => void;
+    hideProfileMenu: () => void;
+}
+
+const SearchParamsComponent = ({ hideMenu, hideProfileMenu }: SearchParamsComponentProps) => {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        hideMenu();
+        hideProfileMenu();
+    }, [pathname, searchParams]);
+
+    return null;  // Return null since we only use the hook's effects
+};
 
 const Layout = ({ children }: ChildContainerProps) => {
     const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
@@ -33,13 +51,6 @@ const Layout = ({ children }: ChildContainerProps) => {
             }
         }
     });
-
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    useEffect(() => {
-        hideMenu();
-        hideProfileMenu();
-    }, [pathname, searchParams]);
 
     const [bindProfileMenuOutsideClickListener, unbindProfileMenuOutsideClickListener] = useEventListener({
         type: 'click',
@@ -134,6 +145,10 @@ const Layout = ({ children }: ChildContainerProps) => {
                 <AppConfig />
                 <div className="layout-mask"></div>
             </div>
+            {/* Wrapping SearchParamsComponent in Suspense */}
+            <Suspense fallback={<div>Loading...</div>}>
+                <SearchParamsComponent hideMenu={hideMenu} hideProfileMenu={hideProfileMenu} />
+            </Suspense>
         </React.Fragment>
     );
 };
