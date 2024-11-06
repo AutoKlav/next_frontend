@@ -13,6 +13,24 @@ import { PrimeReactContext } from 'primereact/api';
 import { ChildContainerProps, LayoutState, AppTopbarRef } from '@/types';
 import { usePathname, useSearchParams } from 'next/navigation';
 
+// Define prop types for SearchParamsComponent
+interface SearchParamsComponentProps {
+    hideMenu: () => void;
+    hideProfileMenu: () => void;
+}
+
+const SearchParamsComponent = ({ hideMenu, hideProfileMenu }: SearchParamsComponentProps) => {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        hideMenu();
+        hideProfileMenu();
+    }, [pathname, searchParams]);
+
+    return null;  // Return null since we only use the hook's effects
+};
+
 const Layout = ({ children }: ChildContainerProps) => {
     const { layoutConfig, layoutState, setLayoutState } = useContext(LayoutContext);
     const { setRipple } = useContext(PrimeReactContext);
@@ -33,18 +51,6 @@ const Layout = ({ children }: ChildContainerProps) => {
             }
         }
     });
-
-    const pathname = usePathname();
-
-    const SearchParamsComponent = () => {
-        const searchParams = useSearchParams();
-        useEffect(() => {
-            hideMenu();
-            hideProfileMenu();
-        }, [pathname, searchParams]);
-        
-        return null;  // Return null since we only use the hook's effects
-    };
 
     const [bindProfileMenuOutsideClickListener, unbindProfileMenuOutsideClickListener] = useEventListener({
         type: 'click',
@@ -141,7 +147,7 @@ const Layout = ({ children }: ChildContainerProps) => {
             </div>
             {/* Wrapping SearchParamsComponent in Suspense */}
             <Suspense fallback={<div>Loading...</div>}>
-                <SearchParamsComponent />
+                <SearchParamsComponent hideMenu={hideMenu} hideProfileMenu={hideProfileMenu} />
             </Suspense>
         </React.Fragment>
     );

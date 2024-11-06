@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, Suspense } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { MenuContext } from './context/menucontext';
 import { AppMenuItemProps } from '@/types';
@@ -11,7 +11,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 const AppMenuitem = (props: AppMenuItemProps) => {
     const pathname = usePathname();
-    //const searchParams = useSearchParams();
+    const searchParams = useSearchParams();
     const { activeMenu, setActiveMenu } = useContext(MenuContext);
     const item = props.item;
     const key = props.parentKey ? props.parentKey + '-' + props.index : String(props.index);
@@ -26,7 +26,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
     useEffect(() => {
         onRouteChange(pathname);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [pathname,  ]);//searchParams]);
+    }, [pathname, searchParams]);
 
     const itemClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
         //avoid processing disabled items
@@ -81,4 +81,10 @@ const AppMenuitem = (props: AppMenuItemProps) => {
     );
 };
 
-export default AppMenuitem;
+const AppMenuitemWithSuspense = (props: AppMenuItemProps) => (
+    <Suspense fallback={<div>Loading...</div>}>
+        <AppMenuitem {...props} />
+    </Suspense>
+);
+
+export default AppMenuitemWithSuspense;
