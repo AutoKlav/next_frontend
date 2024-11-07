@@ -17,11 +17,11 @@ export interface Status {
 
 // Variables message
 export interface Variables {
-  targetK: number;
-  serialDataTime: number;
-  stateMachineTick: number;
-  sterilizationTemp: number;
-  pasterizationTemp: number;
+  targetk: number;
+  serialdatatime: number;
+  statemachinetick: number;
+  sterilizationtemp: number;
+  pasterizationtemp: number;
 }
 
 // SetVariable message
@@ -41,13 +41,13 @@ export interface SensorValues {
 export interface StateMachineValues {
   time: number;
   temp: number;
-  tempK: number;
-  dTemp: number;
+  tempk: number;
+  dtemp: number;
   pressure: number;
-  Dr: number;
-  Fr: number;
+  dr: number;
+  fr: number;
   r: number;
-  sumFr: number;
+  sumfr: number;
   sumr: number;
 }
 

@@ -52,7 +52,7 @@ const pressures = [
 ];
 
 
-const MonitorLayout = () => {
+const MonitorLayout = async () => {
     return (
         <div className="grid p-2">
          <div className="col-6">
