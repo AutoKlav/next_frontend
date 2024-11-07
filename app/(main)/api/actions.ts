@@ -8,8 +8,8 @@ export const getStatusAction = async () => {
 }
 
 export const getStateMachineValuesAction = async () => {
-    const state = await getStateMachineValues();
-    return state;
+    const states = await getStateMachineValues();
+    return states;
 }
 
 export const getVariablesAction = async () => {
