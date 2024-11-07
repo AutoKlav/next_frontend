@@ -1,17 +1,26 @@
 import LineChart from '@/demo/components/Charts/LineChart';
 import React from 'react';
-import { getStatusAction, stateMachineValuesAction } from '../api/actions';
+import { getStatusAction, getStateMachineValuesAction, getVariablesAction } from '../api/actions';
 
 const ChartPage = async () => {
     const actionData = await getStatusAction();    
-    const stateMachineValues = await stateMachineValuesAction();
-    console.log(stateMachineValues);
+    const stateMachineValues = await getStateMachineValuesAction();
+    const variables = await getVariablesAction();
+    console.log(variables);
     return (
         <div className='grid'>
             <div className='col-4'>
                 <h3>Status</h3>
                 <div>
                     {actionData?.code} {actionData?.errors} {actionData?.errorsstring}
+                </div>
+                <h3>Variables</h3>
+                <div>
+                    <p>Target K: {variables.targetk}</p>
+                    <p>Serial Data Time: {variables.serialdatatime}</p>
+                    <p>State Machine Tick: {variables.statemachinetick}</p>
+                    <p>Sterilization Temp: {variables.sterilizationtemp}</p>
+                    <p>Pasterization Temp: {variables.pasterizationtemp}</p>        
                 </div>
             </div>
             <div className='col-4'>

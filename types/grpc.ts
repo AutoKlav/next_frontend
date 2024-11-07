@@ -17,11 +17,11 @@ export interface Status {
 
 // Variables message
 export interface Variables {
-  targetK: number;
-  serialDataTime: number;
-  stateMachineTick: number;
-  sterilizationTemp: number;
-  pasterizationTemp: number;
+  targetk: number;
+  serialdatatime: number;
+  statemachinetick: number;
+  sterilizationtemp: number;
+  pasterizationtemp: number;
 }
 
 // SetVariable message
