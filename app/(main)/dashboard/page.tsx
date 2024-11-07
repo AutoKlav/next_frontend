@@ -6,7 +6,8 @@ import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHead
 
 import { getStateMachineValuesAction, stopProcessAction } from '../api/actions';
 import { stopProcess } from '@/services/grpc';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { get } from 'http';
 
 interface DataCardProps {
     icon: string;
@@ -39,25 +40,25 @@ const DataCard: React.FC<DataCardProps> = ({ icon, headerName, value, unit, colo
 };
 
 const temperatures = [
-    { icon: 'pi-sun', headerName: 'Temperatura komore', value: '121.5', unit: '°C', color: 'red' },
-    { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '118.2', unit: '°C', color: 'red' },
-    { icon: 'pi-cloud', headerName: 'Temperatura pare', value: '125.3', unit: '°C', color: 'red' },
+    { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-cloud', headerName: 'Temperatura pare', value: '', unit: '°C', color: 'red' },
 ];
 
 const stateValues = [
-    { icon: 'pi-chart-line', headerName: 'Dr', value: '12.5', unit: '', color: 'cyan' },
-    { icon: 'pi-chart-bar', headerName: 'Fr', value: '0.8', unit: '', color: 'cyan' },
-    { icon: 'pi-chart-pie', headerName: 'r', value: '0.9', unit: '', color: 'cyan' },
+    { icon: 'pi-chart-line', headerName: 'Dr', value: '', unit: '', color: 'cyan' },
+    { icon: 'pi-chart-bar', headerName: 'Fr', value: '', unit: '', color: 'cyan' },
+    { icon: 'pi-chart-pie', headerName: 'r', value: '', unit: '', color: 'cyan' },
 ];
 
 const pressures = [
-    { icon: 'pi-gauge', headerName: 'Pritisak komore', value: '2.1', unit: 'bar', color: 'blue' },
-    { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '2.3', unit: 'bar', color: 'blue' },    
+    { icon: 'pi-gauge', headerName: 'Pritisak komore', value: '', unit: 'bar', color: 'blue' },
+    { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },    
 ];
 
 
 const MonitorLayout = () => {
-    const { isLoading, isError, mutate: stopProcess } = useMutation({
+    const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
         onError: (error) => {
             console.error('Error stopping process:', error);
@@ -68,13 +69,33 @@ const MonitorLayout = () => {
     });
 
     const handleStopProcess = () => {
-        stopProcess();
+        stopProcess();        
     };
+
+    const { isError, error, data: stateMachineValues } = useQuery(
+        { 
+            queryKey: ['stateMachineValues'],
+            queryFn: () => getStateMachineValuesAction(),            
+            refetchInterval: 10000,                        
+        },        
+    );
+
+    temperatures[0].value = stateMachineValues?.temp.toString() || 'N/A';
+    temperatures[1].value = stateMachineValues?.tempk.toString() || 'N/A';
+    //temperatures[2].value = stateMachineValues?. .toString() || 'N/A';
+
+    stateValues[0].value = stateMachineValues?.dr.toString() || 'N/A';
+    stateValues[1].value = stateMachineValues?.fr.toString() || 'N/A';
+    stateValues[2].value = stateMachineValues?.r.toString() || 'N/A';
+
+    pressures[0].value = stateMachineValues?.pressure.toString() || 'N/A';
+    //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
+
 
     return (
         <div className="grid p-2">
          <div className="col-6">
-            <Button label="Stop" onClick={handleStopProcess} className="p-button-danger" />
+            <Button label="Stop" onClick={handleStopProcess} className="p-button-danger" />            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (
