@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
-import { useMutation } from 'react-query';
+
 import { getStateMachineValuesAction, stopProcessAction } from '../api/actions';
 import { stopProcess } from '@/services/grpc';
+import { useMutation } from '@tanstack/react-query';
 
 interface DataCardProps {
     icon: string;

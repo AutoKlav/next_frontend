@@ -11,7 +11,7 @@ import "primereact/resources/primereact.min.css";
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import AuthProvider from './(full-page)/api/context/AuthProvider';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 interface RootLayoutProps {
     children: React.ReactNode;
