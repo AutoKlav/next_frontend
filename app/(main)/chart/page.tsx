@@ -6,7 +6,7 @@ const ChartPage = async () => {
     const actionData = await getStatusAction();    
     const stateMachineValues = await getStateMachineValuesAction();
     const variables = await getVariablesAction();
-    console.log(variables);
+    
     return (
         <div className='grid'>
             <div className='col-4'>
