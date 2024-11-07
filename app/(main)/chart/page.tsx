@@ -7,10 +7,16 @@ const ChartPage = async () => {
     const stateMachineValues = await stateMachineValuesAction();
     console.log(stateMachineValues);
     return (
-        <div>
-            <h1>Status: {actionData?.code} {actionData?.errors} {actionData?.errorsstring}</h1>
+        <div className='grid'>
+            <div className='col-6'>
+                <h3>Status</h3>
+                <div>
+                    {actionData?.code} {actionData?.errors} {actionData?.errorsstring}
+                </div>
+            </div>
+            <div className='col-6'>
+            <h3>State Machine Values</h3>
             <div>
-                <h2>Chart {stateMachineValues.r}</h2>
                 <p>Time: {stateMachineValues.time}</p>
                 <p>Temperature: {stateMachineValues.temp}</p>
                 <p>Temperature (K): {stateMachineValues.tempk}</p>
@@ -22,6 +28,7 @@ const ChartPage = async () => {
                 <p>Sum Fr: {stateMachineValues.sumfr}</p>
                 <p>Sum r: {stateMachineValues.sumr}</p>
             </div>
+        </div>            
             <LineChart />
         </div>
     );
