@@ -1,8 +1,11 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
+import { useMutation } from 'react-query';
+import { getStateMachineValuesAction, stopProcessAction } from '../api/actions';
+import { stopProcess } from '@/services/grpc';
 
 interface DataCardProps {
     icon: string;
@@ -52,10 +55,25 @@ const pressures = [
 ];
 
 
-const MonitorLayout = async () => {
+const MonitorLayout = () => {
+    const { isLoading, isError, mutate: stopProcess } = useMutation({
+        mutationFn: stopProcessAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+        },
+        onSuccess: (data) => {
+            console.log('Process stopped:', data);
+        },
+    });
+
+    const handleStopProcess = () => {
+        stopProcess();
+    };
+
     return (
         <div className="grid p-2">
          <div className="col-6">
+            <Button label="Stop" onClick={handleStopProcess} className="p-button-danger" />
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (

@@ -11,12 +11,15 @@ import "primereact/resources/primereact.min.css";
 import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import AuthProvider from './(full-page)/api/context/AuthProvider';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 interface RootLayoutProps {
     children: React.ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+    const queryClient = new QueryClient();
+
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
@@ -26,7 +29,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
                 <PrimeReactProvider>
                     <LayoutProvider>
                         <AuthProvider>
-                            {children}
+                            <QueryClientProvider client={queryClient}>
+                                {children}
+                            </QueryClientProvider>
                         </AuthProvider>
                     </LayoutProvider>
                 </PrimeReactProvider>

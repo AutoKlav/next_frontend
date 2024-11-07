@@ -1,3 +1,5 @@
+"use server"
+
 import { getStateMachineValues, getStatus, getVariables, stopProcess } from "@/services/grpc";
 
 export const getStatusAction = async () => {
@@ -16,8 +18,6 @@ export const getVariablesAction = async () => {
 }
 
 export const stopProcessAction = async () => {
-    //const response = await stopProcess();
-    //console.log(response);
-    console.log('stopProcessAction');
-    //return response;
+    const response = await stopProcess();
+    return response;
 }
