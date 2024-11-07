@@ -27,3 +27,24 @@ if (session?.user.role !== 'user') {
     return <h1 className="text-5xl">Access Denied</h1>;
 }
 ```
+
+# Fetching best practices
+
+1. [Best Practices](https://www.youtube.com/watch?v=udOD6yAhjB4)
+2. [3 Important Patterns](https://www.youtube.com/watch?v=T6mWYLLngnE)
+
+## Webhooks
+
+### API Route Pattern
+
+[API Route Handlers](https://www.youtube.com/watch?v=yRJd_tlHu9I)
+
+## Refetching data, ex. update values every minute
+
+### NEXT Server Actions + React Query
+
+[Server Actions + React Query](https://www.youtube.com/watch?v=OgVeQVXt7xU)
+
+## Display values only on initial render, prefill
+
+-   Server actions

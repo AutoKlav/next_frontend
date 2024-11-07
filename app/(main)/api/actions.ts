@@ -1,4 +1,4 @@
-import { getStateMachineValues, getStatus, getVariables } from "@/services/grpc";
+import { getStateMachineValues, getStatus, getVariables, stopProcess } from "@/services/grpc";
 
 export const getStatusAction = async () => {
     const status = await getStatus();
@@ -13,4 +13,11 @@ export const getStateMachineValuesAction = async () => {
 export const getVariablesAction = async () => {
     const variables = await getVariables();
     return variables;
+}
+
+export const stopProcessAction = async () => {
+    //const response = await stopProcess();
+    //console.log(response);
+    console.log('stopProcessAction');
+    //return response;
 }
