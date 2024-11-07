@@ -8,13 +8,13 @@ const ChartPage = async () => {
     console.log(stateMachineValues);
     return (
         <div className='grid'>
-            <div className='col-6'>
+            <div className='col-4'>
                 <h3>Status</h3>
                 <div>
                     {actionData?.code} {actionData?.errors} {actionData?.errorsstring}
                 </div>
             </div>
-            <div className='col-6'>
+            <div className='col-4'>
             <h3>State Machine Values</h3>
             <div>
                 <p>Time: {stateMachineValues.time}</p>
@@ -28,8 +28,10 @@ const ChartPage = async () => {
                 <p>Sum Fr: {stateMachineValues.sumfr}</p>
                 <p>Sum r: {stateMachineValues.sumr}</p>
             </div>
-        </div>            
+            </div>
+            <div className='col-12'>
             <LineChart />
+            </div>
         </div>
     );
 };
