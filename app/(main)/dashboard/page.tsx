@@ -72,26 +72,25 @@ const MonitorLayout = () => {
         stopProcess();        
     };
 
-    const { isError, error, data: stateMachineValues } = useQuery(
+    const { data: stateMachineValues } = useQuery(
         { 
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
-            refetchInterval: 10000,                        
+            refetchInterval: 1000,                        
         },        
     );
-
-    temperatures[0].value = stateMachineValues?.temp.toString() || 'N/A';
-    temperatures[1].value = stateMachineValues?.tempk.toString() || 'N/A';
+        
+    temperatures[0].value = stateMachineValues?.temp?.toString() || 'N/A';
+    temperatures[1].value = stateMachineValues?.tempk?.toString() || 'N/A';
     //temperatures[2].value = stateMachineValues?. .toString() || 'N/A';
 
-    stateValues[0].value = stateMachineValues?.dr.toString() || 'N/A';
-    stateValues[1].value = stateMachineValues?.fr.toString() || 'N/A';
-    stateValues[2].value = stateMachineValues?.r.toString() || 'N/A';
+    stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
+    stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
+    stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
 
-    pressures[0].value = stateMachineValues?.pressure.toString() || 'N/A';
+    pressures[0].value = stateMachineValues?.pressure?.toString() || 'N/A';
     //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
-
-
+    
     return (
         <div className="grid p-2">
          <div className="col-6">
