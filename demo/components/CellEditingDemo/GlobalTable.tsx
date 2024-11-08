@@ -6,11 +6,11 @@ import { CSSProperties } from 'react';
 
 export default function ConfigTable() {
     const [config, setConfig] = useState([
-        { id: 'targetK', label: 'Target K', value: 5 },
-        { id: 'serialDataTime', label: 'Serial Data Time', value: 3000 },
-        { id: 'stateMachineTick', label: 'State Machine Tick', value: 60000 },
-        { id: 'sterilizationTemp', label: 'Sterilization Temperature', value: 120 },
-        { id: 'pasterizationTemp', label: 'Pasterization Temperature', value: 70 }
+        { id: 'targetK', label: 'Target K', value: '5' },
+        { id: 'serialDataTime', label: 'Serial Data Time', value: '3000' },
+        { id: 'stateMachineTick', label: 'State Machine Tick', value: '60000' },
+        { id: 'sterilizationTemp', label: 'Sterilization Temperature', value: '120' },
+        { id: 'pasterizationTemp', label: 'Pasterization Temperature', value: '70' }
     ]);
 
     const columns = [
