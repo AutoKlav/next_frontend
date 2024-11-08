@@ -8,6 +8,7 @@ import { getStateMachineValuesAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
+import ChipStates from '@/demo/components/Chips/ChipList';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -26,6 +27,12 @@ const pressures = [
     { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },    
 ];
 
+const chipData = [
+    { label: 'Pumpa', icon: 'pi pi-check', className: 'bg-green-700 text-white text-900 font-small' },
+    { label: 'Grijači', icon: 'pi pi-check', className: 'bg-green-700 text-white text-900 font-small' },
+    { label: 'Parni ventil', icon: 'pi pi-circle-off', className: 'bg-gray-500 text-white text-900 font-small' },
+    { label: 'Ispusni ventil', icon: 'pi pi-circle-off', className: 'bg-gray-500 text-white text-900 font-small' },
+];
 
 const MonitorLayout = () => {
     const { mutate: stopProcess } = useMutation({
@@ -97,22 +104,20 @@ const MonitorLayout = () => {
             <div className="grid gap-2">
                 <div className="col-4">
                     <div className='flex flex-column gap-3'>
-                        <Chip label="Pumpa" icon="pi pi-check" className="bg-green-700 text-white text-900 font-small" />
-                        <Chip label="Grijači" icon="pi pi-check" className="bg-green-700 text-white text-900 font-small" />
-                        <Chip label="Parni ventil" icon="pi pi-circle-off" className="bg-gray-500 text-white text-900 font-small" />
-                        <Chip label="Ispusni ventil" icon="pi pi-circle-off" className="bg-gray-500 text-white text-900 font-small" />
+                       {chipData.map((chip, index) => (
+                            <ChipStates key={index} {...chip} />
+                        ))}
                     </div>
                 </div>
-                <div className="col-3">
-                    
+                <div className="col-3">                    
                 </div>
                 <div className="col-4">
                 {RenderState(Severity.Success)}
                 </div>
             </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
     );
 };
 

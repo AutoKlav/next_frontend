@@ -6,7 +6,7 @@ interface DataCardProps {
     color: string;
 }
 
-export const DataCard: React.FC<DataCardProps> = (dataProps: DataCardProps) => {
+export const DataCard: React.FC<DataCardProps> = (dataProps) => {
     const { icon, headerName, value, unit, color } = dataProps;
 
     return (

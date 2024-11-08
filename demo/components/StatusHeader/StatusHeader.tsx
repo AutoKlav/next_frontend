@@ -61,19 +61,19 @@ const thirdColumn = (time:string, severity: Severity) => {
             </div>;
 }
 export const RenderState = (severity: Severity) => {
-        switch (severity) {
-            case Severity.Success:
-                return <Chip label="Proces je završio" icon="pi pi-check" className="bg-green-700 text-900 text-xs font-small mb-3" />;
-            case Severity.Info:
-                return <Chip label="Spremno za početak" icon="pi pi-info-circle" className="bg-blue-500 text-900 text-xs font-small mb-3" />;
-            case Severity.Warning:
-                return <Chip label="Proces je u izvođenju" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-xs font-small mb-3" />;
-            case Severity.Danger:
-                return <Chip label="Greška u izvođenju" icon="pi pi-times" className="bg-red-700 text-900 text-xs font-small mb-3" />;
-            default:
-                return null;
-        }
-    };
+    switch (severity) {
+        case Severity.Success:
+            return <Chip key={'0'} label="Proces je završio" icon="pi pi-check" className="bg-green-700 text-900 text-xs font-small mb-3" />;
+        case Severity.Info:
+            return <Chip key={'1'} label="Spremno za početak" icon="pi pi-info-circle" className="bg-blue-500 text-900 text-xs font-small mb-3" />;
+        case Severity.Warning:
+            return <Chip key={'2'} label="Proces je u izvođenju" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-xs font-small mb-3" />;
+        case Severity.Danger:
+            return <Chip key={'3'} label="Greška u izvođenju" icon="pi pi-times" className="bg-red-700 text-900 text-xs font-small mb-3" />;
+        default:
+            return null;
+    }
+};
 
 const StatusHeader = () => {
 
