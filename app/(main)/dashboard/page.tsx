@@ -1,43 +1,13 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
 
 import { getStateMachineValuesAction, stopProcessAction } from '../api/actions';
-import { stopProcess } from '@/services/grpc';
+
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { get } from 'http';
-
-interface DataCardProps {
-    icon: string;
-    headerName: string;
-    value: string;
-    unit: string;
-    color: string;
-}
-
-const DataCard: React.FC<DataCardProps> = ({ icon, headerName, value, unit, color }) => {
-    return (
-        <li className="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
-            <div className="flex flex-column">
-                <div className='flex flex-row items-center gap-2'>
-                    <i className={`pi ${icon} text-2xl text-${color}-500 mb-2`}></i>
-                    <span className="text-900 font-small mb-2">{headerName}</span>
-                </div>
-                <div className="flex justify-between items-center bg-gray-900 p-2" style={{ borderRadius: '10px' }}>
-                    <input
-                        type="text"
-                        value={value}
-                        readOnly
-                        className={`text-${color}-500 text-2xl font-bold border-none bg-transparent`}
-                    />
-                    <span className={`text-${color}-500 text-2xl font-bold`}>{unit}</span>
-                </div>
-            </div>
-        </li>
-    );
-};
+import { DataCard } from '@/demo/components/Cards/DataCard';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
