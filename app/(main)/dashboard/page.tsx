@@ -1,10 +1,9 @@
 "use client";
 import React from 'react';
 import { Button } from 'primereact/button';
-import { Chip } from 'primereact/chip';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getStateMachineValuesAction, stopProcessAction } from '../api/actions';
+import { getStateMachineValuesAction, setVariableAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -46,7 +45,7 @@ const MonitorLayout = () => {
     });
 
     const handleStopProcess = () => {
-        stopProcess();        
+        stopProcess();
     };
 
     const { data: stateMachineValues } = useQuery(
