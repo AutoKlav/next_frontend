@@ -1,12 +1,45 @@
+"use client"
 import React, { useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputNumber } from 'primereact/inputnumber';
 import { CSSProperties } from 'react';
+import { setVariableAction } from '@/app/(main)/api/actions';
+import { SetVariable, Variables } from '@/types/grpc';
 
-export default function ConfigTable() {
+interface VariableProps {
+    data: Variables;
+}
+
+const VariablesTable  = (variables: VariableProps) => {    
+    const variable1 = 
+        [
+            {
+                "name": "targetK",
+                "value": "6"
+            },
+            {
+                "name": "serialDataTime",
+                "value": "3001"
+            },
+            {
+                "name": "stateMachineTick",
+                "value": "60001"
+            },
+            {
+                "name": "sterilizationTemp",
+                "value": "121"
+            },
+            {
+                "name": "pasterizationTemp",
+                "value": "71"
+            }
+        ] as SetVariable[];
+
+    //setVariableAction(variables[0]);
+    //console.log(variables);    
     const [config, setConfig] = useState([
-        { id: 'targetK', label: 'Target K', value: '5' },
+        { id: 'targetK', label: 'Target K', value: variables?.data?.targetk || '0'},
         { id: 'serialDataTime', label: 'Serial Data Time', value: '3000' },
         { id: 'stateMachineTick', label: 'State Machine Tick', value: '60000' },
         { id: 'sterilizationTemp', label: 'Sterilization Temperature', value: '120' },
@@ -21,9 +54,15 @@ export default function ConfigTable() {
     const onRowEditComplete = (e: any) => {
         let _config = [...config];
         let { newData, index } = e;
-
+        console.log(e);
         _config[index] = newData;
+        const variable = 
+        {
+            "name": newData.id,
+            "value": newData.value.toString()
+        } as SetVariable;
 
+        setVariableAction(variable);
         setConfig(_config);
     };
 
@@ -54,3 +93,5 @@ export default function ConfigTable() {
         </div>
     );
 }
+
+export default VariablesTable;
