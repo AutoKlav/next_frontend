@@ -30,7 +30,6 @@ export const stopProcessAction = async () => {
 }
 
 export const setVariableAction = async (data: SetVariable) => {
-    console.log(data);
     const response = await setVariable(data);
     return response;
 }

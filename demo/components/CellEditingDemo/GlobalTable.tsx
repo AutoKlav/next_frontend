@@ -11,39 +11,13 @@ interface VariableProps {
     data: Variables;
 }
 
-const VariablesTable  = (variables: VariableProps) => {    
-    const variable1 = 
-        [
-            {
-                "name": "targetK",
-                "value": "6"
-            },
-            {
-                "name": "serialDataTime",
-                "value": "3001"
-            },
-            {
-                "name": "stateMachineTick",
-                "value": "60001"
-            },
-            {
-                "name": "sterilizationTemp",
-                "value": "121"
-            },
-            {
-                "name": "pasterizationTemp",
-                "value": "71"
-            }
-        ] as SetVariable[];
-
-    //setVariableAction(variables[0]);
-    //console.log(variables);    
+const VariablesTable  = (variables: VariableProps) => {
     const [config, setConfig] = useState([
         { id: 'targetK', label: 'Target K', value: variables?.data?.targetk || '0'},
-        { id: 'serialDataTime', label: 'Serial Data Time', value: '3000' },
-        { id: 'stateMachineTick', label: 'State Machine Tick', value: '60000' },
-        { id: 'sterilizationTemp', label: 'Sterilization Temperature', value: '120' },
-        { id: 'pasterizationTemp', label: 'Pasterization Temperature', value: '70' }
+        { id: 'serialDataTime', label: 'Serial Data Time', value: variables?.data?.serialdatatime || '0' },
+        { id: 'stateMachineTick', label: 'State Machine Tick', value: variables?.data?.statemachinetick || '0' },
+        { id: 'sterilizationTemp', label: 'Sterilization Temperature', value: variables?.data?.sterilizationtemp || '0' },
+        { id: 'pasterizationTemp', label: 'Pasterization Temperature', value: variables?.data?.pasterizationtemp || '0' }
     ]);
 
     const columns = [
@@ -54,7 +28,6 @@ const VariablesTable  = (variables: VariableProps) => {
     const onRowEditComplete = (e: any) => {
         let _config = [...config];
         let { newData, index } = e;
-        console.log(e);
         _config[index] = newData;
         const variable = 
         {
