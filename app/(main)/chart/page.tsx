@@ -3,7 +3,7 @@ import React from 'react';
 import { getStatusAction, getStateMachineValuesAction, getVariablesAction } from '../api/actions';
 
 const ChartPage = async () => {
-    const variables = await getVariablesAction();    
+    const variables = await getVariablesAction();
     const [statusData, stateMachineValues] = await Promise.all([getStatusAction(), getStateMachineValuesAction()]);    
     
     return (
