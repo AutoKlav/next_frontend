@@ -1,13 +1,14 @@
-'use client';
-
 import React from 'react';
-import GlobalsTable from '@/demo/components/CellEditingDemo/GlobalTable';
+import VariablesTable from '@/demo/components/CellEditingDemo/VariablesTable';
+import { getVariablesAction } from '../../api/actions';
 
-const GlobalsPage = () => {
+const GlobalsPage = async () => {
+    const [variables] = await Promise.all([getVariablesAction()]);
+    
     return (
         <div className="grid">                        
             <div className='col-12'>
-                <GlobalsTable />
+                <VariablesTable data={variables} />
             </div>
         </div>
     );

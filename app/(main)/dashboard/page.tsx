@@ -33,7 +33,7 @@ const chipData = [
     { label: 'Ispusni ventil', icon: 'pi pi-circle-off', className: 'bg-gray-500 text-white text-900 font-small' },
 ];
 
-const MonitorLayout = () => {
+const DashboardPage = () => {
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
         onError: (error) => {
@@ -120,4 +120,4 @@ const MonitorLayout = () => {
     );
 };
 
-export default MonitorLayout;
+export default DashboardPage;

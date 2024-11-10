@@ -1,19 +1,17 @@
 import LineChart from '@/demo/components/Charts/LineChart';
 import React from 'react';
 import { getStatusAction, getStateMachineValuesAction, getVariablesAction } from '../api/actions';
-import StopProcessButton from '@/demo/components/Buttons/StopProcessButton';
 
 const ChartPage = async () => {
     const variables = await getVariablesAction();
-
-    const [actionData, stateMachineValues] = await Promise.all([getStatusAction(), getStateMachineValuesAction()]);    
+    const [statusData, stateMachineValues] = await Promise.all([getStatusAction(), getStateMachineValuesAction()]);    
     
     return (
         <div className='grid'>
             <div className='col-4'>
                 <h3>Status</h3>
                 <div>
-                    {actionData?.code} {actionData?.errors} {actionData?.errorsstring}
+                    {statusData?.code} {statusData?.errors} {statusData?.errorsstring}
                 </div>
                 <h3>Variables</h3>
                 <div>
