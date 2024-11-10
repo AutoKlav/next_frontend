@@ -30,7 +30,7 @@ const VariablesTable  = (variables: VariableProps) => {
     ];
 
     const {isLoading, mutate: setVariableMutation} = useMutation(setVariableAction, {
-        onSuccess: (response) => {
+        onSuccess: (response) => {           
             if (response.response.errorsstring.includes('14 UNAVAILABLE')) {                
                 toast.current?.show({ severity: 'error', summary: 'Greška', detail: 'Neuspješno postavljanje vrijednosti. Backend nije u funkciji.' });
                 return;
