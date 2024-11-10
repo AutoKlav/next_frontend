@@ -55,11 +55,11 @@ const VariablesTable  = (variables: VariableProps) => {
             return;
         }
 
-        const variable = 
-        {
-            "name": newData.id,
-            "value": newData.value.toString()
-        } as SetVariable;    
+        const { id, value } = newData;
+        const variable: SetVariable = {
+            name: id,
+            value: value.toString()
+        };   
         
         setVariableMutation({newData, index, variable });
     };
