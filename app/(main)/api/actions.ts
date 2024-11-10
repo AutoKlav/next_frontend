@@ -29,9 +29,9 @@ export const stopProcessAction = async () => {
     return response;
 }
 
-export const setVariableAction = async (data: SetVariable) => {
-    const response = await setVariable(data);
-    return response;
+export const setVariableAction = async ({ newData, index, variable }: { newData: any; index: number; variable: any }) => {
+    const response = await setVariable(variable);
+    return {response, newData, index};
 }
 
 //#endregion

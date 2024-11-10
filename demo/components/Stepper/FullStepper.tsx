@@ -84,7 +84,7 @@ const FullStepper = () => {
     return (        
         <div className="card p-7 shadow-lg rounded-lg">
             <div className="flex flex-column gap-3">
-                <Toast ref={toast} />    
+                <Toast ref={toast} />
                 {/* Step Indicator */}
                 <Steps model={items} activeIndex={currentStep} className="mb-2" />
                 

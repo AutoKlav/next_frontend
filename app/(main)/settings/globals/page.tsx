@@ -1,5 +1,5 @@
 import React from 'react';
-import VariablesTable from '@/demo/components/CellEditingDemo/GlobalTable';
+import VariablesTable from '@/demo/components/CellEditingDemo/VariablesTable';
 import { getVariablesAction } from '../../api/actions';
 
 const GlobalsPage = async () => {
