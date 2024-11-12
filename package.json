@@ -38,6 +38,7 @@
     "sass": "^1.63.4"
   },
   "trustedDependencies": [
+    "grpc-tools",
     "protobufjs"
   ]
 }
