@@ -1,4 +1,5 @@
 import {
+  ProcessInfoList,
   SensorValues,
   SetVariable,
   StartProcessRequest,
@@ -66,6 +67,12 @@ export const stopProcess = () => {
   const data = new Messages.Empty();
 
   return gRpcCall<Status>("stopProcess", data);
+};
+
+export const getAllProcesses = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<ProcessInfoList>("getAllProcesses", data);
 };
 
 // Sensor

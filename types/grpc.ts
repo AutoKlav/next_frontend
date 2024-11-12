@@ -108,6 +108,11 @@ export interface ProcessLogRow {
   processLength: string;
 }
 
+// ProcessInfoList message
+export interface ProcessInfoList {
+  processes: ProcessLogRow[];
+}
+
 // StartProcessRequest message
 export interface StartProcessRequest {
   processConfig: ProcessConfig;

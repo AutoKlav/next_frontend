@@ -1,6 +1,6 @@
 "use server"
 
-import { getStateMachineValues, getStatus, getVariables, setVariable, stopProcess } from "@/services/grpc";
+import { getAllProcesses, getStateMachineValues, getStatus, getVariables, setVariable, stopProcess } from "@/services/grpc";
 import { SetVariable } from "@/types/grpc";
 
 //#region GET Actions
@@ -18,6 +18,11 @@ export const getStateMachineValuesAction = async () => {
 export const getVariablesAction = async () => {
     const variables = await getVariables();
     return variables;
+}
+
+export const getProcessesAction = async () => {
+    const processes = await getAllProcesses();
+    return processes;
 }
 
 //#endregion
