@@ -9,8 +9,7 @@ const client = new AutoklavClient(
   credentials.createInsecure()
 );
 
-export const gRpcCall = <T>(method: string, data: any) => {
-  
+export const gRpcCall = <T>(method: string, data: any) => {  
   // Reject is avoided to prevent the app from crashing, every error is handled in the response
   return new Promise<T>((resolve, reject) => {
     client[method](data, (err: GrpcError, response: any) => {

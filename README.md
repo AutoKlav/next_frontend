@@ -4,11 +4,22 @@
 
 ## Install dependencies
 
-`bun install --pure-lockfile`
+-   `bun i`
+-   `bun pm untrusted` (used for `proto:generate`)
+-   `bun pm trust --all`
 
 ## Authentication
 
 -   all pages are protected by ./middleware.ts with [next-auth](https://www.youtube.com/watch?v=w2h54xz6Ndw)
+
+## Generate proto files
+
+-   `bun proto:generate`
+
+## Add new grpc endpoint
+
+-   delete `*.js` files in `serivce\grpc`
+-   `bun proto:generate`
 
 ## Authorization
 
