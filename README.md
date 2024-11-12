@@ -16,6 +16,11 @@
 
 -   `bun proto:generate`
 
+## Add new grpc endpoint
+
+-   delete `*.js` files in `serivce\grpc`
+-   `bun proto:generate`
+
 ## Authorization
 
 -   page authorization is ignored, only component is applied

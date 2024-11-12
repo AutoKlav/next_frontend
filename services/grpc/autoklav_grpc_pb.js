@@ -15,6 +15,39 @@ function deserialize_autoklav_Empty(buffer_arg) {
   return services_grpc_autoklav_pb.Empty.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_autoklav_ProcessInfoList(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.ProcessInfoList)) {
+    throw new Error('Expected argument of type autoklav.ProcessInfoList');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_ProcessInfoList(buffer_arg) {
+  return services_grpc_autoklav_pb.ProcessInfoList.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_autoklav_ProcessLogList(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.ProcessLogList)) {
+    throw new Error('Expected argument of type autoklav.ProcessLogList');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_ProcessLogList(buffer_arg) {
+  return services_grpc_autoklav_pb.ProcessLogList.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_autoklav_ProcessLogRequest(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.ProcessLogRequest)) {
+    throw new Error('Expected argument of type autoklav.ProcessLogRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_ProcessLogRequest(buffer_arg) {
+  return services_grpc_autoklav_pb.ProcessLogRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_autoklav_SensorValues(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.SensorValues)) {
     throw new Error('Expected argument of type autoklav.SensorValues');
@@ -119,7 +152,29 @@ getVariables: {
     responseDeserialize: deserialize_autoklav_Status,
   },
   // Process
-startProcess: {
+getAllProcesses: {
+    path: '/autoklav.Autoklav/getAllProcesses',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.Empty,
+    responseType: services_grpc_autoklav_pb.ProcessInfoList,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_ProcessInfoList,
+    responseDeserialize: deserialize_autoklav_ProcessInfoList,
+  },
+  getProcessLogs: {
+    path: '/autoklav.Autoklav/getProcessLogs',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.ProcessLogRequest,
+    responseType: services_grpc_autoklav_pb.ProcessLogList,
+    requestSerialize: serialize_autoklav_ProcessLogRequest,
+    requestDeserialize: deserialize_autoklav_ProcessLogRequest,
+    responseSerialize: serialize_autoklav_ProcessLogList,
+    responseDeserialize: deserialize_autoklav_ProcessLogList,
+  },
+  startProcess: {
     path: '/autoklav.Autoklav/startProcess',
     requestStream: false,
     responseStream: false,
