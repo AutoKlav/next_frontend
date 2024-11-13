@@ -17,6 +17,9 @@ const HistoryTable = () => {
         onSuccess: () => setLoading(false),
         onError: () => setLoading(false)
     });
+
+    //const processLogs = await getProcessLogsAction(1);
+    //console.log(processLogs);
     
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
     const [loading, setLoading] = useState(true);
