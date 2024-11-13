@@ -39,16 +39,22 @@ export interface SensorValues {
 
 // StateMachineValues message
 export interface StateMachineValues {
+  id: number;
   time: number;
   temp: number;
   tempk: number;
   dtemp: number;
   pressure: number;
+  state: number;
   dr: number;
   fr: number;
   r: number;
   sumfr: number;
   sumr: number;
+}
+
+export interface ProcessLogList {
+  processesLogs: StateMachineValues[];
 }
 
 // Enum ProcessConfigType
@@ -97,8 +103,8 @@ export interface ProcessInfo {
   processLength: string;
 }
 
-// ProcessLogRow message
-export interface ProcessLogRow {
+// ProcessInfoRow message
+export interface ProcessInfoRow {
   id: number;
   productName: string;
   productQuantity: string;
@@ -110,7 +116,7 @@ export interface ProcessLogRow {
 
 // ProcessInfoList message
 export interface ProcessInfoList {
-  processesList: ProcessLogRow[];
+  processesList: ProcessInfoRow[];
 }
 
 // StartProcessRequest message

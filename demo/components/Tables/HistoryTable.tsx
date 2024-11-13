@@ -8,9 +8,9 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
 import { useQuery } from '@tanstack/react-query';
-import { getProcessesAction } from '@/app/(main)/api/actions';
+import { getProcessLogsAction, getProcessesAction } from '@/app/(main)/api/actions';
 
-const HistoryTable = () => {    
+const HistoryTable = () => {
     const { data: processesData } = useQuery({
         queryKey: ['processesData'],
         queryFn: () => getProcessesAction(),
@@ -79,7 +79,7 @@ const HistoryTable = () => {
 
     const handleGraph = () => {
         console.log('Graph processes:', selectedProcesses);
-        // Add your graph logic here
+        
     };
 
     const dateFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
