@@ -117,7 +117,7 @@ const HistoryTable = () => {
                 showGridlines
                 value={processesData?.processesList || []} // Use fetched data here
                 paginator
-                rows={10}
+                rows={5}
                 dataKey="id"
                 loading={loading}
                 selection={selectedProcesses}
