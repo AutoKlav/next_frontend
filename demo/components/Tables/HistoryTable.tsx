@@ -11,22 +11,15 @@ import { useQuery } from '@tanstack/react-query';
 import { getProcessesAction } from '@/app/(main)/api/actions';
 
 const HistoryTable = () => {    
-    const processes = [
-        { id: 1000, name: 'Process A', startTime: '2024-10-22T15:05:20', duration: 9000 },
-        { id: 1001, name: 'Process B', startTime: '2024-10-22T16:00:00', duration: 6300 },
-        { id: 1002, name: 'Process C', startTime: '2024-10-22T17:15:00', duration: 11700 },
-    ];
-
-    const { data: processesData } = useQuery(
-        { 
-            queryKey: ['processesData'],
-            queryFn: () => getProcessesAction(),            
-            refetchInterval: 1000,                        
-        },        
-    );    
-
+    const { data: processesData } = useQuery({
+        queryKey: ['processesData'],
+        queryFn: () => getProcessesAction(),
+        onSuccess: () => setLoading(false),
+        onError: () => setLoading(false)
+    });
+    
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [selectedProcesses, setSelectedProcesses] = useState<any[]>([]);
     const [filters1, setFilters1] = useState<DataTableFilterMeta>({});
 
@@ -110,19 +103,19 @@ const HistoryTable = () => {
         });
     };
 
-    const dateBodyTemplate = (rowData: { startTime: string }) => {
-        return formatDate(rowData.startTime);
+    const dateBodyTemplate = (rowData: { processstart: string }) => {
+        return formatDate(rowData.processstart);
     };
 
-    const header = renderHeader1();    
-
+    const header = renderHeader1();
+    
     return (
         <div className="card">
             <h2>Povijest procesa</h2>
             <DataTable
                 className="p-datatable-gridlines"
                 showGridlines
-                value={processes}
+                value={processesData?.processesList || []} // Use fetched data here
                 paginator
                 rows={10}
                 dataKey="id"
@@ -131,14 +124,13 @@ const HistoryTable = () => {
                 onSelectionChange={(e) => setSelectedProcesses(e.value)}
                 filters={filters1}
                 filterDisplay="menu"
-                globalFilterFields={['name']}
+                globalFilterFields={['productname']}
                 header={header}
             >
                 <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
-                <Column field="name" header="Ime procesa" filter filterPlaceholder="Search by name" style={{ maxWidth: '250px' }} />
-                {/* TODO Fix date filter */}
-                <Column field="startTime" header="Vrijeme pocetka" style={{ maxWidth: '200px' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
-                <Column field="duration" header="Duljina trajanja (s)" />
+                <Column field="productname" header="Ime procesa" filter filterPlaceholder="Search by name" style={{ maxWidth: '250px' }} />
+                <Column field="processstart" header="Vrijeme pocetka" style={{ maxWidth: '200px' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
+                <Column field="processlength" header="Duljina trajanja (s)" />
             </DataTable>
         </div>
     );

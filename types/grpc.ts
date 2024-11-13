@@ -110,7 +110,7 @@ export interface ProcessLogRow {
 
 // ProcessInfoList message
 export interface ProcessInfoList {
-  processes: ProcessLogRow[];
+  processesList: ProcessLogRow[];
 }
 
 // StartProcessRequest message
