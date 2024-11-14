@@ -85,7 +85,8 @@ const HistoryTable = () => {
 
     const handleGraph = () => {
         console.log('Graph processes:', selectedProcesses);
-        getProcessLogMutation(1);        
+        const identifiers = selectedProcesses.map((process) => process.id);        
+        getProcessLogMutation(identifiers);        
     };
 
     const dateFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
