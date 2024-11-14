@@ -54,7 +54,7 @@ export interface StateMachineValues {
 }
 
 export interface ProcessLogList {
-  processesLogs: StateMachineValues[];
+  processlogsList: StateMachineValues[];
 }
 
 // Enum ProcessConfigType

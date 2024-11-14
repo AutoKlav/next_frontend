@@ -25,8 +25,8 @@ export const getProcessesAction = async () => {
     return processes;
 }
 
-export const getProcessLogsAction = async (id: number) => {
-    const processLogs = await getAllProcessLogs(id);
+export const getProcessLogsAction = async (ids: number[]) => {
+    const processLogs = await getAllProcessLogs(ids);
     return processLogs;
 }
 
