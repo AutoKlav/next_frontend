@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+"use client";
+import React, { use, useRef, useState } from "react";
 import { Button } from 'primereact/button';
 import { Steps } from 'primereact/steps';
 import { ProgressBar } from 'primereact/progressbar';
@@ -27,9 +28,11 @@ const FullStepper = () => {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const inputValue = useRef(0);
+
+    const selectedSensorRef = useRef<SensorDropdown | null>(null);   
+    
     const y1y2 = useRef<number[]>([]); 
     const x1x2 = useRef<number[]>([4,6]);
-
 
     const toast = useRef<Toast>(null);
     console.log('minMaxValues', y1y2.current);
@@ -90,6 +93,7 @@ const FullStepper = () => {
             setCurrentStep((prevStep) => prevStep - 1);
         }
     };
+    console.log('selectedSensorRef', selectedSensorRef.current);
 
     return (        
         <div className="card p-7 shadow-lg rounded-lg">
@@ -106,7 +110,7 @@ const FullStepper = () => {
                     className="mb-3" 
                 />
                 {currentStep === 0 ? (
-                    <SensorDropdown />
+                    <SensorDropdown selectedSensorRef={selectedSensorRef}/>
                 ): null}
 
                 {currentStep === 1 || currentStep === 2 ? (

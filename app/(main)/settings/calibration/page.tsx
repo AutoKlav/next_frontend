@@ -1,5 +1,3 @@
-"use client";
-
 import FullStepper from '@/demo/components/Stepper/FullStepper';
 import React from 'react';
 
