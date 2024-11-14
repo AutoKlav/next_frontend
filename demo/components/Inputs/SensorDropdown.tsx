@@ -36,7 +36,7 @@ const SensorDropdown: React.FC<SensorDropdownProps> = (props) => {
                 onChange={handleChange}
                 value={selectedSensor}
                 className="p-inputtext-md p-1"
-                style={{ borderRadius: '13px', width: '28%', height:'45px' }}                
+                style={{ borderRadius: '8px', width: '28%', height:'45px' }}                
             />
         </div>
     );
