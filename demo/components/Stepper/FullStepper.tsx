@@ -2,10 +2,10 @@ import React, { useRef, useState } from "react";
 import { Button } from 'primereact/button';
 import { Steps } from 'primereact/steps';
 import { ProgressBar } from 'primereact/progressbar';
-import { InputNumber } from "primereact/inputnumber";
 import { Toast } from 'primereact/toast';
 import CalibrationInput from "../Inputs/CalibrationInput";
 import CalibrationResults from "../Inputs/CalibrationResults";
+import SensorDropdown from "../Inputs/SensorDropdown";
 
 const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
     if (x1x2.length !== 2 || y1y2.length !== 2) {
@@ -105,6 +105,10 @@ const FullStepper = () => {
                     style={{ height: '24px', borderRadius: '50px', color: 'white' }} 
                     className="mb-3" 
                 />
+                {currentStep === 0 ? (
+                    <SensorDropdown />
+                ): null}
+
                 {currentStep === 1 || currentStep === 2 ? (
 
                     <CalibrationInput currentStep={currentStep} inputValue={inputValue} loading={loading} />                            
