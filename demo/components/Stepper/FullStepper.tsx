@@ -54,11 +54,18 @@ const FullStepper = () => {
 
     const handleNext = () => {
 
+        // Value is not selected        
+        if(!selectedSensorRef.current){
+            showWarn();
+            return;
+        }
+        
         // there is no progress bar loading on the first step, so we can skip setInterval
         if(currentStep == 0){
             setCurrentStep((prevStep) => prevStep + 1);
             return;            
-        }   
+        } 
+
 
         if((currentStep==1 || currentStep==2) && !inputValue.current) {
             showWarn();
@@ -93,7 +100,6 @@ const FullStepper = () => {
             setCurrentStep((prevStep) => prevStep - 1);
         }
     };
-    console.log('selectedSensorRef', selectedSensorRef.current);
 
     return (        
         <div className="card p-7 shadow-lg rounded-lg">
