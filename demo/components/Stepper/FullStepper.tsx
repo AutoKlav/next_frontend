@@ -7,6 +7,8 @@ import { Toast } from 'primereact/toast';
 import CalibrationInput from "../Inputs/CalibrationInput";
 import CalibrationResults from "../Inputs/CalibrationResults";
 import SensorDropdown from "../Inputs/SensorDropdown";
+import { useMutation } from "@tanstack/react-query";
+import { getStateMachineValuesAction } from "@/app/(main)/api/actions";
 
 const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
     if (x1x2.length !== 2 || y1y2.length !== 2) {
@@ -28,14 +30,41 @@ const FullStepper = () => {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const inputValue = useRef(0);
+    const sensorValuesArray = useRef<number[]>([]);
 
     const selectedSensorRef = useRef<SensorDropdown | null>(null);   
     
-    const y1y2 = useRef<number[]>([]); 
-    const x1x2 = useRef<number[]>([4,6]);
+    const y1y2 = useRef<number[]>([0,0]); 
+    const x1x2 = useRef<number[]>([0,0]);
+
+    const { mutate: getSensorValuesMutation } = useMutation({
+        mutationFn: getStateMachineValuesAction,
+        onError: (error) => {
+            console.error('Error fetching sensor values:', error);
+        },
+        onSuccess: (data) => {
+            console.log('Sensor values:', data);
+            if(selectedSensorRef.current?.id === 'pressure'){                
+                if(x1x2.current[currentStep] < data.pressure){
+                    x1x2.current[currentStep] = data.pressure;
+                }
+            }
+            else if(selectedSensorRef.current?.id === 'temp'){
+                if(x1x2.current[currentStep] < data.temp){
+                    x1x2.current[currentStep] = data.temp;
+                }
+            }
+            else if(selectedSensorRef.current?.id === 'tempk'){
+                if(x1x2.current[currentStep] < data.tempk){
+                    x1x2.current[currentStep] = data.tempk;
+                }
+            }
+            console.log('Values ', x1x2.current);
+        },
+    });
 
     const toast = useRef<Toast>(null);
-    console.log('minMaxValues', y1y2.current);
+    
     const items = [
         { label: 'Odabir senzora' },
         { label: 'Upis najmanje vrijednosti' },
@@ -64,8 +93,7 @@ const FullStepper = () => {
         if(currentStep == 0){
             setCurrentStep((prevStep) => prevStep + 1);
             return;            
-        } 
-
+        }
 
         if((currentStep==1 || currentStep==2) && !inputValue.current) {
             showWarn();
@@ -77,6 +105,7 @@ const FullStepper = () => {
 
         const interval = setInterval(() => {
             progressValue += 20;
+            getSensorValuesMutation();
             setProgress(progressValue);
             if (progressValue >= 100) {
                 clearInterval(interval);
