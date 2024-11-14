@@ -2,8 +2,10 @@ import React, { useRef, useState } from "react";
 import { Button } from 'primereact/button';
 import { Steps } from 'primereact/steps';
 import { ProgressBar } from 'primereact/progressbar';
-import { InputNumber } from "primereact/inputnumber";
 import { Toast } from 'primereact/toast';
+import CalibrationInput from "../Inputs/CalibrationInput";
+import CalibrationResults from "../Inputs/CalibrationResults";
+import SensorDropdown from "../Inputs/SensorDropdown";
 
 const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
     if (x1x2.length !== 2 || y1y2.length !== 2) {
@@ -32,8 +34,9 @@ const FullStepper = () => {
     const toast = useRef<Toast>(null);
     console.log('minMaxValues', y1y2.current);
     const items = [
-        { label: 'Očitanje najmanje vrijednosti' },
-        { label: 'Očitanje najveće vrijednosti' },
+        { label: 'Odabir senzora' },
+        { label: 'Upis najmanje vrijednosti' },
+        { label: 'Upis najveće vrijednosti' },
         { label: 'Rezultati kalibracije' }
     ];
 
@@ -47,7 +50,14 @@ const FullStepper = () => {
     };
 
     const handleNext = () => {
-        if(!inputValue.current) {
+
+        // there is no progress bar loading on the first step, so we can skip setInterval
+        if(currentStep == 0){
+            setCurrentStep((prevStep) => prevStep + 1);
+            return;            
+        }   
+
+        if((currentStep==1 || currentStep==2) && !inputValue.current) {
             showWarn();
             return;
         }
@@ -95,60 +105,17 @@ const FullStepper = () => {
                     style={{ height: '24px', borderRadius: '50px', color: 'white' }} 
                     className="mb-3" 
                 />
+                {currentStep === 0 ? (
+                    <SensorDropdown />
+                ): null}
 
-                <div className="flex flex-row gap-1">
-                    <div className="flex flex-column gap-2">
-                        {/* Input Fields */}
-                        {currentStep !== 2 ? (
-                            <>
-                            <label>Upišite najmanju vrijednost</label>
-                            <InputNumber                        
-                                key={currentStep} // Unique key to reset input
-                                defaultValue={inputValue.current} // Clear value on next step
-                                onChange={(e) => (inputValue.current = e.value ? e.value : 0)}                        
-                                mode="decimal"
-                                showButtons
-                                className="p-inputtext-md p-1"
-                                style={{ borderRadius: '13px' }}>                            
-                            </InputNumber>
-                            </>
-                        ): null}                   
-                        
-                        </div>                
-                        {loading && (
-                            <div className="flex flex-column gap-2">
-                            <label>Očitana vrijednost</label>
-                            <InputNumber 
-                                value={1033}
-                                readOnly
-                                className="p-inputtext-md p-1"
-                                style={{ borderRadius: '13px' }} 
-                            />
-                            </div>                        
-                    )}
-                </div>
-                {currentStep === 2 && (
-                <div className="flex flex-row gap-2">
-                    <div className="flex flex-column gap-2">
-                    <label>Minimalna kalibrirana vrijednost</label>
-                    <InputNumber 
-                        value={1033}
-                        readOnly
-                        className="p-inputtext-md p-1"
-                        style={{ borderRadius: '13px' }} 
-                    />
-                    </div>
-                    <div className="flex flex-column gap-2">
-                    <label>Maksimalna kalibrirana vrijednost</label>
-                    <InputNumber 
-                        value={1033}
-                        readOnly
-                        className="p-inputtext-md p-1"
-                        style={{ borderRadius: '13px' }} 
-                    />
-                    </div>
-                </div>
-                )}
+                {currentStep === 1 || currentStep === 2 ? (
+
+                    <CalibrationInput currentStep={currentStep} inputValue={inputValue} loading={loading} />                            
+                ) : null }
+                {currentStep === 3 ? (
+                    <CalibrationResults minCalibratedValue={1023} maxCalibratedValue={1000} />                
+                ) : null }
 
                 {/* Navigation Buttons */}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
