@@ -7,19 +7,22 @@ import { Column, ColumnFilterElementTemplateOptions } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Calendar } from 'primereact/calendar';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getProcessLogsAction, getProcessesAction } from '@/app/(main)/api/actions';
 
 const HistoryTable = () => {
-    const { data: processesData } = useQuery({
-        queryKey: ['processesData'],
+    const { data: processesDataQuery } = useQuery({
+        queryKey: ['processesDataQuery'],
         queryFn: () => getProcessesAction(),
         onSuccess: () => setLoading(false),
         onError: () => setLoading(false)
     });
 
-    //const processLogs = await getProcessLogsAction(1);
-    //console.log(processLogs);
+    const {isLoading, mutate: getProcessLogMutation} = useMutation(getProcessLogsAction, {
+        onSuccess: (response) => {           
+            console.log('Process logs:', response.processlogsList);
+        }
+    });
     
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
     const [loading, setLoading] = useState(true);
@@ -82,7 +85,7 @@ const HistoryTable = () => {
 
     const handleGraph = () => {
         console.log('Graph processes:', selectedProcesses);
-        
+        getProcessLogMutation(1);        
     };
 
     const dateFilterTemplate = (options: ColumnFilterElementTemplateOptions) => {
@@ -118,7 +121,7 @@ const HistoryTable = () => {
             <DataTable
                 className="p-datatable-gridlines"
                 showGridlines
-                value={processesData?.processesList || []} // Use fetched data here
+                value={processesDataQuery?.processesList || []} // Use fetched data here
                 paginator
                 rows={5}
                 dataKey="id"

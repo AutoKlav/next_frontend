@@ -1,5 +1,6 @@
 import {
   ProcessInfoList,
+  ProcessLogList,
   SensorValues,
   SetVariable,
   StartProcessRequest,
@@ -79,7 +80,7 @@ export const getAllProcessLogs = (id: number) => {
   const data = new Messages.ProcessLogRequest();
   data.setId(id);
 
-  return gRpcCall<ProcessInfoList>("getProcessLogs", data);
+  return gRpcCall<ProcessLogList>("getProcessLogs", data);
 };
 
 // Sensor
