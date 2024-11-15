@@ -9,6 +9,7 @@ import CalibrationResults from "../Inputs/CalibrationResults";
 import SensorDropdown from "../Inputs/SensorDropdown";
 import { useMutation } from "@tanstack/react-query";
 import { getStateMachineValuesAction } from "@/app/(main)/api/actions";
+import { useToast } from "@/layout/context/toastcontext";
 
 const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
     if (x1x2.length !== 2 || y1y2.length !== 2) {
@@ -26,11 +27,15 @@ const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
 };
 
 const FullStepper = () => {
+    // Toast Context
+    const { showWarn, showError } = useToast();
+    
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const inputValue = useRef(0);
     const sensorValuesArray = useRef<number[]>([]);
+    const errorPresent = useRef<boolean | null>(null);
 
     const selectedSensorRef = useRef<SensorDropdown | null>(null);   
     
@@ -40,26 +45,32 @@ const FullStepper = () => {
     const { mutate: getSensorValuesMutation } = useMutation({
         mutationFn: getStateMachineValuesAction,
         onError: (error) => {
-            console.error('Error fetching sensor values:', error);
+            showError('Greška', 'Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno.');
         },
         onSuccess: (data) => {
-            console.log('Sensor values:', data);
+            
+            if(data?.errorsstring?.includes('14 UNAVAILABLE')){
+                errorPresent.current = true;                
+                console.log(errorPresent.current);
+                return;
+            }
+            
+            const position = currentStep - 2;
             if(selectedSensorRef.current?.id === 'pressure'){                
-                if(x1x2.current[currentStep] < data.pressure){
-                    x1x2.current[currentStep] = data.pressure;
+                if(x1x2.current[position] < data.pressure){
+                    x1x2.current[position] = data.pressure;
                 }
             }
             else if(selectedSensorRef.current?.id === 'temp'){
-                if(x1x2.current[currentStep] < data.temp){
-                    x1x2.current[currentStep] = data.temp;
+                if(x1x2.current[position] < data.temp){
+                    x1x2.current[position] = data.temp;
                 }
             }
             else if(selectedSensorRef.current?.id === 'tempk'){
-                if(x1x2.current[currentStep] < data.tempk){
-                    x1x2.current[currentStep] = data.tempk;
+                if(x1x2.current[position] < data.tempk){
+                    x1x2.current[position] = data.tempk;
                 }
-            }
-            console.log('Values ', x1x2.current);
+            }            
         },
     });
 
@@ -72,31 +83,22 @@ const FullStepper = () => {
         { label: 'Rezultati kalibracije' }
     ];
 
-    const showWarn = () => {
-        toast.current?.show({
-            severity: 'warn',
-            summary: 'Vrijednost nije unesena',
-            detail: 'Molimo unesite vrijednost',
-            life: 3000
-        });
-    };
-
     const handleNext = () => {
-
+        
         // Value is not selected        
-        if(!selectedSensorRef.current){
-            showWarn();
+        if (!selectedSensorRef.current) {
+            showWarn('Upozorenje', 'Molimo odaberite senzor.');
             return;
         }
-        
+
         // there is no progress bar loading on the first step, so we can skip setInterval
-        if(currentStep == 0){
+        if (currentStep == 0) {
             setCurrentStep((prevStep) => prevStep + 1);
-            return;            
+            return;
         }
 
-        if((currentStep==1 || currentStep==2) && !inputValue.current) {
-            showWarn();
+        if ((currentStep == 1 || currentStep == 2) && !inputValue.current) {
+            showWarn('Upozorenje', 'Molimo unesite vrijednost.');
             return;
         }
 
@@ -104,6 +106,14 @@ const FullStepper = () => {
         let progressValue = 0;
 
         const interval = setInterval(() => {
+            if (errorPresent.current) {
+                clearInterval(interval);
+                setLoading(false);
+                setProgress(0);
+                showError('Greška', 'Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno.');
+                return;
+            }
+
             progressValue += 20;
             getSensorValuesMutation();
             setProgress(progressValue);
@@ -113,9 +123,9 @@ const FullStepper = () => {
                 setProgress(0);
 
                 y1y2.current[currentStep] = Number(inputValue.current) || 0;
-                
+
                 // Clear the input after saving
-                inputValue.current = 0; 
+                inputValue.current = 0;
 
                 if (currentStep < items.length - 1) {
                     setCurrentStep((prevStep) => prevStep + 1);
@@ -129,7 +139,7 @@ const FullStepper = () => {
             setCurrentStep((prevStep) => prevStep - 1);
         }
     };
-
+        
     return (        
         <div className="card p-7 shadow-lg rounded-lg">
             <div className="flex flex-column gap-3">

@@ -51,6 +51,7 @@ export interface StateMachineValues {
   r: number;
   sumfr: number;
   sumr: number;
+  errorsstring: string | undefined;
 }
 
 export interface ProcessLogList {
