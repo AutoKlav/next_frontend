@@ -12,6 +12,7 @@ import '../styles/layout/layout.scss';
 import '../styles/demo/Demos.scss';
 import AuthProvider from './(full-page)/api/context/AuthProvider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ToastProvider } from '@/layout/context/toastcontext';
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -30,7 +31,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     <LayoutProvider>
                         <AuthProvider>
                             <QueryClientProvider client={queryClient}>
-                                {children}
+                                <ToastProvider>
+                                    {children}
+                                </ToastProvider>
                             </QueryClientProvider>
                         </AuthProvider>
                     </LayoutProvider>
