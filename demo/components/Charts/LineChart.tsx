@@ -21,14 +21,24 @@ const LineChart = () => {
                     data: [65, 59, 80, 81, 56, 55, 40],
                     fill: false,
                     borderColor: documentStyle.getPropertyValue('--blue-500'),
-                    tension: 0.4
+                    tension: 0.4,
+                    yAxisID: 'y'
                 },
                 {
                     label: 'Second Dataset',
                     data: [28, 48, 40, 19, 86, 27, 90],
                     fill: false,
                     borderColor: documentStyle.getPropertyValue('--pink-500'),
-                    tension: 0.4
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                },
+                {
+                    label: 'Third Dataset',
+                    data: [12, 42, 25, 36, 72, 50, 65],
+                    fill: false,
+                    borderColor: documentStyle.getPropertyValue('--green-500'),
+                    tension: 0.4,
+                    yAxisID: 'y2'
                 }
             ]
         };
@@ -74,10 +84,42 @@ const LineChart = () => {
                     }
                 },
                 y: {
+                    type: 'linear',
+                    //type: 'logarithmic',
+                    display: true,
+                    position: 'left',
                     ticks: {
-                        color: textColorSecondary
+                        color: textColorSecondary,                        
+                        stepSize: 3
+                        
                     },
                     grid: {
+                        color: surfaceBorder
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    ticks: {
+                        color: textColorSecondary,
+                        stepSize: 5
+                    },
+                    grid: {
+                        drawOnChartArea: true, 
+                        color: surfaceBorder
+                    }
+                },
+                y2: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    ticks: {
+                        color: textColorSecondary,
+                        stepSize: 5
+                    },
+                    grid: {
+                        drawOnChartArea: true, 
                         color: surfaceBorder
                     }
                 }
