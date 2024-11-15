@@ -48,6 +48,28 @@ const LineChart = () => {
                     pointStyle: 'triangle',
                     tension: 0.4,
                     yAxisID: 'y2'
+                },
+                {
+                    label: 'Fourth Dataset',
+                    data: [45, 67, 78, 88, 99, 100, 110],
+                    fill: false,
+                    borderColor: 'rgba(54, 162, 235, 0.6)', // Soft blue
+                    borderDash: [2, 2], // Dotted line
+                    borderWidth: 2,
+                    pointStyle: 'star',
+                    tension: 0.4,
+                    yAxisID: 'y3'
+                },
+                {
+                    label: 'Fifth Dataset',
+                    data: [23, 34, 45, 56, 67, 78, 89],
+                    fill: false,
+                    borderColor: 'rgba(255, 99, 132, 0.6)', // Soft red
+                    borderDash: [3, 3], // Dashed line
+                    borderWidth: 2,
+                    pointStyle: 'cross',
+                    tension: 0.4,
+                    yAxisID: 'y4'
                 }
             ]
         };
@@ -98,7 +120,7 @@ const LineChart = () => {
                     position: 'left',
                     ticks: {
                         color: textColorSecondary,
-                        stepSize: 3
+                        stepSize: 1
                     },
                     grid: {
                         color: surfaceBorder
@@ -113,20 +135,49 @@ const LineChart = () => {
                         stepSize: 5
                     },
                     grid: {
-                        drawOnChartArea: true,
+                        drawOnChartArea: false,
                         color: surfaceBorder
                     }
                 },
                 y2: {
                     type: 'linear',
                     display: true,
-                    position: 'right',
+                    position: 'left',
+                    offset: true,
                     ticks: {
                         color: textColorSecondary,
                         stepSize: 5
                     },
                     grid: {
-                        drawOnChartArea: true,
+                        drawOnChartArea: false,
+                        color: surfaceBorder
+                    }
+                },
+                y3: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    offset: true,
+                    ticks: {
+                        color: textColorSecondary,
+                        stepSize: 5
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                        color: surfaceBorder
+                    }
+                },
+                y4: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    offset: true,
+                    ticks: {
+                        color: textColorSecondary,
+                        stepSize: 5
+                    },
+                    grid: {
+                        drawOnChartArea: false,
                         color: surfaceBorder
                     }
                 }
