@@ -26,6 +26,13 @@ const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
     console.log(`Line equation: y = ${m}x + ${b}`);
 };
 
+const getPosition = (currentStep: number) => {
+    const position = currentStep - 2;
+    return position;
+}
+
+
+
 const FullStepper = () => {
     // Toast Context
     const { showWarn, showError } = useToast();
@@ -34,13 +41,19 @@ const FullStepper = () => {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const inputValue = useRef(0);
-    const sensorValuesArray = useRef<number[]>([]);
     const errorPresent = useRef<boolean | null>(null);
 
     const selectedSensorRef = useRef<SensorDropdown | null>(null);   
     
-    const y1y2 = useRef<number[]>([0,0]); 
-    const x1x2 = useRef<number[]>([0,0]);
+    const y1y2 = useRef<number[]>([0,0]);     
+    const [x1x2, setX1X2] = useState<number[]>([0,0]);    
+    const updateIndex = (index: number, value: number) => {
+        setX1X2(prevState => {
+            const newState = [...prevState];
+            newState[index] = value;
+            return newState;
+        });
+    };
 
     const { mutate: getSensorValuesMutation } = useMutation({
         mutationFn: getStateMachineValuesAction,
@@ -55,22 +68,25 @@ const FullStepper = () => {
                 return;
             }
             
-            const position = currentStep - 2;
+            const position = getPosition(currentStep);
+
             if(selectedSensorRef.current?.id === 'pressure'){                
-                if(x1x2.current[position] < data.pressure){
-                    x1x2.current[position] = data.pressure;
+                if(x1x2[position] < data.pressure){
+                    console.log('position',position);
+                    console.log('current step',currentStep);
+                    updateIndex(position, data.pressure);
                 }
             }
             else if(selectedSensorRef.current?.id === 'temp'){
-                if(x1x2.current[position] < data.temp){
-                    x1x2.current[position] = data.temp;
+                if(x1x2[position] < data.temp){
+                    updateIndex(position, data.temp);
                 }
             }
             else if(selectedSensorRef.current?.id === 'tempk'){
-                if(x1x2.current[position] < data.tempk){
-                    x1x2.current[position] = data.tempk;
+                if(x1x2[position] < data.tempk){
+                    updateIndex(position, data.tempk);
                 }
-            }            
+            }
         },
     });
 
@@ -109,7 +125,7 @@ const FullStepper = () => {
             if (errorPresent.current) {
                 clearInterval(interval);
                 setLoading(false);
-                setProgress(0);
+                setProgress(0);                
                 showError('Greška', 'Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno.');
                 return;
             }
@@ -139,7 +155,8 @@ const FullStepper = () => {
             setCurrentStep((prevStep) => prevStep - 1);
         }
     };
-        
+
+    console.log("Array", x1x2);
     return (        
         <div className="card p-7 shadow-lg rounded-lg">
             <div className="flex flex-column gap-3">
@@ -158,9 +175,8 @@ const FullStepper = () => {
                     <SensorDropdown selectedSensorRef={selectedSensorRef}/>
                 ): null}
 
-                {currentStep === 1 || currentStep === 2 ? (
-
-                    <CalibrationInput currentStep={currentStep} inputValue={inputValue} loading={loading} />                            
+                {currentStep === 1 || currentStep === 2 ? (                    
+                    <CalibrationInput currentStep={currentStep} inputValue={inputValue} />
                 ) : null }
                 {currentStep === 3 ? (
                     <CalibrationResults minCalibratedValue={1023} maxCalibratedValue={1000} />                
