@@ -1,54 +1,46 @@
 "use client";
-import React, { use, useRef, useState } from "react";
-import { Button } from 'primereact/button';
-import { Steps } from 'primereact/steps';
-import { ProgressBar } from 'primereact/progressbar';
-import { Toast } from 'primereact/toast';
-import CalibrationInput from "../Inputs/CalibrationInput";
-import CalibrationResults from "../Inputs/CalibrationResults";
-import SensorDropdown from "../Inputs/SensorDropdown";
+import React, { useRef, useState } from "react";
+import { Button } from "primereact/button";
+import { Steps } from "primereact/steps";
+import { ProgressBar } from "primereact/progressbar";
+import { Toast } from "primereact/toast";
 import { useMutation } from "@tanstack/react-query";
-import { getStateMachineValuesAction } from "@/app/(main)/api/actions";
 import { useToast } from "@/layout/context/toastcontext";
+import CalibrationInput from "../Inputs/CalibrationInput"; // Placeholder component
+import CalibrationResults from "../Inputs/CalibrationResults"; // Placeholder component
+import SensorDropdown from "../Inputs/SensorDropdown"; // Placeholder component
+import { getStateMachineValuesAction } from "@/app/(main)/api/actions"; // Mutation action
 
+// Helper function to calculate line equation (optional, for reference)
 const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
     if (x1x2.length !== 2 || y1y2.length !== 2) {
-        console.error('Invalid input arrays. Both arrays must contain exactly two elements.');
+        console.error("Invalid input arrays. Both arrays must contain exactly two elements.");
         return;
     }
-
     const [x1, x2] = x1x2;
     const [y1, y2] = y1y2;
-
     const m = (y2 - y1) / (x2 - x1);
     const b = y1 - m * x1;
-
     console.log(`Line equation: y = ${m}x + ${b}`);
 };
 
-const getPosition = (currentStep: number) => {
-    const position = currentStep - 2;
-    return position;
-}
-
-
-
 const FullStepper = () => {
-    // Toast Context
     const { showWarn, showError } = useToast();
-    
+
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
+
     const inputValue = useRef(0);
     const errorPresent = useRef<boolean | null>(null);
+    const stepRef = useRef(0); // Ref to track the current step
 
-    const selectedSensorRef = useRef<SensorDropdown | null>(null);   
-    
-    const y1y2 = useRef<number[]>([0,0]);     
-    const [x1x2, setX1X2] = useState<number[]>([0,0]);    
+    const selectedSensorRef = useRef<SensorDropdown | null>(null);
+    const y1y2 = useRef<number[]>([0, 0]);
+    const [x1x2, setX1X2] = useState<number[]>([0, 0]);
+
     const updateIndex = (index: number, value: number) => {
-        setX1X2(prevState => {
+        setX1X2((prevState) => {
             const newState = [...prevState];
             newState[index] = value;
             return newState;
@@ -57,53 +49,46 @@ const FullStepper = () => {
 
     const { mutate: getSensorValuesMutation } = useMutation({
         mutationFn: getStateMachineValuesAction,
-        onError: (error) => {
-            showError('Greška', 'Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno.');
+        onError: () => {
+            showError(
+                "Greška",
+                "Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno."
+            );
         },
-        onSuccess: (data) => {
-            
-            if(data?.errorsstring?.includes('14 UNAVAILABLE')){
-                errorPresent.current = true;                
-                console.log(errorPresent.current);
+        onSuccess: (data) => {            
+            if (data?.errorsstring?.includes("14 UNAVAILABLE")) {
+                errorPresent.current = true;
                 return;
             }
-            
-            const position = getPosition(currentStep);
 
-            if(selectedSensorRef.current?.id === 'pressure'){                
-                if(x1x2[position] < data.pressure){
-                    console.log('position',position);
-                    console.log('current step',currentStep);
-                    updateIndex(position, data.pressure);
-                }
-            }
-            else if(selectedSensorRef.current?.id === 'temp'){
-                if(x1x2[position] < data.temp){
-                    updateIndex(position, data.temp);
-                }
-            }
-            else if(selectedSensorRef.current?.id === 'tempk'){
-                if(x1x2[position] < data.tempk){
-                    updateIndex(position, data.tempk);
+            const position = stepRef.current - 2; // Use stepRef to track step
+            if (position >= 0) {
+                const sensorId = selectedSensorRef.current?.id;
+                const sensorValue =
+                    sensorId === "pressure"
+                        ? data.pressure
+                        : sensorId === "temp"
+                        ? data.temp
+                        : sensorId === "tempk"
+                        ? data.tempk
+                        : 0;
+                if (x1x2[position] < sensorValue) {
+                    updateIndex(position, sensorValue);
                 }
             }
         },
     });
 
-    const toast = useRef<Toast>(null);
-    
     const items = [
-        { label: 'Odabir senzora' },
-        { label: 'Upis najmanje vrijednosti' },
-        { label: 'Upis najveće vrijednosti' },
-        { label: 'Rezultati kalibracije' }
+        { label: "Odabir senzora" },
+        { label: "Upis najmanje vrijednosti" },
+        { label: "Upis najveće vrijednosti" },
+        { label: "Rezultati kalibracije" },
     ];
 
     const handleNext = () => {
-        
-        // Value is not selected        
         if (!selectedSensorRef.current) {
-            showWarn('Upozorenje', 'Molimo odaberite senzor.');
+            showWarn("Upozorenje", "Molimo odaberite senzor.");
             return;
         }
 
@@ -119,32 +104,36 @@ const FullStepper = () => {
         }
 
         setLoading(true);
+        stepRef.current = currentStep; // Sync ref with state
         let progressValue = 0;
 
         const interval = setInterval(() => {
             if (errorPresent.current) {
                 clearInterval(interval);
                 setLoading(false);
-                setProgress(0);                
-                showError('Greška', 'Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno.');
+                setProgress(0);
+                showError(
+                    "Greška",
+                    "Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno."
+                );
                 return;
             }
-
+            
             progressValue += 20;
             getSensorValuesMutation();
             setProgress(progressValue);
+
             if (progressValue >= 100) {
                 clearInterval(interval);
                 setLoading(false);
                 setProgress(0);
 
                 y1y2.current[currentStep] = Number(inputValue.current) || 0;
-
-                // Clear the input after saving
                 inputValue.current = 0;
 
                 if (currentStep < items.length - 1) {
                     setCurrentStep((prevStep) => prevStep + 1);
+                    stepRef.current = currentStep + 1; // Sync ref for the next step
                 }
             }
         }, 1000);
@@ -153,54 +142,45 @@ const FullStepper = () => {
     const handleBack = () => {
         if (currentStep > 0) {
             setCurrentStep((prevStep) => prevStep - 1);
+            stepRef.current = currentStep - 1; // Sync ref when stepping back
         }
     };
-
-    console.log("Array", x1x2);
-    return (        
+    
+    return (
         <div className="card p-7 shadow-lg rounded-lg">
             <div className="flex flex-column gap-3">
-                <Toast ref={toast} />
-                {/* Step Indicator */}
+                <Toast ref={useRef<Toast>(null)} />
                 <Steps model={items} activeIndex={currentStep} className="mb-2" />
-                
-                {/* Progress Bar */}
-                <ProgressBar 
-                    value={Math.round((currentStep + 1) * (100 / items.length) + progress / items.length)} 
-                    showValue={true}  
-                    style={{ height: '24px', borderRadius: '50px', color: 'white' }} 
-                    className="mb-3" 
+                <ProgressBar
+                    value={Math.round((currentStep + 1) * (100 / items.length) + progress / items.length)}
+                    showValue={true}
+                    style={{ height: "24px", borderRadius: "50px", color: "white" }}
+                    className="mb-3"
                 />
-                {currentStep === 0 ? (
-                    <SensorDropdown selectedSensorRef={selectedSensorRef}/>
-                ): null}
-
-                {currentStep === 1 || currentStep === 2 ? (                    
+                {currentStep === 0 && <SensorDropdown selectedSensorRef={selectedSensorRef} />}
+                {(currentStep === 1 || currentStep === 2) && (
                     <CalibrationInput currentStep={currentStep} inputValue={inputValue} />
-                ) : null }
-                {currentStep === 3 ? (
-                    <CalibrationResults minCalibratedValue={1023} maxCalibratedValue={1000} />                
-                ) : null }
-
-                {/* Navigation Buttons */}
+                )}
+                {currentStep === 3 && (
+                    <CalibrationResults minCalibratedValue={1023} maxCalibratedValue={1000} />
+                )}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
                     {currentStep !== 0 && (
-                        <Button 
-                            label="Back" 
-                            icon="pi pi-arrow-left" 
+                        <Button
+                            label="Back"
+                            icon="pi pi-arrow-left"
                             className="p-button-secondary w-full md:w-auto p-button-rounded p-2"
-                            onClick={handleBack}                       
+                            onClick={handleBack}
                         />
                     )}
-                    
                     {currentStep < items.length - 1 && (
-                        <Button 
-                            label="Next" 
-                            icon="pi pi-arrow-right" 
-                            iconPos={loading ? "left" : "right"} 
-                            onClick={handleNext} 
-                            className="p-button  md:w-auto p-button-rounded p-2 ml-auto"
-                            loading={loading}                            
+                        <Button
+                            label="Next"
+                            icon="pi pi-arrow-right"
+                            iconPos={loading ? "left" : "right"}
+                            onClick={handleNext}
+                            className="p-button md:w-auto p-button-rounded p-2 ml-auto"
+                            loading={loading}
                         />
                     )}
                 </div>
