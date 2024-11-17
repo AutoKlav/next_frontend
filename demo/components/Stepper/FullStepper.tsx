@@ -33,7 +33,7 @@ const FullStepper = () => {
 
     const inputValue = useRef(0);
     const errorPresent = useRef<boolean | null>(null);
-    const stepRef = useRef(0); // Ref to track the current step
+    const stepRef = useRef(0);
 
     const selectedSensorRef = useRef<SensorDropdown | null>(null);
     const y1y2 = useRef<number[]>([0, 0]);
@@ -128,7 +128,7 @@ const FullStepper = () => {
                 setLoading(false);
                 setProgress(0);
 
-                y1y2.current[currentStep] = Number(inputValue.current) || 0;
+                y1y2.current[currentStep-1] = Number(inputValue.current) || 0;
                 inputValue.current = 0;
 
                 if (currentStep < items.length - 1) {
@@ -145,6 +145,7 @@ const FullStepper = () => {
             stepRef.current = currentStep - 1; // Sync ref when stepping back
         }
     };
+    console.log(y1y2.current);
     
     return (
         <div className="card p-7 shadow-lg rounded-lg">
