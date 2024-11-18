@@ -132,6 +132,23 @@ const FullStepper = () => {
             stepRef.current = currentStep - 1; // Sync ref when stepping back
         }
     };
+
+    const resetValues = () => {
+        setCurrentStep(0);
+        setProgress(0);
+        setLoading(false);
+        inputValue.current = 0;
+        errorPresent.current = null;
+        stepRef.current = 0;
+        selectedSensorRef.current = null;
+        y1y2.current = [0, 0];
+        setX1X2([0, 0]);
+
+    }
+
+    const handleCalibrate = () => {
+        resetValues();
+    }
     console.log(x1x2);
     
     return (
@@ -167,6 +184,16 @@ const FullStepper = () => {
                             icon="pi pi-arrow-right"
                             iconPos={loading ? "left" : "right"}
                             onClick={handleNext}
+                            className="p-button md:w-auto p-button-rounded p-2 ml-auto"
+                            loading={loading}
+                        />
+                    )}
+                    {currentStep === items.length - 1 && (
+                        <Button
+                            label="Kalibriraj i vrati se na početnu stranicu"
+                            icon="pi pi-cog"
+                            iconPos={loading ? "left" : "right"}
+                            onClick={handleCalibrate}
                             className="p-button md:w-auto p-button-rounded p-2 ml-auto"
                             loading={loading}
                         />
