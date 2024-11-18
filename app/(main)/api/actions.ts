@@ -1,7 +1,7 @@
 "use server"
 
-import { getAllProcessLogs, getAllProcesses, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, stopProcess } from "@/services/grpc";
-import { SetVariable } from "@/types/grpc";
+import { getAllProcessLogs, getAllProcesses, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess } from "@/services/grpc";
+import { ProcessConfigMode, ProcessConfigType, StartProcessRequest } from "@/types/grpc";
 
 //#region GET Actions
 
@@ -39,6 +39,33 @@ export const getProcessLogsAction = async (ids: number[]) => {
 
 //#region POST Actions
 
+export const startProcessAction = async () => {
+    const request: StartProcessRequest = {
+        processConfig: {
+          customTemp: 0,
+          finishTemp: 40,
+          maintainPressure: 2,
+          maintainTemp: 120,
+          mode: ProcessConfigMode.TARGETF,
+          targetF: 5,
+          targetTime: 20,
+          type: ProcessConfigType.STERILIZATION
+        },
+        processInfo: {
+          bacteria: 'nulla do laborum laboris labore',
+          description: 'reprehenderit magna eiusmod et',
+          processLength: 'ex',
+          processStart: 'est sit',
+          productName: 'deserunt enim tempor',
+          productQuantity: 'sint aliqua do laborum'
+        }
+      } 
+      
+      const response = await startProcess(request);
+      return response;
+ };
+
+
 export const stopProcessAction = async () => {
     const response = await stopProcess();
     return response;
@@ -47,6 +74,12 @@ export const stopProcessAction = async () => {
 export const setVariableAction = async ({ newData, index, variable }: { newData: any; index: number; variable: any }) => {
     const response = await setVariable(variable);
     return {response, newData, index};
+}
+
+//TODO
+export const emergencyStopAction = async () => {
+    //const response = await stopProcess();
+    //return response;
 }
 
 //#endregion
