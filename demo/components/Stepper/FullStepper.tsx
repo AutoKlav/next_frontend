@@ -11,19 +11,6 @@ import CalibrationResults from "../Inputs/CalibrationResults"; // Placeholder co
 import SensorDropdown from "../Inputs/SensorDropdown"; // Placeholder component
 import { getStateMachineValuesAction } from "@/app/(main)/api/actions"; // Mutation action
 
-// Helper function to calculate line equation (optional, for reference)
-const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
-    if (x1x2.length !== 2 || y1y2.length !== 2) {
-        console.error("Invalid input arrays. Both arrays must contain exactly two elements.");
-        return;
-    }
-    const [x1, x2] = x1x2;
-    const [y1, y2] = y1y2;
-    const m = (y2 - y1) / (x2 - x1);
-    const b = y1 - m * x1;
-    console.log(`Line equation: y = ${m}x + ${b}`);
-};
-
 const FullStepper = () => {
     const { showWarn, showError } = useToast();
 
@@ -46,7 +33,7 @@ const FullStepper = () => {
             return newState;
         });
     };
-
+    
     const { mutate: getSensorValuesMutation } = useMutation({
         mutationFn: getStateMachineValuesAction,
         onError: () => {
@@ -145,7 +132,7 @@ const FullStepper = () => {
             stepRef.current = currentStep - 1; // Sync ref when stepping back
         }
     };
-    console.log(y1y2.current);
+    console.log(x1x2);
     
     return (
         <div className="card p-7 shadow-lg rounded-lg">
@@ -163,7 +150,7 @@ const FullStepper = () => {
                     <CalibrationInput currentStep={currentStep} inputValue={inputValue} />
                 )}
                 {currentStep === 3 && (
-                    <CalibrationResults minCalibratedValue={1023} maxCalibratedValue={1000} />
+                    <CalibrationResults x1x2={x1x2} y1y2={y1y2.current} sensorName={selectedSensorRef.current?.name} />
                 )}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
                     {currentStep !== 0 && (
