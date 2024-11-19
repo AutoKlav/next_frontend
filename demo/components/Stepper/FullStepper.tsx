@@ -27,6 +27,11 @@ const FullStepper = () => {
     const [x1x2, setX1X2] = useState<number[]>([0, 0]);
 
     const updateIndex = (index: number, value: number) => {
+        if (index < 0 || index >= x1x2.length) {
+            console.warn("Invalid index for updateIndex:", index);
+            return;
+        }
+        console.log("updateIndex ", index, value);
         setX1X2((prevState) => {
             const newState = [...prevState];
             newState[index] = value;
@@ -47,8 +52,9 @@ const FullStepper = () => {
                 errorPresent.current = true;
                 return;
             }
-
-            const position = stepRef.current - 2; // Use stepRef to track step
+    
+            // Adjust the position logic to avoid overwriting x1x2[0]
+            const position = stepRef.current === 1 ? 0 : stepRef.current === 2 ? 1 : -1;
             if (position >= 0) {
                 const sensorId = selectedSensorRef.current?.id;
                 const sensorValue =
@@ -59,9 +65,7 @@ const FullStepper = () => {
                         : sensorId === "tempk"
                         ? data.tempk
                         : 0;
-                if (x1x2[position] < sensorValue) {
-                    updateIndex(position, sensorValue);
-                }
+                updateIndex(position, sensorValue);
             }
         },
     });
@@ -149,7 +153,7 @@ const FullStepper = () => {
     const handleCalibrate = () => {
         resetValues();
     }
-    console.log(x1x2);
+    console.log("X1X2 FullStepper", x1x2);
     
     return (
         <div className="card p-7 shadow-lg rounded-lg">

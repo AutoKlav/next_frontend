@@ -7,8 +7,7 @@ interface CalibrationResultsProps {
     sensorName: string | undefined;
 }
 
-// Helper function to calculate line equation (optional, for reference)
-const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
+const calibrateSensor = (x1x2: number[], y1y2: number[]) => {
     if (x1x2.length !== 2 || y1y2.length !== 2) {
         console.error("Invalid input arrays. Both arrays must contain exactly two elements.");
         return;
@@ -19,21 +18,25 @@ const calculateLineEquation = (x1x2: number[], y1y2: number[]) => {
 
     // Input from user
     const [y1, y2] = y1y2;
+    console.log(`x1: ${x1}, x2: ${x2}, y1: ${y1}, y2: ${y2}`);
 
     // Calculate line equation
     const m = (y2 - y1) / (x2 - x1);
     const b = y1 - m * x1;
     console.log(`Line equation: y = ${m}x + ${b}`);
     
-    const calibratedMinimum = m*x1+b;
-    const calibratedMaximum = m*x2+b;
+    const calibratedMinimum = m * x1 + b;
+    const calibratedMaximum = m * x2 + b;
+    console.log(`Calibrated minimum: ${calibratedMinimum}, calibrated maximum: ${calibratedMaximum}`);
     return [calibratedMinimum, calibratedMaximum];
 };
 
 const CalibrationResults: React.FC<CalibrationResultsProps> = (props) => {
     const { x1x2, y1y2, sensorName } = props;
-    const result = calculateLineEquation(x1x2, y1y2);
+    const result = calibrateSensor(x1x2, y1y2);
     const [calibratedMinimum, calibratedMaximum] = result || [0, 0];
+
+    console.log("X1X2 Calibration", x1x2);
     
     return (
         <>
@@ -54,7 +57,7 @@ const CalibrationResults: React.FC<CalibrationResultsProps> = (props) => {
                 className="p-inputtext-md p-1"
                 style={{ borderRadius: '13px' }} 
             />
-            <label>Kalibrirana minimalna vrijednost</label>
+            <label>Minimalna kalibrirana vrijednost</label>
             <InputNumber 
                 value={calibratedMinimum}
                 readOnly
@@ -77,7 +80,7 @@ const CalibrationResults: React.FC<CalibrationResultsProps> = (props) => {
                 className="p-inputtext-md p-1"
                 style={{ borderRadius: '13px' }} 
             />
-            <label>Kalibrirana kalibrirana vrijednost</label>
+            <label>Maksimalna kalibrirana vrijednost</label>
             <InputNumber 
                 value={calibratedMaximum}
                 readOnly
