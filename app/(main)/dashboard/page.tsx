@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from 'primereact/button';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getStateMachineValuesAction, setVariableAction, stopProcessAction } from '../api/actions';
+import { getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -44,6 +44,20 @@ const DashboardPage = () => {
         },
     });
 
+    const { mutate: startProcess } = useMutation({
+        mutationFn: startProcessAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+        },
+        onSuccess: (data) => {
+            console.log('Process started:', data);
+        },
+    });
+
+    const handleStartProcess = () => {
+        startProcess();
+    };
+
     const handleStopProcess = () => {
         stopProcess();
     };
@@ -70,7 +84,9 @@ const DashboardPage = () => {
     return (
         <div className="grid p-2">
          <div className="col-6">
+            <Button label="Start" onClick={handleStartProcess} className="p-button-success" />
             <Button label="Stop" onClick={handleStopProcess} className="p-button-danger" />            
+            <Button label="Emergency Stop" onClick={handleStopProcess} className="p-button-danger" icon="pi pi-exclamation-triangle"/>            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (

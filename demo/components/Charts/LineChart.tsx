@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Chart } from 'primereact/chart';
+import jsPDF from 'jspdf';
+import { Button } from 'primereact/button';
+import { Chart as ChartJS } from 'chart.js';
 
 const LineChart = () => {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
+    const chartRef = useRef<any>(null);
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -75,8 +79,8 @@ const LineChart = () => {
         };
 
         const options = {
-            maintainAspectRatio: false,
-            aspectRatio: 0.6,
+            maintainAspectRatio: true,
+            aspectRatio: 1.8,
             plugins: {
                 legend: {
                     labels: {
@@ -196,9 +200,41 @@ const LineChart = () => {
         setChartOptions(options);
     }, []);
 
+    const getCurrentDateTime = (): string => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+        return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`;
+    };
+
+    const handleExportToPDF = () => {
+        const chartInstance = chartRef.current?.getChart(); // Access the Chart.js instance
+        if (chartInstance) {
+            const imageData = chartInstance.toBase64Image('image/png', 1.0); // Convert the chart to an image
+            const pdf = new jsPDF({ 
+                orientation: 'portrait', // Set orientation to landscape
+                unit: "mm",
+                format: "a4", // A4 size
+            });
+
+            // Rotate the image by 90 degrees to the right
+            pdf.addImage(imageData, 'PNG', 0, 0, 210, 297); // Cover the entire A4 page with rotation
+
+            pdf.save(`${getCurrentDateTime()}.pdf`);
+        } else {
+            alert('Chart instance not found.');
+        }
+    };
+
     return (
         <div className="card">
-            <Chart type="line" data={chartData} options={chartOptions} />
+            <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
+            <Button label="Export to PDF" onClick={handleExportToPDF} className="p-button-info mt-5"/>
         </div>
     );
 };

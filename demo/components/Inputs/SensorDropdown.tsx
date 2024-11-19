@@ -17,7 +17,7 @@ const SensorDropdown: React.FC<SensorDropdownProps> = (props) => {
 
     const sensors: SensorDropdown[] = [
         { id: 'temp', name: 'Temperatura' },
-        { id: 'tempK', name: 'Temperatura konzerve' },
+        { id: 'tempk', name: 'Temperatura konzerve' },
         { id: 'pressure', name: 'Tlak' }
     ];
 
