@@ -137,9 +137,7 @@ const HistoryTable = () => {
             >
                 <Column
                     field="productname"
-                    header="Process Name"
-                    filterPlaceholder="Search by name"
-                    filter
+                    header="Process Name"                    
                 />
                 <Column
                     field="processstart"
