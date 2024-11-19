@@ -89,7 +89,7 @@ const FullStepper = () => {
             return;
         }
 
-        if ((currentStep == 1 || currentStep == 2) && !inputValue.current) {
+        if ((currentStep == 1 || currentStep == 2) && inputValue.current == null) {
             showWarn('Upozorenje', 'Molimo unesite vrijednost.');
             return;
         }
