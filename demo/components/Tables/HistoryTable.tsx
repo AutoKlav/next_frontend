@@ -66,10 +66,6 @@ const HistoryTable = () => {
         initFilters1();
     }, []);
 
-    const clearFilter1 = () => {
-        initFilters1();
-    };
-
     const onGlobalFilterChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         let _filters1 = { ...filters1 };
@@ -82,18 +78,26 @@ const HistoryTable = () => {
     const initFilters1 = () => {
         setFilters1({
             global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-            name: {
+            productname: {
                 operator: FilterOperator.AND,
                 constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }]
             },
-            startTime: {
+            processstart: {
                 operator: FilterOperator.AND,
                 constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }]
+            },
+            processlength: {
+                operator: FilterOperator.AND,
+                constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }]
             }
         });
         setGlobalFilterValue1('');
     };
 
+    const clearFilter1 = () => {
+        initFilters1();
+    };
+    
     const renderHeader1 = () => {
         return (
             <div className="flex justify-content-between">
@@ -129,17 +133,19 @@ const HistoryTable = () => {
                 onChange={(e) => options.filterCallback(e.value, options.index)}
                 dateFormat="yy-mm-dd"
                 placeholder="Select a date"
+                mask="9999-99-99"
                 className="p-column-filter"
             />
         );
     };
 
     const formatDate = (value: string) => {
+        if (!value) return '';
         const date = new Date(value);
         return date.toLocaleDateString('en-GB', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
         });
     };
 
