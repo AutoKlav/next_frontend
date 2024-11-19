@@ -70,6 +70,12 @@ export const stopProcess = () => {
   return gRpcCall<Status>("stopProcess", data);
 };
 
+export const updateSensor = () => {
+  const data = new Messages.UpdateSensorRequest();
+
+  return gRpcCall<Status>("updateSensor", data);
+}
+
 export const getAllProcesses = () => {
   const data = new Messages.Empty();
 
