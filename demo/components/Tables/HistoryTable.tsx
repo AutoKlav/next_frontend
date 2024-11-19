@@ -11,12 +11,45 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { getProcessLogsAction, getProcessesAction } from '@/app/(main)/api/actions';
 
 const HistoryTable = () => {
-    const { data: processesDataQuery } = useQuery({
-        queryKey: ['processesDataQuery'],
-        queryFn: () => getProcessesAction(),
-        onSuccess: () => setLoading(false),
-        onError: () => setLoading(false)
-    });
+    const processesDataQuery  = [
+        {
+            id: 1,
+            productname: "Product 1",
+            processstart: "2022-01-01T00:00:00",
+            processlength: 100
+        },
+        {
+            id: 2,
+            productname: "Product 2",
+            processstart: "2022-01-02T00:00:00",
+            processlength: 200
+        },
+        {
+            id: 3,
+            productname: "Product 3",
+            processstart: "2022-01-03T00:00:00",
+            processlength: 300
+        },
+        {
+            id: 4,
+            productname: "Product 4",
+            processstart: "2022-01-04T00:00:00",
+            processlength: 400
+        },
+        {
+            id: 5,
+            productname: "Product 5",
+            processstart: "2022-01-05T00:00:00",
+            processlength: 500
+        }
+    ];
+
+    // const { data: processesDataQuery } = useQuery({
+    //     queryKey: ['processesDataQuery'],
+    //     queryFn: () => getProcessesAction(),
+    //     onSuccess: () => setLoading(false),
+    //     onError: () => setLoading(false)
+    // });
 
     const {isLoading, mutate: getProcessLogMutation} = useMutation(getProcessLogsAction, {
         onSuccess: (response) => {           
@@ -25,7 +58,7 @@ const HistoryTable = () => {
     });
     
     const [globalFilterValue1, setGlobalFilterValue1] = useState('');
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [selectedProcesses, setSelectedProcesses] = useState<any[]>([]);
     const [filters1, setFilters1] = useState<DataTableFilterMeta>({});
 
@@ -122,7 +155,7 @@ const HistoryTable = () => {
             <DataTable
                 className="p-datatable-gridlines"
                 showGridlines
-                value={processesDataQuery?.processesList || []} // Use fetched data here
+                value={processesDataQuery || []} // Use fetched data here
                 paginator
                 rows={5}
                 dataKey="id"
@@ -135,7 +168,7 @@ const HistoryTable = () => {
                 header={header}
             >
                 <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
-                <Column field="productname" header="Ime procesa" filter filterPlaceholder="Search by name" style={{ maxWidth: '250px' }} />
+                <Column field="productname" header="Ime procesa" filterPlaceholder="Search by name" style={{ maxWidth: '250px' }} />
                 <Column field="processstart" header="Vrijeme pocetka" style={{ maxWidth: '200px' }} body={dateBodyTemplate} filter filterElement={dateFilterTemplate} />
                 <Column field="processlength" header="Duljina trajanja (s)" />
             </DataTable>
