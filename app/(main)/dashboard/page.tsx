@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from 'primereact/button';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction, updateSensorAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -61,6 +61,10 @@ const DashboardPage = () => {
     const handleStopProcess = () => {
         stopProcess();
     };
+
+    const handleSetVariable = (minValue: number, maxValue: number) => {
+        updateSensorAction();
+    }
 
     const { data: stateMachineValues } = useQuery(
         { 
