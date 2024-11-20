@@ -112,18 +112,14 @@ const HistoryTable = () => {
     };
 
     const dateFilterTemplate = (options: any) => {
-        const value = options.value instanceof Date ? options.value : new Date(options.value);
         return (
-            <Calendar
-                value={value}
-                onChange={(e) => options.filterCallback(e.value, options.index)}
-                dateFormat="dd/mm/yy"
-                placeholder="dd/mm/yyyy"
+            <Calendar 
+                value={options.value} 
+                onChange={(e) => options.filterCallback(e.value, options.index)} 
+                dateFormat="dd/mm/yy" 
+                placeholder="dd/mm/yyyy" 
                 mask="99/99/9999"
-                showIcon
-                className="p-column-filter"
-            />
-        );
+                showIcon />);        
     };  
 
     const dateBodyTemplate = (rowData: any) => {
