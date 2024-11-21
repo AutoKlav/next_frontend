@@ -12,38 +12,28 @@ import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actio
 
 const HistoryTable = () => {
     const [loading, setLoading] = useState(true);
+    const [processesDataQuery, setProcessesData] = useState<any[]>([]);
 
-    const processesDataQuery = [
+    const processesDataQuery1 = [
         {
             id: 1,
             productname: "Product 1",
-            processstart: new Date("2022-01-01T00:00:00"), // Proper Date object
+            processstart: new Date("2015-09-13"),//new Date("2022-01-01T00:00:00"),
             processlength: 100,
-        },
-        {
-            id: 2,
-            productname: "Product 2",
-            processstart: new Date("2022-01-02T00:00:00"),
-            processlength: 200,
-        },
-        {
-            id: 3,
-            productname: "Product 3",
-            processstart: new Date("2022-01-03T00:00:00"),
-            processlength: 300,
-        },
-        {
-            id: 4,
-            productname: "Product 4",
-            processstart: new Date("2022-01-04T00:00:00"),
-            processlength: 400,
-        },        
+        },            
     ];
 
-    const { data: processesDataQuery1 } = useQuery({
+    const { data: processesDataQuery2 } = useQuery({
         queryKey: ['processesDataQuery'],
         queryFn: () => getProcessesAction(),
-        onSuccess: () => setLoading(false),
+        onSuccess: (data) => {
+            const transformedData = data.processesList.map((process) => ({
+                ...process,
+                processstart: new Date(process.processstart)
+            }));
+            setProcessesData(transformedData);
+            setLoading(false);
+        },
         onError: () => setLoading(false)
     });
 
@@ -71,14 +61,20 @@ const HistoryTable = () => {
         });
     };
     
-    const formatDate = (value: string | Date | null) => {
-        if (!value) return ''; // Handle null or undefined gracefully
-        const date = value instanceof Date ? value : new Date(value); // Ensure it's a Date object
-        if (isNaN(date.getTime())) return ''; // Handle invalid date
-        return date.toLocaleDateString('en-GB', {
+    const formatDate = (value: Date ) => {
+        // if (!value) return ''; // Handle null or undefined gracefully        
+        // const date = value instanceof Date ? value : new Date(value); // Ensure it's a Date object
+        
+        // if (isNaN(date.getTime())) return ''; // Handle invalid date
+        // return date.toLocaleDateString('en-US', {
+        //     day: '2-digit',
+        //     month: '2-digit',
+        //     year: 'numeric',
+        // });
+        return value.toLocaleDateString('en-US', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric',
+            year: 'numeric'
         });
     };  
 
@@ -116,8 +112,8 @@ const HistoryTable = () => {
             <Calendar 
                 value={options.value} 
                 onChange={(e) => options.filterCallback(e.value, options.index)} 
-                dateFormat="dd/mm/yy" 
-                placeholder="dd/mm/yyyy" 
+                dateFormat="mm/dd/yy" 
+                placeholder="mm/dd/yyyy" 
                 mask="99/99/9999"
                 showIcon />);        
     };  
@@ -139,14 +135,13 @@ const HistoryTable = () => {
 
 
     const header = renderHeader();
-
     return (
         <div className="card">
             <h2>Process History</h2>
             <DataTable
                 className="p-datatable-gridlines"
                 showGridlines
-                value={processesDataQuery}
+                value={processesDataQuery || []}
                 paginator
                 rows={5}
                 dataKey="id"

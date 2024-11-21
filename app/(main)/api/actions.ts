@@ -55,7 +55,7 @@ export const startProcessAction = async () => {
           bacteria: 'nulla do laborum laboris labore',
           description: 'reprehenderit magna eiusmod et',
           processLength: 'ex',
-          processStart: 'est sit',
+          processStart: '2024-01-01T00:00:00',
           productName: 'deserunt enim tempor',
           productQuantity: 'sint aliqua do laborum'
         }
