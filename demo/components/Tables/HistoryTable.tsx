@@ -142,6 +142,7 @@ const HistoryTable = () => {
                 className="p-datatable-gridlines"
                 showGridlines
                 value={processesDataQuery || []}
+                loading={loading}
                 paginator
                 rows={5}
                 dataKey="id"
