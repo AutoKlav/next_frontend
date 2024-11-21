@@ -111,8 +111,8 @@ export interface ProcessInfoRow {
   productQuantity: string;
   bacteria: string;
   description: string;
-  processStart: string;
-  processLength: string;
+  processstart: string;
+  processlength: string;
 }
 
 // ProcessInfoList message
