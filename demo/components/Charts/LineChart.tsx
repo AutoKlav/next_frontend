@@ -121,6 +121,7 @@ const LineChart = () => {
                 },
                 y: {
                     type: 'linear',
+                    //type: 'logarithmic',
                     display: true,
                     position: 'left',
                     ticks: {
