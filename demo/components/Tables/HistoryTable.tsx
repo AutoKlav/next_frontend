@@ -49,7 +49,7 @@ const HistoryTable = () => {
     };
 
     const formatDate = (value: Date) => {
-        return value.toLocaleDateString("en-US", {
+        return value.toLocaleDateString("en-GB", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
@@ -111,8 +111,8 @@ const HistoryTable = () => {
             <Calendar
                 value={options.value}
                 onChange={(e) => options.filterCallback(e.value, options.index)}
-                dateFormat="mm/dd/yy"
-                placeholder="mm/dd/yyyy"
+                dateFormat="dd/mm/yy"
+                placeholder="dd/mm/yyyy"
                 mask="99/99/9999"
                 showIcon
             />
