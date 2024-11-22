@@ -205,20 +205,22 @@ const LineChart = () => {
         const chartInstance = chartRef.current?.getChart(); // Access the Chart.js instance
         if (chartInstance) {
             const imageData = chartInstance.toBase64Image('image/png', 1.0); // Convert the chart to an image
-            const pdf = new jsPDF({ 
-                orientation: 'portrait', // Set orientation to landscape
-                unit: "mm",
-                format: "a4", // A4 size
+            const pdf = new jsPDF({
+                orientation: 'portrait', // Use landscape orientation
+                unit: 'mm',
+                format: 'a4', // A4 size
             });
-
-            // Rotate the image by 90 degrees to the right
-            pdf.addImage(imageData, 'PNG', 0, 0, 210, 297); // Cover the entire A4 page with rotation
-
+    
+            // Translate the origin and rotate the canvas
+            pdf.addImage(imageData, 'PNG', 0, 0, 297, 210); // Cover the rotated landscape A4 page
+    
             pdf.save(`${getCurrentDateTime()}.pdf`);
         } else {
             alert('Chart instance not found.');
         }
     };
+    
+    
 
     return (
         <div className="card">
