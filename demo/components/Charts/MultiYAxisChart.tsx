@@ -35,16 +35,16 @@ const MultiYAxisChart = () => {
                 },
                 y: {
                     type: "linear",
-                    position: "left",
-                    offset: true,
-                    ticks: { color: textColor },
+                    position: "left",                    
+                    ticks: { color: textColor },                    
                     grid: {  color: gridColor, drawOnChartArea: true },
                 },
                 y1: {
                     type: "linear",
                     position: "left",
+                    offset: true,
                     ticks: { color: textColor },
-                    grid: { color: gridColor },
+                    grid: {  color: gridColor, drawOnChartArea: true },
                 },
                 y2: {
                     type: "linear",
@@ -85,7 +85,7 @@ const MultiYAxisChart = () => {
                     pointBackgroundColor: "rgba(255, 255, 255, 1)", // White fill
                     pointRadius: 5,
                     tension: 0.4,
-                    yAxisID: "y",
+                    yAxisID: "y1",
                 },
                 {
                     label: "Revenue (2023)",
@@ -100,7 +100,7 @@ const MultiYAxisChart = () => {
                     pointBackgroundColor: "rgba(255, 255, 255, 1)", // White fill
                     pointRadius: 6,
                     tension: 0.3,
-                    yAxisID: "y1",
+                    yAxisID: "y",
                 },
                 {
                     label: "Expenses",
@@ -148,8 +148,7 @@ const MultiYAxisChart = () => {
                     yAxisID: "y4",
                 },
             ],
-        };
-        
+        };        
 
         setChartData(data);
         setChartOptions(updateChartOptions("white", "white")); // Initial white theme

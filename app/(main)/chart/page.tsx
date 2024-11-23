@@ -1,7 +1,7 @@
-import LineChart from '@/demo/components/Charts/LineChart';
 import React from 'react';
 import { getStatusAction, getStateMachineValuesAction, getVariablesAction } from '../api/actions';
-import SmallLineChart from '@/demo/components/Charts/SmallLineChart';
+import MultiYAxisChart from '@/demo/components/Charts/MultiYAxisChart';
+
 
 const ChartPage = async () => {
     const variables = await getVariablesAction();
@@ -40,8 +40,7 @@ const ChartPage = async () => {
             </div>
             </div>
             <div className='col-12'>
-            <SmallLineChart />
-            <LineChart />
+            <MultiYAxisChart />
             </div>
         </div>
     );
