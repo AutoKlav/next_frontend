@@ -35,36 +35,36 @@ const MultiYAxisChart = () => {
                 },
                 y: {
                     type: "linear",
-                    position: "left",
-                    ticks: { color: textColor },
-                    grid: { color: gridColor },
+                    position: "left",                    
+                    ticks: { color: textColor },                    
+                    grid: {  color: gridColor, drawOnChartArea: true },
                 },
                 y1: {
                     type: "linear",
                     position: "left",
                     offset: true,
                     ticks: { color: textColor },
-                    grid: { drawOnChartArea: false },
+                    grid: {  color: gridColor, drawOnChartArea: true },
                 },
                 y2: {
                     type: "linear",
                     position: "right",
                     ticks: { color: textColor },
-                    grid: { color: gridColor, drawOnChartArea: false },
+                    grid: { color: gridColor, drawOnChartArea: true },
                 },
                 y3: {
                     type: "linear",
                     position: "right",
                     offset: true,
                     ticks: { color: textColor },
-                    grid: { drawOnChartArea: false },
+                    grid: { color: gridColor, drawOnChartArea: true },
                 },
                 y4: {
                     type: "linear",
                     position: "right",
                     offset: true,
                     ticks: { color: textColor },
-                    grid: { drawOnChartArea: false },
+                    grid: { color: gridColor, drawOnChartArea: true },
                 },
             },
         });
@@ -78,14 +78,14 @@ const MultiYAxisChart = () => {
                     fill: false,
                     borderColor: "rgba(75, 192, 192, 1)", // Teal
                     backgroundColor: "rgba(75, 192, 192, 0.3)", // Soft fill
-                    borderDash: [5, 5], // Dashed line
+                    borderDash: [10, 10], // Dashed line
                     borderWidth: 2,
                     pointStyle: "circle",
                     pointBorderColor: "rgba(75, 192, 192, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)", // White fill
                     pointRadius: 5,
                     tension: 0.4,
-                    yAxisID: "y",
+                    yAxisID: "y1",
                 },
                 {
                     label: "Revenue (2023)",
@@ -93,14 +93,14 @@ const MultiYAxisChart = () => {
                     fill: false,
                     borderColor: "rgba(255, 99, 132, 1)", // Red
                     backgroundColor: "rgba(255, 99, 132, 0.3)", // Soft fill
-                    borderDash: [10, 5], // Long dash
+                    borderDash: [25, 5], // Long dash
                     borderWidth: 2,
                     pointStyle: "triangle",
                     pointBorderColor: "rgba(255, 99, 132, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)", // White fill
                     pointRadius: 6,
                     tension: 0.3,
-                    yAxisID: "y1",
+                    yAxisID: "y",
                 },
                 {
                     label: "Expenses",
@@ -134,12 +134,12 @@ const MultiYAxisChart = () => {
                 },
                 {
                     label: "Growth Rate",
-                    data: [5, 10, 15, 20, 25, 30, 35],
+                    data: [5,5, 25, 20, 65, 30, 35],
                     fill: false,
                     borderColor: "rgba(153, 102, 255, 1)", // Purple
                     backgroundColor: "rgba(153, 102, 255, 0.3)", // Soft fill
                     borderDash: [5, 10, 2, 10], // Dash-dot pattern
-                    borderWidth: 2,
+                    borderWidth: 4,
                     pointStyle: "crossRot",
                     pointBorderColor: "rgba(153, 102, 255, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)", // White fill
@@ -148,8 +148,7 @@ const MultiYAxisChart = () => {
                     yAxisID: "y4",
                 },
             ],
-        };
-        
+        };        
 
         setChartData(data);
         setChartOptions(updateChartOptions("white", "white")); // Initial white theme
@@ -180,22 +179,22 @@ const MultiYAxisChart = () => {
                     y1: {
                         ...chartOptions.scales?.y1,
                         ticks: { color: "black" },
-                        grid: { drawOnChartArea: false },
+                        grid: { color: "black", drawOnChartArea: true },                        
                     },
                     y2: {
                         ...chartOptions.scales?.y2,
                         ticks: { color: "black" },
-                        grid: { color: "black", drawOnChartArea: false },
+                        grid: { color: "black", drawOnChartArea: true },
                     },
                     y3: {
                         ...chartOptions.scales?.y3,
                         ticks: { color: "black" },
-                        grid: { drawOnChartArea: false },
+                        grid: { color:"black", drawOnChartArea: true },
                     },
                     y4: {
                         ...chartOptions.scales?.y4,
                         ticks: { color: "black" },
-                        grid: { drawOnChartArea: false },
+                        grid: { color:"black", drawOnChartArea: true },
                     },
                 },
             };
