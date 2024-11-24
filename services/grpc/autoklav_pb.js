@@ -1424,7 +1424,7 @@ proto.autoklav.StateMachineValues.prototype.toObject = function(opt_includeInsta
 proto.autoklav.StateMachineValues.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    time: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    elapsedtime: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
     temp: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
     tempk: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
     dtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
@@ -1434,7 +1434,8 @@ proto.autoklav.StateMachineValues.toObject = function(includeInstance, msg) {
     fr: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
     r: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
     sumfr: jspb.Message.getFloatingPointFieldWithDefault(msg, 11, 0.0),
-    sumr: jspb.Message.getFloatingPointFieldWithDefault(msg, 12, 0.0)
+    sumr: jspb.Message.getFloatingPointFieldWithDefault(msg, 12, 0.0),
+    timestamp: jspb.Message.getFieldWithDefault(msg, 13, "")
   };
 
   if (includeInstance) {
@@ -1476,8 +1477,8 @@ proto.autoklav.StateMachineValues.deserializeBinaryFromReader = function(msg, re
       msg.setId(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readUint32());
-      msg.setTime(value);
+      var value = /** @type {number} */ (reader.readDouble());
+      msg.setElapsedtime(value);
       break;
     case 3:
       var value = /** @type {number} */ (reader.readDouble());
@@ -1519,6 +1520,10 @@ proto.autoklav.StateMachineValues.deserializeBinaryFromReader = function(msg, re
       var value = /** @type {number} */ (reader.readDouble());
       msg.setSumr(value);
       break;
+    case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTimestamp(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -1555,9 +1560,9 @@ proto.autoklav.StateMachineValues.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getTime();
-  if (f !== 0) {
-    writer.writeUint32(
+  f = message.getElapsedtime();
+  if (f !== 0.0) {
+    writer.writeDouble(
       2,
       f
     );
@@ -1632,6 +1637,13 @@ proto.autoklav.StateMachineValues.serializeBinaryToWriter = function(message, wr
       f
     );
   }
+  f = message.getTimestamp();
+  if (f.length > 0) {
+    writer.writeString(
+      13,
+      f
+    );
+  }
 };
 
 
@@ -1654,11 +1666,11 @@ proto.autoklav.StateMachineValues.prototype.setId = function(value) {
 
 
 /**
- * optional uint32 time = 2;
+ * optional double elapsedTime = 2;
  * @return {number}
  */
-proto.autoklav.StateMachineValues.prototype.getTime = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+proto.autoklav.StateMachineValues.prototype.getElapsedtime = function() {
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
 };
 
 
@@ -1666,8 +1678,8 @@ proto.autoklav.StateMachineValues.prototype.getTime = function() {
  * @param {number} value
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
-proto.autoklav.StateMachineValues.prototype.setTime = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+proto.autoklav.StateMachineValues.prototype.setElapsedtime = function(value) {
+  return jspb.Message.setProto3FloatField(this, 2, value);
 };
 
 
@@ -1834,7 +1846,7 @@ proto.autoklav.StateMachineValues.prototype.setSumfr = function(value) {
 
 
 /**
- * optional double sumr = 12;
+ * optional double sumR = 12;
  * @return {number}
  */
 proto.autoklav.StateMachineValues.prototype.getSumr = function() {
@@ -1848,6 +1860,24 @@ proto.autoklav.StateMachineValues.prototype.getSumr = function() {
  */
 proto.autoklav.StateMachineValues.prototype.setSumr = function(value) {
   return jspb.Message.setProto3FloatField(this, 12, value);
+};
+
+
+/**
+ * optional string timestamp = 13;
+ * @return {string}
+ */
+proto.autoklav.StateMachineValues.prototype.getTimestamp = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.autoklav.StateMachineValues} returns this
+ */
+proto.autoklav.StateMachineValues.prototype.setTimestamp = function(value) {
+  return jspb.Message.setProto3StringField(this, 13, value);
 };
 
 
