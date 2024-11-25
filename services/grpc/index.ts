@@ -83,8 +83,8 @@ export const getAllProcesses = () => {
 };
 
 export const getAllProcessLogs = (ids: number[]) => {
-  const data = new Messages.ProcessLogRequest();
-  data.setId(1);
+  const data = new Messages.ProcessLogRequest();  
+  data.setIdsList(ids);
 
   return gRpcCall<ProcessLogList>("getProcessLogs", data);
 };

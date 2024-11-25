@@ -17,6 +17,7 @@ const HistoryTable = () => {
         queryKey: ["processesDataQuery"],
         queryFn: async () => {
             const response = await getProcessesAction();
+            
             // Transform data directly
             return response?.processesList?.map((process) => ({
                 ...process,
@@ -35,7 +36,7 @@ const HistoryTable = () => {
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: (response) => {
             // Handle process logs if needed
-            console.log("Process logs:", response.processlogsList);
+            console.log("Process logs:", response);
         },
     });
 
@@ -132,21 +133,21 @@ const HistoryTable = () => {
         return formatDate(rowData.processstart); // Safe formatting
     };
 
-    const handlePrint = () => {
-        console.log("Print processes:", selectedProcesses);
+    const handlePrint = () => {        
+        const iDs = selectedProcesses.map((process) => process.id);        
+        getProcessLogMutation(iDs);
     };
 
     const handleGraph = () => {
-        console.log("Graph processes:", selectedProcesses);
-        const identifiers = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation(identifiers);
+        const iDs = selectedProcesses.map((process) => process.id);
+        getProcessLogMutation(iDs);
     };
 
     const header = renderHeader();
 
     return (
         <div className="card">
-            <h2>Process History</h2>
+            <h2>Povijest procesa</h2>
             <DataTable
                 className="p-datatable-gridlines"
                 showGridlines
@@ -161,13 +162,13 @@ const HistoryTable = () => {
                 filterDisplay="menu"
                 globalFilterFields={["productname", "processstart"]}
                 header={header}
-                emptyMessage="No processes found."
+                emptyMessage="Nema pronađenih procesa."
             >
                 <Column selectionMode="multiple" headerStyle={{ width: "3em" }} />
-                <Column field="productname" header="Process Name" />
+                <Column field="productname" header="Naziv procesa" />
                 <Column
                     field="processstart"
-                    header="Start Date"
+                    header="Datum početka"
                     dataType="date"
                     body={dateBodyTemplate}
                     filter
@@ -175,14 +176,10 @@ const HistoryTable = () => {
                     showFilterMatchModes
                     style={{ maxWidth: "200px" }}
                 />
-                <Column field="processlength" header="Process Length (s)" />
+                <Column field="processlength" header="Duljina procesa (s)" />
             </DataTable>
         </div>
     );
 };
 
 export default HistoryTable;
-function showError(arg0: string, arg1: string) {
-    throw new Error("Function not implemented.");
-}
-
