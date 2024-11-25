@@ -30,9 +30,9 @@ export const getProcessesAction = async () => {
     return processes;
 }
 
-export const getProcessLogsAction = async (ids: number[]) => {    
+export const getProcessLogsAction = async ({ids, source} : {ids: number[], source:string}) => {    
     const processLogs = await getAllProcessLogs(ids);    
-    return processLogs;
+    return {data: processLogs, source: source};
 }
 
 //#endregion

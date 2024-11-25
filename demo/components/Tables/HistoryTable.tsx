@@ -34,9 +34,15 @@ const HistoryTable = () => {
     });
 
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
-        onSuccess: (response) => {
+        onSuccess: ({data, source}) => {
             // Handle process logs if needed
-            console.log("Process logs:", response);
+            console.log("Process logs:", data);
+
+            if (source === "print") {
+                console.log("Handle print logic here.");
+            } else if (source === "graph") {
+                console.log("Handle graph logic here.");
+            }
         },
     });
 
@@ -134,13 +140,13 @@ const HistoryTable = () => {
     };
 
     const handlePrint = () => {        
-        const iDs = selectedProcesses.map((process) => process.id);        
-        getProcessLogMutation(iDs);
+        const ids = selectedProcesses.map((process) => process.id);        
+        getProcessLogMutation({ids: ids, source: 'print'});
     };
 
     const handleGraph = () => {
-        const iDs = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation(iDs);
+        const ids = selectedProcesses.map((process) => process.id);
+        getProcessLogMutation({ids: ids, source: 'graph'});
     };
 
     const header = renderHeader();
@@ -152,7 +158,7 @@ const HistoryTable = () => {
                 className="p-datatable-gridlines"
                 showGridlines
                 value={processesDataQuery || []}
-                loading={loading}
+                loading={loading || isLogLoading}
                 paginator
                 rows={5}
                 dataKey="id"
