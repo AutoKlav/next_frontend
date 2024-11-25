@@ -9,8 +9,10 @@ import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actions";
+import { useToast } from "@/layout/context/toastcontext";
 
 const HistoryTable = () => {
+    const { showError } = useToast();
     const { data: processesDataQuery, isLoading: loading } = useQuery({
         queryKey: ["processesDataQuery"],
         queryFn: async () => {
@@ -20,6 +22,12 @@ const HistoryTable = () => {
                 ...process,
                 processstart: new Date(process.processstart),
             }));
+        },
+        onError(err) {
+            showError(
+                "Greška",
+                "Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno."
+            );
         },
     });
 
@@ -173,3 +181,7 @@ const HistoryTable = () => {
 };
 
 export default HistoryTable;
+function showError(arg0: string, arg1: string) {
+    throw new Error("Function not implemented.");
+}
+
