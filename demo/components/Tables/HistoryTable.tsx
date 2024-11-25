@@ -9,24 +9,40 @@ import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actions";
+import { useToast } from "@/layout/context/toastcontext";
 
 const HistoryTable = () => {
+    const { showError } = useToast();
     const { data: processesDataQuery, isLoading: loading } = useQuery({
         queryKey: ["processesDataQuery"],
         queryFn: async () => {
             const response = await getProcessesAction();
+            
             // Transform data directly
-            return response.processesList.map((process) => ({
+            return response?.processesList?.map((process) => ({
                 ...process,
                 processstart: new Date(process.processstart),
             }));
         },
+        onError(err) {
+            showError(
+                "Greška",
+                "Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno."
+            );
+            console.log(err);
+        },
     });
 
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
-        onSuccess: (response) => {
+        onSuccess: ({data, source}) => {
             // Handle process logs if needed
-            console.log("Process logs:", response.processlogsList);
+            console.log("Process logs:", data);
+
+            if (source === "print") {
+                console.log("Handle print logic here.");
+            } else if (source === "graph") {
+                console.log("Handle graph logic here.");
+            }
         },
     });
 
@@ -123,26 +139,26 @@ const HistoryTable = () => {
         return formatDate(rowData.processstart); // Safe formatting
     };
 
-    const handlePrint = () => {
-        console.log("Print processes:", selectedProcesses);
+    const handlePrint = () => {        
+        const ids = selectedProcesses.map((process) => process.id);        
+        getProcessLogMutation({ids: ids, source: 'print'});
     };
 
     const handleGraph = () => {
-        console.log("Graph processes:", selectedProcesses);
-        const identifiers = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation(identifiers);
+        const ids = selectedProcesses.map((process) => process.id);
+        getProcessLogMutation({ids: ids, source: 'graph'});
     };
 
     const header = renderHeader();
 
     return (
         <div className="card">
-            <h2>Process History</h2>
+            <h2>Povijest procesa</h2>
             <DataTable
                 className="p-datatable-gridlines"
                 showGridlines
                 value={processesDataQuery || []}
-                loading={loading}
+                loading={loading || isLogLoading}
                 paginator
                 rows={5}
                 dataKey="id"
@@ -152,13 +168,13 @@ const HistoryTable = () => {
                 filterDisplay="menu"
                 globalFilterFields={["productname", "processstart"]}
                 header={header}
-                emptyMessage="No processes found."
+                emptyMessage="Nema pronađenih procesa."
             >
                 <Column selectionMode="multiple" headerStyle={{ width: "3em" }} />
-                <Column field="productname" header="Process Name" />
+                <Column field="productname" header="Naziv procesa" />
                 <Column
                     field="processstart"
-                    header="Start Date"
+                    header="Datum početka"
                     dataType="date"
                     body={dateBodyTemplate}
                     filter
@@ -166,7 +182,7 @@ const HistoryTable = () => {
                     showFilterMatchModes
                     style={{ maxWidth: "200px" }}
                 />
-                <Column field="processlength" header="Process Length (s)" />
+                <Column field="processlength" header="Duljina procesa (s)" />
             </DataTable>
         </div>
     );
