@@ -18,7 +18,7 @@ const HistoryTable = () => {
         queryFn: async () => {
             const response = await getProcessesAction();
             // Transform data directly
-            return response.processesList.map((process) => ({
+            return response?.processesList?.map((process) => ({
                 ...process,
                 processstart: new Date(process.processstart),
             }));
@@ -28,6 +28,7 @@ const HistoryTable = () => {
                 "Greška",
                 "Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno."
             );
+            console.log(err);
         },
     });
 
