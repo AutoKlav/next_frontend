@@ -81,10 +81,4 @@ export const updateSensorAction = async () => {
     return response;
 }
 
-//TODO
-export const emergencyStopAction = async () => {
-    //const response = await stopProcess();
-    //return response;
-}
-
 //#endregion

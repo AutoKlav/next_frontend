@@ -11,8 +11,7 @@ import ChipStates from '@/demo/components/Chips/ChipList';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-cloud', headerName: 'Temperatura pare', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },    
 ];
 
 const stateValues = [
@@ -71,13 +70,16 @@ const DashboardPage = () => {
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
             refetchInterval: 1000,                        
-        },        
+            onSuccess: (data) => {
+                console.log('State machine values:', data);
+            },
+        },
+        
     );
         
     temperatures[0].value = stateMachineValues?.temp?.toString() || 'N/A';
     temperatures[1].value = stateMachineValues?.tempk?.toString() || 'N/A';
-    //temperatures[2].value = stateMachineValues?. .toString() || 'N/A';
-
+    
     stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
@@ -90,7 +92,6 @@ const DashboardPage = () => {
          <div className="col-6">
             <Button label="Start" onClick={handleStartProcess} className="p-button-success" />
             <Button label="Stop" onClick={handleStopProcess} className="p-button-danger" />            
-            <Button label="Emergency Stop" onClick={handleStopProcess} className="p-button-danger" icon="pi pi-exclamation-triangle"/>            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (
