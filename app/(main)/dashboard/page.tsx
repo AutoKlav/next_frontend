@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from 'primereact/button';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction, updateSensorAction } from '../api/actions';
+import { getSensorRelayValuesAction, getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction, updateSensorAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -95,8 +95,26 @@ const DashboardPage = () => {
                     return;
                 }
             },
+        },        
+    );
+
+    const { data: relaySensorValues } = useQuery(
+        { 
+            queryKey: ['relaySensorValues'],
+            queryFn: () => getSensorRelayValuesAction(),
+            refetchInterval: 1000,
+            onError: (error) => {
+                console.error('Error getting relay sensor values:', error);
+                showError('Relej','Greška prilikom dohvaćanja podataka');
+            },
+            onSuccess: (data) => {
+                if(checkForErrors(data)){
+                    showError('Relej','Greška prilikom dohvaćanja releja', 500);
+                    return;                    
+                }
+                console.log('Relay sensor values:', data);
+            },
         },
-        
     );
         
     temperatures[0].value = stateMachineValues?.temp?.toString() || 'N/A';
