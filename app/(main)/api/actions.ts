@@ -1,6 +1,6 @@
 "use server"
 
-import { getAllProcessLogs, getAllProcesses, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
+import { getAllProcessLogs, getAllProcesses, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
 import { ProcessConfigMode, ProcessConfigType, StartProcessRequest } from "@/types/grpc";
 
 //#region GET Actions
@@ -17,6 +17,11 @@ export const getStateMachineValuesAction = async () => {
 
 export const getSensorValuesAction = async () => {
     const sensors = await getSensorValues();
+    return sensors;
+}
+
+export const getSensorRelayValuesAction = async () => {
+    const sensors = await getSensorRelayValues();
     return sensors;
 }
 
