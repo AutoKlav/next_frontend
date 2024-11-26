@@ -84,9 +84,16 @@ const DashboardPage = () => {
         { 
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
-            refetchInterval: 1000,                        
+            refetchInterval: 1000,
+            onError: (error) => {
+                console.error('Error getting state machine values:', error);
+                showError('Proces','Greška prilikom dohvaćanja podataka');
+            },
             onSuccess: (data) => {
-                console.log('State machine values:', data);
+                if(checkForErrors(data)){
+                    showError('Proces','Greška prilikom pokretanja procesa', 500);
+                    return;
+                }
             },
         },
         
