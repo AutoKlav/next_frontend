@@ -105,8 +105,8 @@ const DashboardPage = () => {
     return (
         <div className="grid p-2">
          <div className="col-6">
-            <Button label="Start" onClick={handleStartProcess} className="p-button-success" />
-            <Button label="Stop" onClick={handleStopProcess} className="p-button-danger" />            
+            <Button label="Pokreni proces" onClick={handleStartProcess} className="p-button-success" />
+            <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (
