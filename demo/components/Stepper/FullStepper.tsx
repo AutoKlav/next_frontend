@@ -10,6 +10,7 @@ import CalibrationInput from "../Inputs/CalibrationInput"; // Placeholder compon
 import CalibrationResults from "../Inputs/CalibrationResults"; // Placeholder component
 import SensorDropdown from "../Inputs/SensorDropdown"; // Placeholder component
 import { getStateMachineValuesAction } from "@/app/(main)/api/actions"; // Mutation action
+import { checkForErrors } from "@/utils/errorUtil";
 
 const FullStepper = () => {
     const { showWarn, showError } = useToast();
@@ -48,7 +49,7 @@ const FullStepper = () => {
             );
         },
         onSuccess: (data) => {            
-            if (data?.errorsstring?.includes("14 UNAVAILABLE")) {
+            if(checkForErrors(data)){            
                 errorPresent.current = true;
                 return;
             }
@@ -153,7 +154,6 @@ const FullStepper = () => {
     const handleCalibrate = () => {
         resetValues();
     }
-    console.log("X1X2 FullStepper", x1x2);
     
     return (
         <div className="card p-7 shadow-lg rounded-lg">

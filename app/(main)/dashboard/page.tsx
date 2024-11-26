@@ -3,16 +3,17 @@ import React from 'react';
 import { Button } from 'primereact/button';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction, updateSensorAction } from '../api/actions';
+import { getSensorRelayValuesAction, getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction, updateSensorAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
 import ChipStates from '@/demo/components/Chips/ChipList';
+import { useToast } from '@/layout/context/toastcontext';
+import { checkForErrors } from '@/utils/errorUtil';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-cloud', headerName: 'Temperatura pare', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },    
 ];
 
 const stateValues = [
@@ -34,13 +35,21 @@ const chipData = [
 ];
 
 const DashboardPage = () => {
+    const { showSuccess, showError } = useToast();
+
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
         onError: (error) => {
             console.error('Error stopping process:', error);
+            showError('Proces','Greška prilikom zaustavljanja procesa');
         },
         onSuccess: (data) => {
-            console.log('Process stopped:', data);
+            if(checkForErrors(data)){
+                showError('Proces','Greška prilikom zaustavljanja procesa');
+                return;
+            }
+
+            showSuccess('Proces','Proces je uspješno zaustavljen');
         },
     });
 
@@ -50,7 +59,12 @@ const DashboardPage = () => {
             console.error('Error stopping process:', error);
         },
         onSuccess: (data) => {
-            console.log('Process started:', data);
+            if(checkForErrors(data)){
+                showError('Proces','Greška prilikom pokretanja procesa');
+                return;
+            }
+
+            showSuccess('Proces','Proces je uspješno pokrenut');
         },
     });
 
@@ -70,14 +84,42 @@ const DashboardPage = () => {
         { 
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
-            refetchInterval: 1000,                        
+            refetchInterval: 1000,
+            onError: (error) => {
+                console.error('Error getting state machine values:', error);
+                showError('Proces','Greška prilikom dohvaćanja podataka');
+            },
+            onSuccess: (data) => {
+                if(checkForErrors(data)){
+                    showError('Proces','Greška prilikom pokretanja procesa', 500);
+                    return;
+                }
+            },
         },        
+    );
+
+    const { data: relaySensorValues } = useQuery(
+        { 
+            queryKey: ['relaySensorValues'],
+            queryFn: () => getSensorRelayValuesAction(),
+            refetchInterval: 1000,
+            onError: (error) => {
+                console.error('Error getting relay sensor values:', error);
+                showError('Relej','Greška prilikom dohvaćanja podataka');
+            },
+            onSuccess: (data) => {
+                if(checkForErrors(data)){
+                    showError('Relej','Greška prilikom dohvaćanja releja', 500);
+                    return;                    
+                }
+                console.log('Relay sensor values:', data);
+            },
+        },
     );
         
     temperatures[0].value = stateMachineValues?.temp?.toString() || 'N/A';
     temperatures[1].value = stateMachineValues?.tempk?.toString() || 'N/A';
-    //temperatures[2].value = stateMachineValues?. .toString() || 'N/A';
-
+    
     stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
@@ -88,9 +130,8 @@ const DashboardPage = () => {
     return (
         <div className="grid p-2">
          <div className="col-6">
-            <Button label="Start" onClick={handleStartProcess} className="p-button-success" />
-            <Button label="Stop" onClick={handleStopProcess} className="p-button-danger" />            
-            <Button label="Emergency Stop" onClick={handleStopProcess} className="p-button-danger" icon="pi pi-exclamation-triangle"/>            
+            <Button label="Pokreni proces" onClick={handleStartProcess} className="p-button-success" />
+            <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (

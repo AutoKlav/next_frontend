@@ -1,6 +1,7 @@
 import {
   ProcessInfoList,
   ProcessLogList,
+  SensorRelayValues,
   SensorValues,
   SetVariable,
   StartProcessRequest,
@@ -95,6 +96,12 @@ export const getSensorValues = () => {
 
   return gRpcCall<SensorValues>("getSensorValues", data);
 };
+
+export const getSensorRelayValues = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<SensorRelayValues>("getSensorRelayValues", data);
+}
 
 // State machine
 export const getStateMachineValues = () => {

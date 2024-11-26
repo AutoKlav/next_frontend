@@ -48,6 +48,17 @@ function deserialize_autoklav_ProcessLogRequest(buffer_arg) {
   return services_grpc_autoklav_pb.ProcessLogRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_autoklav_SensorRelayValues(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.SensorRelayValues)) {
+    throw new Error('Expected argument of type autoklav.SensorRelayValues');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_SensorRelayValues(buffer_arg) {
+  return services_grpc_autoklav_pb.SensorRelayValues.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_autoklav_SensorValues(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.SensorValues)) {
     throw new Error('Expected argument of type autoklav.SensorValues');
@@ -218,6 +229,17 @@ getSensorValues: {
     requestDeserialize: deserialize_autoklav_Empty,
     responseSerialize: serialize_autoklav_SensorValues,
     responseDeserialize: deserialize_autoklav_SensorValues,
+  },
+  getSensorRelayValues: {
+    path: '/autoklav.Autoklav/getSensorRelayValues',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.Empty,
+    responseType: services_grpc_autoklav_pb.SensorRelayValues,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_SensorRelayValues,
+    responseDeserialize: deserialize_autoklav_SensorRelayValues,
   },
   updateSensor: {
     path: '/autoklav.Autoklav/updateSensor',

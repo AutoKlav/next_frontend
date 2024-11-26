@@ -37,6 +37,15 @@ export interface SensorValues {
   pressure: number;
 }
 
+export interface SensorRelayValues {
+  waterFill: number;
+  heating: number;
+  bypass: number;
+  pump: number;
+  inPressure: number;
+  cooling: number;
+}
+
 // StateMachineValues message
 export interface StateMachineValues {
   id: number;
