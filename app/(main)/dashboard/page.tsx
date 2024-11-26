@@ -8,6 +8,8 @@ import { getStateMachineValuesAction, setVariableAction, startProcessAction, sto
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
 import ChipStates from '@/demo/components/Chips/ChipList';
+import { useToast } from '@/layout/context/toastcontext';
+import { checkForErrors } from '@/utils/errorUtil';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -33,13 +35,21 @@ const chipData = [
 ];
 
 const DashboardPage = () => {
+    const { showSuccess, showError } = useToast();
+
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
         onError: (error) => {
             console.error('Error stopping process:', error);
+            showError('Proces','Greška prilikom zaustavljanja procesa');
         },
         onSuccess: (data) => {
-            console.log('Process stopped:', data);
+            if(checkForErrors(data)){
+                showError('Proces','Greška prilikom zaustavljanja procesa');
+                return;
+            }
+
+            showSuccess('Proces','Proces je uspješno zaustavljen');
         },
     });
 
@@ -49,7 +59,12 @@ const DashboardPage = () => {
             console.error('Error stopping process:', error);
         },
         onSuccess: (data) => {
-            console.log('Process started:', data);
+            if(checkForErrors(data)){
+                showError('Proces','Greška prilikom pokretanja procesa');
+                return;
+            }
+
+            showSuccess('Proces','Proces je uspješno pokrenut');
         },
     });
 
