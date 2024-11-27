@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
 
@@ -10,6 +10,8 @@ import { DataCard } from '@/demo/components/Cards/DataCard';
 import ChipStates from '@/demo/components/Chips/ChipList';
 import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
+import { Dialog } from 'primereact/dialog';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -27,11 +29,11 @@ const pressures = [
     { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },    
 ];
 
-const chipData = [
-    { name: 'heating', label: 'Grijači', value: 0 },
-    { name: 'bypass', label: 'Bypass', value: 0 },
+const relayMapper = [
     { name: 'waterfill', label: 'Pumpa vode', value: 0 },
+    { name: 'heating', label: 'Grijači', value: 0 },
     { name: 'pump', label: 'Pumpa', value: 0 },
+    { name: 'bypass', label: 'Bypass', value: 0 },
     { name: 'inpressure', label: 'Ulazni tlak', value: 0 },
     { name: 'cooling', label: 'Hlađenje', value: 0 },
 ];
@@ -115,15 +117,15 @@ const DashboardPage = () => {
 
     pressures[0].value = stateMachineValues?.pressure?.toString() || 'N/A';
     //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
-
-    const state = stateMachineValues?.state || 0;
     
-    chipData[0].value = relaySensorValues?.waterFill || 0;
-    chipData[1].value = relaySensorValues?.heating || 0;
-    chipData[2].value = relaySensorValues?.bypass || 0;
-    chipData[3].value = relaySensorValues?.pump || 0;
-    chipData[4].value = relaySensorValues?.inPressure || 0;
-    chipData[5].value = relaySensorValues?.cooling || 0;
+    const state = stateMachineValues?.state || 0;
+    console.log(relaySensorValues);
+    relayMapper[0].value = relaySensorValues?.waterfill || 0;
+    relayMapper[1].value = relaySensorValues?.heating || 0;
+    relayMapper[2].value = relaySensorValues?.pump || 0;
+    relayMapper[3].value = relaySensorValues?.bypass || 0;
+    relayMapper[4].value = relaySensorValues?.inpressure || 0;
+    relayMapper[5].value = relaySensorValues?.cooling || 0;
 
     const handleStartProcess = () => {
         if(state === 0){
@@ -140,10 +142,28 @@ const DashboardPage = () => {
 
     const handleSetVariable = (minValue: number, maxValue: number) => {
         updateSensorAction();
-    }    
+    }
+
+    const [visible, setVisible] = useState(false);
+    const footerContent = (
+        <div>
+            <Button label="No" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
+            <Button label="Yes" icon="pi pi-check" onClick={() => setVisible(false)} autoFocus />
+        </div>
+    );
     
     return (
         <div className="grid p-2">
+            <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+            <Button label="Show" icon="pi pi-external-link" onClick={() => setVisible(true)} />
+            <Dialog header="Header" visible={visible} style={{ width: '50vw' }} onHide={() => {if (!visible) return; setVisible(false); }} footer={footerContent}>
+                <p className="m-0">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </p>
+            </Dialog>
          <div className="col-6">
             <Button label="Pokreni proces" onClick={handleStartProcess} className="p-button-success" />
             <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />            
@@ -179,7 +199,7 @@ const DashboardPage = () => {
             <div className="grid gap-2">
                 <div className="col-4">
                     <div className='flex flex-column gap-3'>
-                       {chipData.map((chip, index) => (
+                       {relayMapper.map((chip, index) => (
                             <ChipStates key={index} {...chip} />
                         ))}
                     </div>

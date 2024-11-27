@@ -38,11 +38,11 @@ export interface SensorValues {
 }
 
 export interface SensorRelayValues {
-  waterFill: number;
+  waterfill: number;
   heating: number;
   bypass: number;
   pump: number;
-  inPressure: number;
+  inpressure: number;
   cooling: number;
 }
 
