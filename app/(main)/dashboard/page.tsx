@@ -37,7 +37,7 @@ const chipData = [
 ];
 
 const DashboardPage = () => {
-    const { showSuccess, showError } = useToast();
+    const { showSuccess, showError, showWarn } = useToast();
 
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
@@ -54,33 +54,6 @@ const DashboardPage = () => {
             showSuccess('Proces','Proces je uspješno zaustavljen');
         },
     });
-
-    const { mutate: startProcess } = useMutation({
-        mutationFn: startProcessAction,
-        onError: (error) => {
-            console.error('Error stopping process:', error);
-        },
-        onSuccess: (data) => {
-            if(checkForErrors(data)){
-                showError('Proces','Greška prilikom pokretanja procesa');
-                return;
-            }
-
-            showSuccess('Proces','Proces je uspješno pokrenut');
-        },
-    });
-
-    const handleStartProcess = () => {
-        startProcess();
-    };
-
-    const handleStopProcess = () => {
-        stopProcess();
-    };
-
-    const handleSetVariable = (minValue: number, maxValue: number) => {
-        updateSensorAction();
-    }
 
     const { data: stateMachineValues } = useQuery(
         { 
@@ -100,6 +73,21 @@ const DashboardPage = () => {
         },        
     );
 
+    const { mutate: startProcess } = useMutation({
+        mutationFn: startProcessAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+        },
+        onSuccess: (data) => {
+            if(checkForErrors(data)){
+                showError('Proces','Greška prilikom pokretanja procesa');
+                return;
+            }
+
+            showSuccess('Proces','Proces je uspješno pokrenut');
+        },
+    });
+
     const { data: relaySensorValues } = useQuery(
         { 
             queryKey: ['relaySensorValues'],
@@ -117,7 +105,7 @@ const DashboardPage = () => {
             },
         },
     );
-        
+    
     temperatures[0].value = stateMachineValues?.temp?.toString() || 'N/A';
     temperatures[1].value = stateMachineValues?.tempk?.toString() || 'N/A';
     
@@ -135,7 +123,24 @@ const DashboardPage = () => {
     chipData[2].value = relaySensorValues?.bypass || 0;
     chipData[3].value = relaySensorValues?.pump || 0;
     chipData[4].value = relaySensorValues?.inPressure || 0;
-    chipData[5].value = relaySensorValues?.cooling || 0;   
+    chipData[5].value = relaySensorValues?.cooling || 0;
+
+    const handleStartProcess = () => {
+        if(state === 0){
+            startProcess();
+            return;
+        }
+
+        showWarn('Proces','Proces je već pokrenut');
+    };
+
+    const handleStopProcess = () => {
+        stopProcess();        
+    };
+
+    const handleSetVariable = (minValue: number, maxValue: number) => {
+        updateSensorAction();
+    }    
     
     return (
         <div className="grid p-2">
