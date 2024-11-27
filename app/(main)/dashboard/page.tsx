@@ -28,10 +28,12 @@ const pressures = [
 ];
 
 const chipData = [
-    { label: 'Pumpa', icon: 'pi pi-check', className: 'bg-green-700 text-white text-900 font-small' },
-    { label: 'Grijači', icon: 'pi pi-check', className: 'bg-green-700 text-white text-900 font-small' },
-    { label: 'Parni ventil', icon: 'pi pi-circle-off', className: 'bg-gray-500 text-white text-900 font-small' },
-    { label: 'Ispusni ventil', icon: 'pi pi-circle-off', className: 'bg-gray-500 text-white text-900 font-small' },
+    { name: 'heating', label: 'Grijači', value: 0 },
+    { name: 'bypass', label: 'Bypass', value: 0 },
+    { name: 'waterfill', label: 'Pumpa vode', value: 0 },
+    { name: 'pump', label: 'Pumpa', value: 0 },
+    { name: 'inpressure', label: 'Ulazni tlak', value: 0 },
+    { name: 'cooling', label: 'Hlađenje', value: 0 },
 ];
 
 const DashboardPage = () => {
@@ -89,7 +91,7 @@ const DashboardPage = () => {
                 console.error('Error getting state machine values:', error);
                 showError('Proces','Greška prilikom dohvaćanja podataka');
             },
-            onSuccess: (data) => {
+            onSuccess: (data) => {                
                 if(checkForErrors(data)){
                     showError('Proces','Greška prilikom pokretanja procesa', 500);
                     return;
@@ -111,8 +113,7 @@ const DashboardPage = () => {
                 if(checkForErrors(data)){
                     showError('Relej','Greška prilikom dohvaćanja releja', 500);
                     return;                    
-                }
-                console.log('Relay sensor values:', data);
+                }                
             },
         },
     );
@@ -126,6 +127,15 @@ const DashboardPage = () => {
 
     pressures[0].value = stateMachineValues?.pressure?.toString() || 'N/A';
     //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
+
+    const state = stateMachineValues?.state || 0;
+    
+    chipData[0].value = relaySensorValues?.waterFill || 0;
+    chipData[1].value = relaySensorValues?.heating || 0;
+    chipData[2].value = relaySensorValues?.bypass || 0;
+    chipData[3].value = relaySensorValues?.pump || 0;
+    chipData[4].value = relaySensorValues?.inPressure || 0;
+    chipData[5].value = relaySensorValues?.cooling || 0;   
     
     return (
         <div className="grid p-2">
@@ -172,7 +182,7 @@ const DashboardPage = () => {
                 <div className="col-3">                    
                 </div>
                 <div className="col-4">
-                {RenderState(Severity.Success)}
+                {RenderState(state)}
                 </div>
             </div>
                 </div>

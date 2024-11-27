@@ -5,16 +5,18 @@ import { Chip } from 'primereact/chip';
 export enum Severity {
     Success = "success",
     Info = "info",
-    Warning = "warning",
+    WarningFilling = "warning",
+    WarningHeating = "warning",
+    WarningCooling = "warning",    
     Danger = "danger"
 }
 
-const firstColumn = (name:string, severity: Severity) => {
+const firstColumn = (name:string, state: number) => {
     return <div className="col-4">
     <div className="card mb-0">
         <div className="flex justify-content-between mb-3">
             <div>                            
-                {RenderState(severity)}
+                {RenderState(state)}
                 <div className="text-900 font-medium text-xl">{name}</div>
             </div>                        
         </div>                    
@@ -23,13 +25,13 @@ const firstColumn = (name:string, severity: Severity) => {
 </div>;
 }
 
-const secondColumn = (time:string, severity: Severity) => {
+const secondColumn = (time:string, state: number) => {
     let subHeader = "Završeno vrijeme";
-    if(severity === Severity.Warning) {
+    if(state === 2) {
         subHeader = "Vrijeme rada";
-    }else if(severity === Severity.Success) {
+    }else if(state === 5 || state === 6) {
         subHeader = "Vrijeme";
-    }else if(severity === Severity.Danger) {
+    }else if(state === -1) {
         subHeader = "Vrijeme";
     }
     return  <div className="col-4">
@@ -44,9 +46,9 @@ const secondColumn = (time:string, severity: Severity) => {
             </div>;
 }
 
-const thirdColumn = (time:string, severity: Severity) => {
+const thirdColumn = (time:string, state: number) => {
     let subHeader = "(Procjena) Preostalog vremena";
-    if(severity === Severity.Success) {
+    if(state === 5 || state === 6) {
         subHeader = "Total F";
     }
     return <div className="col-4">
@@ -60,16 +62,22 @@ const thirdColumn = (time:string, severity: Severity) => {
                 </div>
             </div>;
 }
-export const RenderState = (severity: Severity) => {
-    switch (severity) {
-        case Severity.Success:
-            return <Chip key={'0'} label="Proces je završio" icon="pi pi-check" className="bg-green-700 text-900 text-xs font-small mb-3" />;
-        case Severity.Info:
-            return <Chip key={'1'} label="Spremno za početak" icon="pi pi-info-circle" className="bg-blue-500 text-900 text-xs font-small mb-3" />;
-        case Severity.Warning:
-            return <Chip key={'2'} label="Proces je u izvođenju" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-xs font-small mb-3" />;
-        case Severity.Danger:
-            return <Chip key={'3'} label="Greška u izvođenju" icon="pi pi-times" className="bg-red-700 text-900 text-xs font-small mb-3" />;
+export const RenderState = (state:number) => {
+    switch (state) {
+        case 0:
+            return <Chip key={'0'} label="Proces je spreman za početak" icon="pi pi-info-circle" className="bg-blue-500 text-900 text-sm font-medium mb-3" />;
+        case 2:
+            return <Chip key={'1'} label="Proces je u izvođenju (Punjenje)" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-sm font-medium mb-3" />;
+        case 3:
+            return <Chip key={'2'} label="Proces je u izvođenju (Zagrijavanje)" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-sm font-medium mb-3" />;
+        case 4:
+            return <Chip key={'3'} label="Proces je u izvođenju (Hlađenje)" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-sm font-medium mb-3" />;
+        case 5:
+            return <Chip key={'6'} label="Proces je pri kraju" icon="pi pi-check" className="bg-green-700 text-900 text-sm font-medium mb-3" />;
+        case 6:
+            return <Chip key={'6'} label="Proces je završio" icon="pi pi-check" className="bg-green-700 text-900 text-sm font-medium mb-3" />;
+        case -1:
+            return <Chip key={'5'} label="Greška u izvođenju" icon="pi pi-times" className="bg-red-700 text-900 text-sm font-medium mb-3" />;
         default:
             return null;
     }
@@ -77,7 +85,7 @@ export const RenderState = (severity: Severity) => {
 
 const StatusHeader = () => {
 
-    const severity = Severity.Danger;
+    const severity = -1;
     const name = "Grah 500g";
     const timeSecond = "00:30:00";
     const timeThird = "00:30:00";
