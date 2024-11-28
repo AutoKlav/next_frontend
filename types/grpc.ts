@@ -38,11 +38,11 @@ export interface SensorValues {
 }
 
 export interface SensorRelayValues {
-  waterFill: number;
+  waterfill: number;
   heating: number;
   bypass: number;
   pump: number;
-  inPressure: number;
+  inpressure: number;
   cooling: number;
 }
 
@@ -60,6 +60,7 @@ export interface StateMachineValues {
   r: number;
   sumfr: number;
   sumr: number;
+  timestamp: string;
   errorsstring: string | undefined;
 }
 
