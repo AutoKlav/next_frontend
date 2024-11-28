@@ -12,6 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { ProgressBar } from 'primereact/progressbar';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -153,8 +154,7 @@ const DashboardPage = () => {
     );
     
     return (
-        <div className="grid p-2">
-            <ProgressSpinner style={{width: '50px', height: '50px'}} strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s" />
+        <div className="grid p-2">            
             <Button label="Show" icon="pi pi-external-link" onClick={() => setVisible(true)} />
             <Dialog header="Header" visible={visible} style={{ width: '50vw' }} onHide={() => {if (!visible) return; setVisible(false); }} footer={footerContent}>
                 <p className="m-0">
@@ -208,6 +208,9 @@ const DashboardPage = () => {
                 </div>
                 <div className="col-4">
                 {RenderState(state)}
+                {state !== 0 &&(
+                    <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }} className='ml-2 mr-2'></ProgressBar>
+                )}
                 </div>
             </div>
                 </div>
