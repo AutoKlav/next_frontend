@@ -5,7 +5,7 @@ import jsPDF from "jspdf";
 export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOptions: ChartOptions<"line">) => {
     const chartInstance = chartRef.current?.getChart();
     if (chartInstance && chartOptions) {
-        const updatedOptions: ChartOptions<"line"> = {
+        const updatedOptions: any = {
             ...chartOptions,
             plugins: {
                 ...chartOptions.plugins,
@@ -21,29 +21,30 @@ export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOpt
                 },
                 y: {
                     ...chartOptions.scales?.y,
-                    ticks: { color: "black" },
-                    grid: { color: "black" },
-                },
-                y1: {
-                    ...chartOptions.scales?.y1,
-                    ticks: { color: "black" },
-                    grid: { color: "black", drawOnChartArea: true },                        
-                },
+                    ticks: { color: "textColor", stepSize: 10 },
+
+                    grid: { color: "black", drawOnChartArea: true },
+                },                
+                // y1: {
+                //     ...chartOptions.scales?.y1,
+                //     ticks: { color: "black" },
+                //     grid: { color: "black", drawOnChartArea: true },                        
+                // },
                 y2: {
                     ...chartOptions.scales?.y2,
-                    ticks: { color: "black" },
-                    grid: { color: "black", drawOnChartArea: true },
-                },
-                y3: {
-                    ...chartOptions.scales?.y3,
-                    ticks: { color: "black" },
-                    grid: { color:"black", drawOnChartArea: true },
-                },
-                y4: {
-                    ...chartOptions.scales?.y4,
-                    ticks: { color: "black" },
-                    grid: { color:"black", drawOnChartArea: true },
-                },
+                    ticks: { color: "black", stepSize: 0.5 },
+                    grid: { color: "black", drawOnChartArea: false },
+                },                
+                // y3: {
+                //     ...chartOptions.scales?.y3,
+                //     ticks: { color: "black" },
+                //     grid: { color:"black", drawOnChartArea: true },
+                // },
+                // y4: {
+                //     ...chartOptions.scales?.y4,
+                //     ticks: { color: "black" },
+                //     grid: { color:"black", drawOnChartArea: true },
+                // },
             },
         };
 

@@ -135,7 +135,7 @@ const MultiYAxisChart = () => {
     useEffect(() => {
         const updateChartOptions = (textColor: string, gridColor: string): ChartOptions<"line"> => ({
             maintainAspectRatio: true,
-            aspectRatio: 1.6, // Wider graph
+            aspectRatio: 1.6,
             plugins: {
                 legend: {
                     display: true,
@@ -158,40 +158,33 @@ const MultiYAxisChart = () => {
                 },
                 y: {
                     type: "linear",
-                    position: "left",                    
-                    ticks: { color: textColor, stepSize: 20 },                    
-                    grid: {  color: gridColor, drawOnChartArea: true },
+                    position: "left",
+                    //offset: true,
+                    ticks: {
+                        color: textColor,
+                        stepSize: 10, // Correct step size for linear scale,                        
+                    },
+                    grid: {
+                        color: gridColor,
+                        drawOnChartArea: true,
+                    },
                 },
-                // y1: {
-                //     type: "linear",
-                //     position: "left",
-                //     offset: true,
-                //     ticks: { color: textColor, stepSize: 10 },
-                //     grid: {  color: gridColor, drawOnChartArea: true },
-                // },
                 y2: {
                     type: "linear",
                     position: "right",
-                    offset: false,
-                    ticks: { color: textColor, stepSize: 0.5 },
-                    grid: { color: gridColor, drawOnChartArea: false },
+                    //offset: false,
+                    ticks: {
+                        color: textColor,
+                        stepSize: 0.5, // Correct step size for y2 axis                        
+                    },
+                    grid: {
+                        color: gridColor,
+                        drawOnChartArea: false,
+                    },
                 },
-                // y3: {
-                //     type: "linear",
-                //     position: "right",
-                //     offset: false,
-                //     ticks: { color: textColor, stepSize: 5 },
-                //     grid: { color: gridColor, drawOnChartArea: true },
-                // },
-                // y4: {
-                //     type: "linear",
-                //     position: "right",
-                //     offset: true,
-                //     ticks: { color: textColor, stepSize:12 },
-                //     grid: { color: gridColor, drawOnChartArea: true },
-                // },
             },
         });
+        
         getProcessLogMutation({ ids: [55], source: "graph" });
         setChartOptions(updateChartOptions("white", "white")); // Initial white theme
     }, []);
