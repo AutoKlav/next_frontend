@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Chart } from "primereact/chart";
-import jsPDF from "jspdf";
-import { getCurrentDateTime } from "@/utils/dateUtil";
 import { Button } from "primereact/button";
 import { ChartOptions } from "chart.js";
 import { handleExportToPDF } from "@/utils/exportUtil";
