@@ -8,6 +8,15 @@ import { handleExportToPDF } from "@/utils/exportUtil";
 import { useMutation } from "@tanstack/react-query";
 import { getProcessLogsAction } from "@/app/(main)/api/actions";
 
+interface TransformedData {
+    timestamp: string[];
+    temp: number[];
+    tempk: number[];
+    sumfr: number[];
+    fr: number[];
+    pressure: number[];
+}
+
 const MultiYAxisChart = () => {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
@@ -16,7 +25,27 @@ const MultiYAxisChart = () => {
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: ({data, source}) => {
             
-            console.log("Process logs:", data.processlogsList);            
+            console.log("Process logs:", data.processlogsList);
+            
+            const transformedData: TransformedData = {
+                timestamp: [],
+                temp: [],
+                tempk: [],
+                sumfr: [],
+                fr: [],
+                pressure: [],
+            };
+
+            data.processlogsList.forEach((log) => {
+                transformedData.timestamp.push(log.timestamp);
+                transformedData.temp.push(log.temp);
+                transformedData.tempk.push(log.tempk);
+                transformedData.sumfr.push(log.sumfr);
+                transformedData.fr.push(log.fr);
+                transformedData.pressure.push(log.pressure);
+            });
+
+            console.log("Transformed data:", transformedData);
         },
     });
     

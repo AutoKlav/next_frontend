@@ -60,6 +60,7 @@ export interface StateMachineValues {
   r: number;
   sumfr: number;
   sumr: number;
+  timestamp: string;
   errorsstring: string | undefined;
 }
 
