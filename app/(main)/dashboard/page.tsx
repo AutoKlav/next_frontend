@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
-import { RenderState, Severity } from '@/demo/components/StatusHeader/StatusHeader';
+import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 
 import { getSensorRelayValuesAction, getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction, updateSensorAction } from '../api/actions';
 
@@ -11,8 +11,10 @@ import ChipStates from '@/demo/components/Chips/ChipList';
 import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import { ProgressBar } from 'primereact/progressbar';
+import { StartProcessRequest } from '@/types/grpc';
+import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
+import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -41,6 +43,44 @@ const relayMapper = [
 
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
+    const [isModalVisible, setModalVisibility] = useState(false);    
+    
+    // const request: StartProcessRequest = {
+    //     processConfig: {
+    //       customTemp: 0,
+    //       finishTemp: 40,
+    //       maintainPressure: 2,
+    //       maintainTemp: 120,
+    //       mode: ProcessConfigMode.TARGETF,
+    //       targetF: 5,
+    //       targetTime: 20,
+    //       type: ProcessConfigType.STERILIZATION
+    //     },
+    //     processInfo: {
+    //       bacteria: 'nulla do laborum laboris labore',
+    //       description: 'reprehenderit magna eiusmod et',
+    //       processLength: 'ex',
+    //       processStart: '2024-01-01T00:00:00',
+    //       productName: 'deserunt enim tempor',
+    //       productQuantity: 'sint aliqua do laborum'
+    //     }
+    //   } 
+    //#region  Modal inputs    
+    const bacteria = React.useRef<string>();
+    const description = React.useRef<string>();
+    const productName = React.useRef<string>();
+    const productQuantity = React.useRef<string>();
+
+    const customTemp = React.useRef<number>(0);
+    const finishTemp = React.useRef<number>(0);
+    const maintainPressure = React.useRef<number>(0);
+    const maintainTemp = React.useRef<number>(0);
+    const mode = React.useRef<number>(0);
+    const targetF = React.useRef<number>(0);
+    const targetTime = React.useRef<number>(0);
+    const type = React.useRef<number>(0);
+    //#endregion
+    
 
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
@@ -120,7 +160,7 @@ const DashboardPage = () => {
     //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
-    console.log(relaySensorValues);
+    
     relayMapper[0].value = relaySensorValues?.waterfill || 0;
     relayMapper[1].value = relaySensorValues?.heating || 0;
     relayMapper[2].value = relaySensorValues?.pump || 0;
@@ -129,12 +169,13 @@ const DashboardPage = () => {
     relayMapper[5].value = relaySensorValues?.cooling || 0;
 
     const handleStartProcess = () => {
-        if(state === 0){
-            startProcess();
-            return;
-        }
+        setModalVisibility(true);
+        // if(state === 0){
+        //     startProcess();
+        //     return;
+        // }
 
-        showWarn('Proces','Proces je već pokrenut');
+        // showWarn('Proces','Proces je već pokrenut');
     };
 
     const handleStopProcess = () => {
@@ -144,24 +185,42 @@ const DashboardPage = () => {
     const handleSetVariable = (minValue: number, maxValue: number) => {
         updateSensorAction();
     }
-
-    const [visible, setVisible] = useState(false);
+    
     const footerContent = (
         <div>
-            <Button label="No" icon="pi pi-times" onClick={() => setVisible(false)} className="p-button-text" />
-            <Button label="Yes" icon="pi pi-check" onClick={() => setVisible(false)} autoFocus />
+            <Button label="No" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
+            <Button label="Yes" icon="pi pi-check" onClick={() => setModalVisibility(false)} autoFocus />
         </div>
     );
+
+    console.log(productName.current, bacteria.current);
     
     return (
-        <div className="grid p-2">            
-            <Button label="Show" icon="pi pi-external-link" onClick={() => setVisible(true)} />
-            <Dialog header="Header" visible={visible} style={{ width: '50vw' }} onHide={() => {if (!visible) return; setVisible(false); }} footer={footerContent}>
+        <div className="grid p-2">
+            <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                 <p className="m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    <div className="grid p-2">
+                        <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                            <div className="grid">
+                                <div className="col-6">
+                                    <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} />
+                                    <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
+                                    <GeneralStringInput headerName="Unesite opis" inputValue={description} />
+                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />
+                                    <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
+                                    <GeneralNumberInput headerName="Unesite završnu temperaturu" inputValue={finishTemp} />
+                                </div>
+                                <div className="col-6">
+                                    <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
+                                    <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
+                                    <GeneralNumberInput headerName="Unesite mod" inputValue={mode} />
+                                    <GeneralNumberInput headerName="Unesite ciljnu F" inputValue={targetF} />
+                                    <GeneralNumberInput headerName="Unesite ciljno vrijeme" inputValue={targetTime} />
+                                    <GeneralNumberInput headerName="Unesite tip" inputValue={type} />
+                                </div>
+                            </div>
+                        </Dialog>
+                    </div>
                 </p>
             </Dialog>
          <div className="col-6">

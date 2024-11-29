@@ -43,8 +43,6 @@ const MultiYAxisChart = () => {
                 transformedData.pressure.push(log.pressure);
             });
 
-            console.log("Transformed data:", transformedData);
-
             updateChartData(transformedData);
         },
     });
@@ -57,29 +55,29 @@ const MultiYAxisChart = () => {
                     label: "Temperatura vode (0-120°C)",
                     data: data.temp,
                     fill: false,
-                    borderColor: "rgba(75, 192, 192, 1)",
-                    backgroundColor: "rgba(75, 192, 192, 0.3)",
+                    borderColor: "rgba(255, 99, 132, 1)",  // Light red
+                    backgroundColor: "rgba(255, 99, 132, 0.3)",  // Light red with transparency
                     borderDash: [10, 10],
-                    borderWidth: 5,
-                    pointStyle: "line",
-                    pointBorderColor: "rgba(75, 192, 192, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 5,
-                    tension: 0.4,
+                    borderWidth: 2,
+                    pointStyle: "rect",
+                    pointBorderColor: "rgba(255, 99, 132, 1)", // Matching red for points
+                    pointBackgroundColor: "rgba(255, 99, 132, 0.5)", // Light red with transparency for point
+                    pointRadius: 8, 
+                    tension: 1,  // Smooth curve
                     yAxisID: "y",
                 },
                 {
                     label: "Temperatura konzerve (0-120°C)",
                     data: data.tempk,
                     fill: false,
-                    borderColor: "rgba(255, 99, 132, 1)",
-                    backgroundColor: "rgba(255, 99, 132, 0.3)",
-                    borderDash: [25, 5],
-                    borderWidth: 2,
+                    borderColor: "rgba(204, 71, 71, 1)",  // Slightly lighter red than before
+                    backgroundColor: "rgba(204, 71, 71, 0.25)", // Less intense red with transparency
+                    borderDash: [10, 10],
                     pointStyle: "triangle",
-                    pointBorderColor: "rgba(255, 99, 132, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 2,
+                    borderWidth: 2,
+                    pointBorderColor: "rgba(204, 71, 71, 1)", // Slightly lighter red for points
+                    pointBackgroundColor: "rgba(204, 71, 71, 0.3)", // Softer, more transparent red for points
+                    pointRadius: 8,
                     tension: 0.3,
                     yAxisID: "y",
                 },
@@ -88,28 +86,28 @@ const MultiYAxisChart = () => {
                     data: data.pressure,
                     fill: false,
                     borderColor: "rgba(153, 102, 255, 1)",
-                    backgroundColor: "rgba(153, 102, 255, 0.3)",
-                    borderDash: [5, 10, 2, 10],
-                    borderWidth: 4,
-                    pointStyle: "crossRot",
+                    backgroundColor: "rgba(153, 102, 255, 0.23)",
+                    borderDash: [10, 10],
+                    borderWidth: 2,
+                    pointStyle: "rectRot",
                     pointBorderColor: "rgba(153, 102, 255, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 4,
-                    tension: 0.1,
+                    pointBackgroundColor: "#9966ff2a",
+                    pointRadius: 10, // Adjusted for better contrast
+                    tension: 0,
                     yAxisID: "y2",
                 },
                 {
                     label: "Fr (0-7)",
                     data: data.fr,
                     fill: false,
-                    borderColor: "rgba(54, 162, 235, 1)",
-                    backgroundColor: "rgba(54, 162, 235, 0.3)",
+                    borderColor: "rgba(54, 162, 235, 1)",  // Lighter blue (Fr)
+                    backgroundColor: "rgba(54, 162, 235, 0.3)",  // Light blue with transparency
                     borderDash: [2, 2],
                     borderWidth: 3,
-                    pointStyle: "rect",
-                    pointBorderColor: "rgba(54, 162, 235, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 4,
+                    pointStyle: "crossRot",
+                    pointBorderColor: "rgba(54, 162, 235, 1)",  // Lighter blue for points
+                    pointBackgroundColor: "rgba(54, 162, 235, 0.4)", // Lighter blue for point background
+                    pointRadius: 8,
                     tension: 0.2,
                     yAxisID: "y2",
                 },
@@ -117,30 +115,49 @@ const MultiYAxisChart = () => {
                     label: "sumFr (0-7)",
                     data: data.sumfr,
                     fill: false,
-                    borderColor: "rgba(255, 205, 86, 1)",
-                    backgroundColor: "rgba(255, 205, 86, 0.4)",
+                    borderColor: "rgba(30, 144, 255, 1)",  // Darker blue (sumFr)
+                    backgroundColor: "rgba(30, 144, 255, 0.4)",  // Darker blue with transparency
                     borderDash: [],
                     borderWidth: 1,
                     pointStyle: "star",
-                    pointBorderColor: "rgba(255, 205, 86, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 5,
+                    pointBorderColor: "rgba(30, 144, 255, 1)",  // Darker blue for points
+                    pointBackgroundColor: "rgba(30, 144, 255, 0.5)", // Darker blue for point background
+                    pointRadius: 12,  // Larger star points
                     tension: 0.5,
                     yAxisID: "y2",
-                },
+                }
             ],
         });
-    };
+    };  
 
     useEffect(() => {
-        const updateChartOptions = (textColor: string, gridColor: string): ChartOptions<"line"> => ({
+        const updateChartOptions = (textColor: string, gridColor: string): any => ({
             maintainAspectRatio: true,
-            aspectRatio: 1.6, // Wider graph
+            aspectRatio: 1.6,
             plugins: {
                 legend: {
                     display: true,
                     labels: {
-                        color: textColor,
+                        usePointStyle: true, // Use point styles in legend
+                        font: {
+                            size: 17, // Custom font size
+                            family: "Arial, sans-serif", // Custom font family (optional)
+                        },
+                        color: textColor, // Custom label color
+                        generateLabels: (chart: any) => {
+                            return chart.data.datasets.map((dataset: any, i: any) => ({
+                                text: dataset.label,
+                                fillStyle: dataset.backgroundColor as string,
+                                strokeStyle: dataset.borderColor as string,
+                                lineWidth: dataset.borderWidth,
+                                pointStyle: dataset.pointStyle as CanvasLineCap,
+                                hidden: !chart.isDatasetVisible(i),
+                                datasetIndex: i,
+                                fontColor: textColor, // Legend label color
+                                fontSize: 16, // Custom size per label if needed
+                            }));
+                        },
+                        padding: 20, // Space between legend items (optional)
                     },
                 },
             },
@@ -158,40 +175,33 @@ const MultiYAxisChart = () => {
                 },
                 y: {
                     type: "linear",
-                    position: "left",                    
-                    ticks: { color: textColor, stepSize: 20 },                    
-                    grid: {  color: gridColor, drawOnChartArea: true },
+                    position: "left",
+                    ticks: {
+                        color: textColor,
+                        stepSize: 10,
+                    },
+                    grid: {
+                        color: gridColor,
+                        drawOnChartArea: true,
+                    },
+                    min: 0,
                 },
-                // y1: {
-                //     type: "linear",
-                //     position: "left",
-                //     offset: true,
-                //     ticks: { color: textColor, stepSize: 10 },
-                //     grid: {  color: gridColor, drawOnChartArea: true },
-                // },
                 y2: {
                     type: "linear",
                     position: "right",
-                    offset: false,
-                    ticks: { color: textColor, stepSize: 0.5 },
-                    grid: { color: gridColor, drawOnChartArea: false },
+                    ticks: {
+                        color: textColor,
+                        stepSize: 0.5,
+                    },
+                    grid: {
+                        color: gridColor,
+                        drawOnChartArea: false,
+                    },
+                    min: 0,
                 },
-                // y3: {
-                //     type: "linear",
-                //     position: "right",
-                //     offset: false,
-                //     ticks: { color: textColor, stepSize: 5 },
-                //     grid: { color: gridColor, drawOnChartArea: true },
-                // },
-                // y4: {
-                //     type: "linear",
-                //     position: "right",
-                //     offset: true,
-                //     ticks: { color: textColor, stepSize:12 },
-                //     grid: { color: gridColor, drawOnChartArea: true },
-                // },
             },
-        });
+        });        
+        
         getProcessLogMutation({ ids: [55], source: "graph" });
         setChartOptions(updateChartOptions("white", "white")); // Initial white theme
     }, []);
