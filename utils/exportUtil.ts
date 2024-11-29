@@ -10,13 +10,40 @@ export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOpt
             plugins: {
                 ...chartOptions.plugins,
                 legend: {
-                    labels: { color: "black" },
+                    display: true,
+                    labels: {
+                        usePointStyle: true, // Use point styles in legend
+                        font: {
+                            size: 17, // Custom font size
+                            family: "Arial, sans-serif", // Custom font family (optional)
+                        },
+                        color: "black", // Custom label color
+                        generateLabels: (chart: any) => {
+                            return chart.data.datasets.map((dataset: any, i: any) => ({
+                                text: dataset.label,
+                                fillStyle: dataset.backgroundColor as string,
+                                strokeStyle: dataset.borderColor as string,
+                                lineWidth: dataset.borderWidth,
+                                pointStyle: dataset.pointStyle as CanvasLineCap,
+                                hidden: !chart.isDatasetVisible(i),
+                                datasetIndex: i,
+                                fontColor: "black", // Legend label color
+                                fontSize: 16, // Custom size per label if needed
+                            }));
+                        },
+                        padding: 20, // Space between legend items (optional)
+                    },
                 },
             },
             scales: {
                 x: {
                     ...chartOptions.scales?.x,
-                    ticks: { color: "black" },
+                    ticks: {
+                        color: "black",
+                        font: {
+                            size: 16,
+                        },
+                    },
                     grid: { color: "black" },
                 },
                 y: {
