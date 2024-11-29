@@ -168,6 +168,7 @@ const MultiYAxisChart = () => {
                         color: gridColor,
                         drawOnChartArea: true,
                     },
+                    min: 0,  // Set minimum value for y axis
                 },
                 y2: {
                     type: "linear",
@@ -181,6 +182,8 @@ const MultiYAxisChart = () => {
                         color: gridColor,
                         drawOnChartArea: false,
                     },
+                    min: 0,  // Set minimum value for y2 axis
+                    //max: 7,  // Set maximum value for y2 axis
                 },
             },
         });
