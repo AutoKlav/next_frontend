@@ -55,29 +55,29 @@ const MultiYAxisChart = () => {
                     label: "Temperatura vode (0-120°C)",
                     data: data.temp,
                     fill: false,
-                    borderColor: "rgba(75, 192, 192, 1)",
-                    backgroundColor: "rgba(75, 192, 192, 0.3)",
+                    borderColor: "rgba(255, 99, 132, 1)",  // Light red
+                    backgroundColor: "rgba(255, 99, 132, 0.3)",  // Light red with transparency
                     borderDash: [10, 10],
-                    borderWidth: 5,
-                    pointStyle: "line",
-                    pointBorderColor: "rgba(75, 192, 192, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 8, // Increased for better visibility
-                    tension: 0.4,
+                    borderWidth: 2,
+                    pointStyle: "rect",
+                    pointBorderColor: "rgba(255, 99, 132, 1)", // Matching red for points
+                    pointBackgroundColor: "rgba(255, 99, 132, 0.5)", // Light red with transparency for point
+                    pointRadius: 8, 
+                    tension: 1,  // Smooth curve
                     yAxisID: "y",
                 },
                 {
                     label: "Temperatura konzerve (0-120°C)",
                     data: data.tempk,
                     fill: false,
-                    borderColor: "rgba(255, 99, 132, 1)",
-                    backgroundColor: "rgba(255, 99, 132, 0.3)",
-                    borderDash: [25, 5],
-                    borderWidth: 2,
+                    borderColor: "rgba(204, 71, 71, 1)",  // Slightly lighter red than before
+                    backgroundColor: "rgba(204, 71, 71, 0.25)", // Less intense red with transparency
+                    borderDash: [10, 10],
                     pointStyle: "triangle",
-                    pointBorderColor: "rgba(255, 99, 132, 1)",
-                    pointBackgroundColor: "#ff638522",
-                    pointRadius: 10, // More prominent
+                    borderWidth: 2,
+                    pointBorderColor: "rgba(204, 71, 71, 1)", // Slightly lighter red for points
+                    pointBackgroundColor: "rgba(204, 71, 71, 0.3)", // Softer, more transparent red for points
+                    pointRadius: 8,
                     tension: 0.3,
                     yAxisID: "y",
                 },
@@ -87,27 +87,27 @@ const MultiYAxisChart = () => {
                     fill: false,
                     borderColor: "rgba(153, 102, 255, 1)",
                     backgroundColor: "rgba(153, 102, 255, 0.23)",
-                    borderDash: [5, 10, 2, 10],
-                    borderWidth: 4,
-                    pointStyle: "crossRot",
+                    borderDash: [10, 10],
+                    borderWidth: 2,
+                    pointStyle: "rectRot",
                     pointBorderColor: "rgba(153, 102, 255, 1)",
                     pointBackgroundColor: "#9966ff2a",
-                    pointRadius: 9, // Adjusted for better contrast
-                    tension: 0.1,
+                    pointRadius: 10, // Adjusted for better contrast
+                    tension: 0,
                     yAxisID: "y2",
                 },
                 {
                     label: "Fr (0-7)",
                     data: data.fr,
                     fill: false,
-                    borderColor: "rgba(54, 162, 235, 1)",
-                    backgroundColor: "rgba(54, 162, 235, 0.3)",
+                    borderColor: "rgba(54, 162, 235, 1)",  // Lighter blue (Fr)
+                    backgroundColor: "rgba(54, 162, 235, 0.3)",  // Light blue with transparency
                     borderDash: [2, 2],
                     borderWidth: 3,
-                    pointStyle: "rect",
-                    pointBorderColor: "rgba(54, 162, 235, 1)",
-                    pointBackgroundColor: "#36a3eb3d",
-                    pointRadius: 8, // Balanced size
+                    pointStyle: "crossRot",
+                    pointBorderColor: "rgba(54, 162, 235, 1)",  // Lighter blue for points
+                    pointBackgroundColor: "rgba(54, 162, 235, 0.4)", // Lighter blue for point background
+                    pointRadius: 8,
                     tension: 0.2,
                     yAxisID: "y2",
                 },
@@ -115,17 +115,17 @@ const MultiYAxisChart = () => {
                     label: "sumFr (0-7)",
                     data: data.sumfr,
                     fill: false,
-                    borderColor: "rgba(255, 205, 86, 1)",
-                    backgroundColor: "rgba(255, 205, 86, 0.4)",
+                    borderColor: "rgba(30, 144, 255, 1)",  // Darker blue (sumFr)
+                    backgroundColor: "rgba(30, 144, 255, 0.4)",  // Darker blue with transparency
                     borderDash: [],
                     borderWidth: 1,
                     pointStyle: "star",
-                    pointBorderColor: "rgba(255, 205, 86, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 10, // Larger star points
+                    pointBorderColor: "rgba(30, 144, 255, 1)",  // Darker blue for points
+                    pointBackgroundColor: "rgba(30, 144, 255, 0.5)", // Darker blue for point background
+                    pointRadius: 12,  // Larger star points
                     tension: 0.5,
                     yAxisID: "y2",
-                },
+                }
             ],
         });
     };  
