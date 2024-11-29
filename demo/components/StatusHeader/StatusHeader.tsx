@@ -3,12 +3,12 @@
 import { Chip } from 'primereact/chip';
 
 export enum Severity {
-    Success = "success",
-    Info = "info",
-    WarningFilling = "warning",
-    WarningHeating = "warning",
-    WarningCooling = "warning",    
-    Danger = "danger"
+    Success = 0,
+    Info = 0,    
+    WarningFilling = 2,
+    WarningHeating = 3,
+    WarningCooling = 4,    
+    Danger = -1,
 }
 
 const firstColumn = (name:string, state: number) => {
