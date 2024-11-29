@@ -62,7 +62,7 @@ const MultiYAxisChart = () => {
                     pointStyle: "line",
                     pointBorderColor: "rgba(75, 192, 192, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 5,
+                    pointRadius: 8, // Increased for better visibility
                     tension: 0.4,
                     yAxisID: "y",
                 },
@@ -77,7 +77,7 @@ const MultiYAxisChart = () => {
                     pointStyle: "triangle",
                     pointBorderColor: "rgba(255, 99, 132, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 2,
+                    pointRadius: 10, // More prominent
                     tension: 0.3,
                     yAxisID: "y",
                 },
@@ -92,7 +92,7 @@ const MultiYAxisChart = () => {
                     pointStyle: "crossRot",
                     pointBorderColor: "rgba(153, 102, 255, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 4,
+                    pointRadius: 9, // Adjusted for better contrast
                     tension: 0.1,
                     yAxisID: "y2",
                 },
@@ -107,7 +107,7 @@ const MultiYAxisChart = () => {
                     pointStyle: "rect",
                     pointBorderColor: "rgba(54, 162, 235, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 4,
+                    pointRadius: 8, // Balanced size
                     tension: 0.2,
                     yAxisID: "y2",
                 },
@@ -122,13 +122,13 @@ const MultiYAxisChart = () => {
                     pointStyle: "star",
                     pointBorderColor: "rgba(255, 205, 86, 1)",
                     pointBackgroundColor: "rgba(255, 255, 255, 1)",
-                    pointRadius: 5,
+                    pointRadius: 10, // Larger star points
                     tension: 0.5,
                     yAxisID: "y2",
                 },
             ],
         });
-    };
+    };  
 
     useEffect(() => {
         const updateChartOptions = (textColor: string, gridColor: string): ChartOptions<"line"> => ({
