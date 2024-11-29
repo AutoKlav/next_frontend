@@ -43,8 +43,6 @@ const MultiYAxisChart = () => {
                 transformedData.pressure.push(log.pressure);
             });
 
-            console.log("Transformed data:", transformedData);
-
             updateChartData(transformedData);
         },
     });
