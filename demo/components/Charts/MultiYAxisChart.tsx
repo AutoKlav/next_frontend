@@ -76,7 +76,7 @@ const MultiYAxisChart = () => {
                     borderWidth: 2,
                     pointStyle: "triangle",
                     pointBorderColor: "rgba(255, 99, 132, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
+                    pointBackgroundColor: "#ff638522",
                     pointRadius: 10, // More prominent
                     tension: 0.3,
                     yAxisID: "y",
@@ -86,12 +86,12 @@ const MultiYAxisChart = () => {
                     data: data.pressure,
                     fill: false,
                     borderColor: "rgba(153, 102, 255, 1)",
-                    backgroundColor: "rgba(153, 102, 255, 0.3)",
+                    backgroundColor: "rgba(153, 102, 255, 0.23)",
                     borderDash: [5, 10, 2, 10],
                     borderWidth: 4,
                     pointStyle: "crossRot",
                     pointBorderColor: "rgba(153, 102, 255, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
+                    pointBackgroundColor: "#9966ff2a",
                     pointRadius: 9, // Adjusted for better contrast
                     tension: 0.1,
                     yAxisID: "y2",
@@ -106,7 +106,7 @@ const MultiYAxisChart = () => {
                     borderWidth: 3,
                     pointStyle: "rect",
                     pointBorderColor: "rgba(54, 162, 235, 1)",
-                    pointBackgroundColor: "rgba(255, 255, 255, 1)",
+                    pointBackgroundColor: "#36a3eb3d",
                     pointRadius: 8, // Balanced size
                     tension: 0.2,
                     yAxisID: "y2",
@@ -131,14 +131,33 @@ const MultiYAxisChart = () => {
     };  
 
     useEffect(() => {
-        const updateChartOptions = (textColor: string, gridColor: string): ChartOptions<"line"> => ({
+        const updateChartOptions = (textColor: string, gridColor: string): any => ({
             maintainAspectRatio: true,
             aspectRatio: 1.6,
             plugins: {
                 legend: {
                     display: true,
                     labels: {
-                        color: textColor,
+                        usePointStyle: true, // Use point styles in legend
+                        font: {
+                            size: 17, // Custom font size
+                            family: "Arial, sans-serif", // Custom font family (optional)
+                        },
+                        color: textColor, // Custom label color
+                        generateLabels: (chart: any) => {
+                            return chart.data.datasets.map((dataset: any, i: any) => ({
+                                text: dataset.label,
+                                fillStyle: dataset.backgroundColor as string,
+                                strokeStyle: dataset.borderColor as string,
+                                lineWidth: dataset.borderWidth,
+                                pointStyle: dataset.pointStyle as CanvasLineCap,
+                                hidden: !chart.isDatasetVisible(i),
+                                datasetIndex: i,
+                                fontColor: textColor, // Legend label color
+                                fontSize: 16, // Custom size per label if needed
+                            }));
+                        },
+                        padding: 20, // Space between legend items (optional)
                     },
                 },
             },
@@ -157,34 +176,31 @@ const MultiYAxisChart = () => {
                 y: {
                     type: "linear",
                     position: "left",
-                    //offset: true,
                     ticks: {
                         color: textColor,
-                        stepSize: 10, // Correct step size for linear scale,                        
+                        stepSize: 10,
                     },
                     grid: {
                         color: gridColor,
                         drawOnChartArea: true,
                     },
-                    min: 0,  // Set minimum value for y axis
+                    min: 0,
                 },
                 y2: {
                     type: "linear",
                     position: "right",
-                    //offset: false,
                     ticks: {
                         color: textColor,
-                        stepSize: 0.5, // Correct step size for y2 axis                        
+                        stepSize: 0.5,
                     },
                     grid: {
                         color: gridColor,
                         drawOnChartArea: false,
                     },
-                    min: 0,  // Set minimum value for y2 axis
-                    //max: 7,  // Set maximum value for y2 axis
+                    min: 0,
                 },
             },
-        });
+        });        
         
         getProcessLogMutation({ ids: [55], source: "graph" });
         setChartOptions(updateChartOptions("white", "white")); // Initial white theme
