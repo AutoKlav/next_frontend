@@ -1,7 +1,6 @@
 "use client";
-
-import React, { useEffect, useState } from "react";
-import { FilterMatchMode, FilterOperator } from "primereact/api";
+import React, { useState } from "react";
+import { FilterMatchMode } from "primereact/api";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
@@ -10,18 +9,21 @@ import { Button } from "primereact/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actions";
 import { useToast } from "@/layout/context/toastcontext";
+import { Dialog } from "primereact/dialog";
+import DateFilterDialog from "../Dialogs/DateFilterSelector";
 
 const HistoryTable = () => {
     const { showError } = useToast();
     const { data: processesDataQuery, isLoading: loading } = useQuery({
         queryKey: ["processesDataQuery"],
         queryFn: async () => {
-            const response = await getProcessesAction();
+            const response =  await getProcessesAction();
             
-            // Transform data directly
+            console.log("Processes:", response?.processesList);
+            
             return response?.processesList?.map((process) => ({
                 ...process,
-                processstart: new Date(process.processstart),
+                processstart: new Date(process.processstart), // Ensure it's a Date object
             }));
         },
         onError(err) {
@@ -35,7 +37,6 @@ const HistoryTable = () => {
 
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: ({data, source}) => {
-            // Handle process logs if needed
             console.log("Process logs:", data);
 
             if (source === "print") {
@@ -50,25 +51,13 @@ const HistoryTable = () => {
     const [filters, setFilters] = useState<DataTableFilterMeta | undefined>(undefined);
     const [selectedProcesses, setSelectedProcesses] = useState<any[]>([]);
 
-    useEffect(() => {
-        initFilters();
-    }, []);
+    const [showDateFilterDialog, setShowDateFilterDialog] = useState(false);
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+    const [dateFilterOption, setDateFilterOption] = useState<string>("Datum je jednak");
 
     const initFilters = () => {
         setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-            processstart: {
-                operator: FilterOperator.AND,
-                constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }],
-            },
-        });
-    };
-
-    const formatDate = (value: Date) => {
-        return value.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
+            global: { value: null, matchMode: FilterMatchMode.CONTAINS },            
         });
     };
 
@@ -117,37 +106,64 @@ const HistoryTable = () => {
                         placeholder="Filtriraj procese"
                         style={{ borderRadius: "11px" }}
                     />
-                    <Button icon="pi pi-calendar" className="p-button-secondary" />
+                    <Button
+                        icon="pi pi-calendar"
+                        className="p-button-secondary"
+                        onClick={() => setShowDateFilterDialog(true)} // Open date filter dialog
+                    />
                 </div>
             </div>
         );
     };
 
-    const dateFilterTemplate = (options: any) => {
-        return (
-            <Calendar
-                value={options.value}
-                onChange={(e) => options.filterCallback(e.value, options.index)}
-                dateFormat="dd/mm/yy"
-                placeholder="dd/mm/yyyy"
-                mask="99/99/9999"
-                showIcon
-            />
-        );
-    };
-
-    const dateBodyTemplate = (rowData: any) => {
-        return formatDate(rowData.processstart); // Safe formatting
-    };
-
-    const handlePrint = () => {        
-        const ids = selectedProcesses.map((process) => process.id);        
-        getProcessLogMutation({ids: ids, source: 'print'});
+    const handlePrint = () => {
+        const ids = selectedProcesses.map((process) => process.id);
+        getProcessLogMutation({ ids: ids, source: "print" });
     };
 
     const handleGraph = () => {
         const ids = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation({ids: ids, source: 'graph'});
+        getProcessLogMutation({ ids: ids, source: "graph" });
+    };
+
+    const handleDateFilterApply = () => {
+        if (selectedDate) {
+            const _filters = { ...filters };
+            switch (dateFilterOption) {
+                case "Datum je prije":
+                    _filters.processstart = {
+                        operator: FilterMatchMode.DATE_BEFORE,
+                        constraints: [{ value: selectedDate, matchMode: FilterMatchMode.DATE_IS }],
+                    };
+                    break;
+                case "Datum je jednak":
+                    _filters.processstart = {
+                        operator: FilterMatchMode.DATE_IS,
+                        constraints: [{ value: selectedDate, matchMode: FilterMatchMode.DATE_IS }],
+                    };
+                    break;
+                case "Datum je poslije":
+                    _filters.processstart = {
+                        operator: FilterMatchMode.DATE_AFTER,
+                        constraints: [{ value: selectedDate, matchMode: FilterMatchMode.DATE_IS }],
+                    };
+                    break;
+            }
+            setFilters(_filters);
+        }
+        setShowDateFilterDialog(false);
+    };
+
+    const handleDateFilterCancel = () => {
+        setShowDateFilterDialog(false);
+    };
+
+    const formatDate = (date: Date) => {
+        return date.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
     };
 
     const header = renderHeader();
@@ -173,18 +189,24 @@ const HistoryTable = () => {
             >
                 <Column selectionMode="multiple" headerStyle={{ width: "3em" }} />
                 <Column field="productname" header="Naziv procesa" />
-                <Column
-                    field="processstart"
-                    header="Datum početka"
-                    dataType="date"
-                    body={dateBodyTemplate}
-                    filter
-                    filterElement={dateFilterTemplate}
-                    showFilterMatchModes
-                    style={{ maxWidth: "200px" }}
+                <Column 
+                    field="processstart" 
+                    header="Datum početka" 
+                    body={(rowData) => formatDate(rowData.processstart)} // Format date before displaying
                 />
                 <Column field="processlength" header="Duljina procesa (s)" />
             </DataTable>
+
+            {/* Date Filter Dialog */}
+            <DateFilterDialog
+                showDateFilterDialog={showDateFilterDialog}
+                handleDateFilterCancel={handleDateFilterCancel}
+                handleDateFilterApply={handleDateFilterApply}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                dateFilterOption={dateFilterOption}
+                setDateFilterOption={setDateFilterOption}
+            />
         </div>
     );
 };
