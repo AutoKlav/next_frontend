@@ -78,7 +78,7 @@ const HistoryTable = () => {
                 <Button
                     type="button"
                     icon="pi pi-filter-slash"
-                    label="Obriši filter"
+                    label="Obriši filtere"
                     outlined
                     onClick={clearFilter}
                 />
