@@ -134,6 +134,11 @@ const MultiYAxisChart = () => {
         const updateChartOptions = (textColor: string, gridColor: string): any => ({
             maintainAspectRatio: true,
             aspectRatio: 1.6,
+            interaction: {
+                mode: 'index',  
+                intersect: true,  
+                axis: 'x',  // Enables the vertical hover line
+              }, 
             plugins: {
               title: {
                 display: true,
@@ -165,16 +170,23 @@ const MultiYAxisChart = () => {
                 },
               },
               tooltip: {
+                mode: 'index',  // Show tooltip for all datasets at the same index
+                //intersect: true,  // Tooltip displays even if the cursor isn't directly on a point
                 callbacks: {
-                  footer: (tooltipItems: any) => {
-                    let sum = 0;
-                    tooltipItems.forEach((tooltipItem: any) => {
-                      sum += tooltipItem.raw as number;
-                    });
-                    return `Total: ${sum}`;
+                  label: (tooltipItem: any) => {
+                    return `${tooltipItem.dataset.label} =  ${tooltipItem.raw}`;
                   },
                 },
-              },
+                titleFont: {
+                  size: 25,  // Increase title font size
+                },
+                bodyFont: {
+                  size: 20,  // Increase body font size
+                },
+                footerFont: {
+                  size: 18,  // Footer font size adjustment
+                },                
+            },                        
             },
             scales: {
               x: {
@@ -193,7 +205,7 @@ const MultiYAxisChart = () => {
                 min: 0,
               },
             },
-          });
+        });
         
         getProcessLogMutation({ ids: [55], source: "graph" });
         setChartOptions(updateChartOptions("white", "white")); // Initial white theme
