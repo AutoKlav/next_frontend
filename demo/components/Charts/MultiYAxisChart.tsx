@@ -7,6 +7,7 @@ import { ChartOptions } from "chart.js";
 import { handleExportToPDF } from "@/utils/exportUtil";
 import { useMutation } from "@tanstack/react-query";
 import { getProcessLogsAction } from "@/app/(main)/api/actions";
+import { updateChartOptions } from "@/utils/chartOptionsUtil";
 
 interface TransformedData {
     timestamp: string[];
@@ -131,85 +132,21 @@ const MultiYAxisChart = () => {
     };  
 
     useEffect(() => {
-        const updateChartOptions = (textColor: string, gridColor: string): any => ({
-            maintainAspectRatio: true,
-            aspectRatio: 1.6,
-            plugins: {
-                legend: {
-                    display: true,
-                    labels: {
-                        usePointStyle: true, // Use point styles in legend
-                        font: {
-                            size: 17, // Custom font size
-                            family: "Arial, sans-serif", // Custom font family (optional)
-                        },
-                        color: textColor, // Custom label color
-                        generateLabels: (chart: any) => {
-                            return chart.data.datasets.map((dataset: any, i: any) => ({
-                                text: dataset.label,
-                                fillStyle: dataset.backgroundColor as string,
-                                strokeStyle: dataset.borderColor as string,
-                                lineWidth: dataset.borderWidth,
-                                pointStyle: dataset.pointStyle as CanvasLineCap,
-                                hidden: !chart.isDatasetVisible(i),
-                                datasetIndex: i,
-                                fontColor: textColor, // Legend label color
-                                fontSize: 16, // Custom size per label if needed
-                            }));
-                        },
-                        padding: 20, // Space between legend items (optional)
-                    },
-                },
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: textColor,
-                        font: {
-                            size: 16,
-                        },
-                    },
-                    grid: {
-                        color: gridColor,
-                    },
-                },
-                y: {
-                    type: "linear",
-                    position: "left",
-                    ticks: {
-                        color: textColor,
-                        stepSize: 10,
-                    },
-                    grid: {
-                        color: gridColor,
-                        drawOnChartArea: true,
-                    },
-                    min: 0,
-                },
-                y2: {
-                    type: "linear",
-                    position: "right",
-                    ticks: {
-                        color: textColor,
-                        stepSize: 0.5,
-                    },
-                    grid: {
-                        color: gridColor,
-                        drawOnChartArea: false,
-                    },
-                    min: 0,
-                },
-            },
-        });        
+        
         
         getProcessLogMutation({ ids: [55], source: "graph" });
-        setChartOptions(updateChartOptions("white", "white")); // Initial white theme
+        setChartOptions(updateChartOptions("white", "white", chartInfo)); // Initial white theme
     }, []);
-
+    
+    const chartInfo = {
+        title: ["Ime: [Product Name]","Količina: [Product Quantity]", "Početak: [Start]", "Trajanje: [Length]"].join(" - "), // Title of the chart
+        subtitle: ["Bakterija: [Ime bakterije]","Opis: [Opis]"].join(" - "), // Subtitle of the chart
+    }
+    
     return (
         <div className="card">
             <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-            <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions)} className="p-button-info mt-5" />
+            <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions, chartInfo)} className="p-button-info mt-5" />
         </div>
     );
 };

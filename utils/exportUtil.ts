@@ -1,54 +1,13 @@
 import { ChartOptions } from "chart.js";
 import { getCurrentDateTime } from "./dateUtil";
 import jsPDF from "jspdf";
+import { updateChartOptions } from "./chartOptionsUtil";
 
-export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOptions: ChartOptions<"line">) => {
+export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOptions: ChartOptions<"line">, chartInfo:{title:string,subtitle:string}) => {
     const chartInstance = chartRef.current?.getChart();
-    if (chartInstance && chartOptions) {
-        const updatedOptions: any = {
-            ...chartOptions,
-            plugins: {
-                ...chartOptions.plugins,
-                legend: {
-                    labels: { color: "black" },
-                },
-            },
-            scales: {
-                x: {
-                    ...chartOptions.scales?.x,
-                    ticks: { color: "black" },
-                    grid: { color: "black" },
-                },
-                y: {
-                    ...chartOptions.scales?.y,
-                    ticks: { color: "textColor", stepSize: 10 },
+    if (chartInstance && chartOptions) {        
 
-                    grid: { color: "black", drawOnChartArea: true },
-                },                
-                // y1: {
-                //     ...chartOptions.scales?.y1,
-                //     ticks: { color: "black" },
-                //     grid: { color: "black", drawOnChartArea: true },                        
-                // },
-                y2: {
-                    ...chartOptions.scales?.y2,
-                    ticks: { color: "black", stepSize: 0.5 },
-                    grid: { color: "black", drawOnChartArea: false },
-                },                
-                // y3: {
-                //     ...chartOptions.scales?.y3,
-                //     ticks: { color: "black" },
-                //     grid: { color:"black", drawOnChartArea: true },
-                // },
-                // y4: {
-                //     ...chartOptions.scales?.y4,
-                //     ticks: { color: "black" },
-                //     grid: { color:"black", drawOnChartArea: true },
-                // },
-            },
-        };
-
-        chartInstance.options = updatedOptions;
+        chartInstance.options = updateChartOptions("black", "black", chartInfo);
         chartInstance.update();
 
         await new Promise((resolve) => requestAnimationFrame(resolve));
