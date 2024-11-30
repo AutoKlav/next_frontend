@@ -131,15 +131,22 @@ const MultiYAxisChart = () => {
         });
     };  
 
-    useEffect(() => {        
+    useEffect(() => {
+        
+        
         getProcessLogMutation({ ids: [55], source: "graph" });
-        setChartOptions(updateChartOptions("white", "white")); // Initial white theme
+        setChartOptions(updateChartOptions("white", "white", chartInfo)); // Initial white theme
     }, []);
-
+    
+    const chartInfo = {
+        title: ["Ime: [Product Name]","Količina: [Product Quantity]", "Početak: [Start]", "Trajanje: [Length]"].join(" - "), // Title of the chart
+        subtitle: ["Bakterija: [Ime bakterije]","Opis: [Opis]"].join(" - "), // Subtitle of the chart
+    }
+    
     return (
         <div className="card">
             <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-            <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions)} className="p-button-info mt-5" />
+            <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions, chartInfo)} className="p-button-info mt-5" />
         </div>
     );
 };

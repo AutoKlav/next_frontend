@@ -5,9 +5,10 @@ import { ChartOptions } from "chart.js";
  * because of dark theme app and white paper prepared for print
  * @param textColor The color of the text in the chart.
  * @param gridColor The color of the grid lines in the chart.
+ * @param chartInfo The title and subtitle of the chart about the process.
  * @returns The updated chart options.
  */
-export const updateChartOptions = (textColor: string, gridColor: string): ChartOptions<"line"> => ({
+export const updateChartOptions = (textColor: string, gridColor: string, chartInfo:{title:string,subtitle:string} ): ChartOptions<"line"> => ({
     maintainAspectRatio: true,
     aspectRatio: 1.6,
     interaction: {
@@ -18,21 +19,26 @@ export const updateChartOptions = (textColor: string, gridColor: string): ChartO
     plugins: {
       title: {
         display: true,
-        text: "Multi-Y-Axis Chart Analysis",
+        text: chartInfo.title,
         font: {
           size: 24,
         },
         color: textColor,
-        padding: { top: 20, bottom: 20 },
+        padding: { 
+          //top: 5, 
+          bottom: 15, 
+        },
+        align: "center",           // Alignment: 'start', 'center', 'end'
       },
       subtitle: {
         display: true,
-        text: "An analysis of process variables over time",
+        text: chartInfo.subtitle,
         font: {
-          size: 16,
+          size: 20,
         },
         color: textColor,
-        padding: { bottom: 10 },
+        padding: { bottom: 15 },
+        align: "center",  // 'start', 'center', 'end'
       },
       legend: {
         display: true,
