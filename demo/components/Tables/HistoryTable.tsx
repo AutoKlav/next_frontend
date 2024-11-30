@@ -117,6 +117,7 @@ const HistoryTable = () => {
                         placeholder="Filtriraj procese"
                         style={{ borderRadius: "11px" }}
                     />
+                    <Button icon="pi pi-calendar" className="p-button-secondary" />
                 </div>
             </div>
         );
