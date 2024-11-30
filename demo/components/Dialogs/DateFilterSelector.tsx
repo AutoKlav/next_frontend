@@ -36,6 +36,7 @@ const DateFilterDialog: React.FC<DateFilterDialogProps> = (props) => {
             visible={showDateFilterDialog}
             style={{ width: "380px" }}
             onHide={handleDateFilterCancel}
+            dismissableMask
         >
             <div className="flex flex-column gap-2 mb-3">
                 <label htmlFor="filter-option" className="text-xl">Odabir filtra:</label>
