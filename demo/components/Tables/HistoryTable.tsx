@@ -1,15 +1,14 @@
 "use client";
+
 import React, { useState } from "react";
 import { FilterMatchMode } from "primereact/api";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
-import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actions";
 import { useToast } from "@/layout/context/toastcontext";
-import { Dialog } from "primereact/dialog";
 import DateFilterDialog from "../Dialogs/DateFilterSelector";
 
 const HistoryTable = () => {
@@ -104,11 +103,11 @@ const HistoryTable = () => {
                         value={globalFilterValue}
                         onChange={onGlobalFilterChange}
                         placeholder="Filtriraj procese"
-                        style={{ borderRadius: "11px" }}
+                        style={{ borderRadius: "11px", height: "50px" }}
                     />
                     <Button
                         icon="pi pi-calendar"
-                        className="p-button-secondary"
+                        outlined
                         onClick={() => setShowDateFilterDialog(true)} // Open date filter dialog
                     />
                 </div>
