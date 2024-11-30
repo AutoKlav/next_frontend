@@ -135,72 +135,65 @@ const MultiYAxisChart = () => {
             maintainAspectRatio: true,
             aspectRatio: 1.6,
             plugins: {
-                legend: {
-                    display: true,
-                    labels: {
-                        usePointStyle: true, // Use point styles in legend
-                        font: {
-                            size: 17, // Custom font size
-                            family: "Arial, sans-serif", // Custom font family (optional)
-                        },
-                        color: textColor, // Custom label color
-                        generateLabels: (chart: any) => {
-                            return chart.data.datasets.map((dataset: any, i: any) => ({
-                                text: dataset.label,
-                                fillStyle: dataset.backgroundColor as string,
-                                strokeStyle: dataset.borderColor as string,
-                                lineWidth: dataset.borderWidth,
-                                pointStyle: dataset.pointStyle as CanvasLineCap,
-                                hidden: !chart.isDatasetVisible(i),
-                                datasetIndex: i,
-                                fontColor: textColor, // Legend label color
-                                fontSize: 16, // Custom size per label if needed
-                            }));
-                        },
-                        padding: 20, // Space between legend items (optional)
-                    },
+              title: {
+                display: true,
+                text: "Multi-Y-Axis Chart Analysis",
+                font: {
+                  size: 24,
                 },
+                color: textColor,
+                padding: { top: 20, bottom: 20 },
+              },
+              subtitle: {
+                display: true,
+                text: "An analysis of process variables over time",
+                font: {
+                  size: 16,
+                },
+                color: textColor,
+                padding: { bottom: 10 },
+              },
+              legend: {
+                display: true,
+                position: "bottom", // Legend at the bottom
+                labels: {
+                  usePointStyle: true,
+                  font: {
+                    size: 17,
+                  },
+                  color: textColor,
+                },
+              },
+              tooltip: {
+                callbacks: {
+                  footer: (tooltipItems: any) => {
+                    let sum = 0;
+                    tooltipItems.forEach((tooltipItem: any) => {
+                      sum += tooltipItem.raw as number;
+                    });
+                    return `Total: ${sum}`;
+                  },
+                },
+              },
             },
             scales: {
-                x: {
-                    ticks: {
-                        color: textColor,
-                        font: {
-                            size: 16,
-                        },
-                    },
-                    grid: {
-                        color: gridColor,
-                    },
-                },
-                y: {
-                    type: "linear",
-                    position: "left",
-                    ticks: {
-                        color: textColor,
-                        stepSize: 10,
-                    },
-                    grid: {
-                        color: gridColor,
-                        drawOnChartArea: true,
-                    },
-                    min: 0,
-                },
-                y2: {
-                    type: "linear",
-                    position: "right",
-                    ticks: {
-                        color: textColor,
-                        stepSize: 0.5,
-                    },
-                    grid: {
-                        color: gridColor,
-                        drawOnChartArea: false,
-                    },
-                    min: 0,
-                },
+              x: {
+                ticks: { color: textColor, font: { size: 16 } },
+                grid: { color: gridColor },
+              },
+              y: {
+                ticks: { color: textColor, stepSize: 10 },
+                grid: { color: gridColor },
+                min: 0,
+              },
+              y2: {
+                position: "right",
+                ticks: { color: textColor, stepSize: 0.5 },
+                grid: { drawOnChartArea: false },
+                min: 0,
+              },
             },
-        });        
+          });
         
         getProcessLogMutation({ ids: [55], source: "graph" });
         setChartOptions(updateChartOptions("white", "white")); // Initial white theme
