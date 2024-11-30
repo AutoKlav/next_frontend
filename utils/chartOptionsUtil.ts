@@ -72,6 +72,8 @@ export const updateChartOptions = (
       },
       padding: {
         top: 15,    // Space above tooltip content
+        left: 15,   // Space to the left of tooltip content
+        right: 15,  // Space to the right of tooltip content
         bottom: 15, // Space below tooltip content
       },
       bodySpacing: 17, // Space between tooltip body items
