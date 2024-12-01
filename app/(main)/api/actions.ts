@@ -44,8 +44,24 @@ export const getProcessLogsAction = async ({ids, source} : {ids: number[], sourc
 
 //#region POST Actions
 
-export const startProcessAction = async () => {
-    const request: StartProcessRequest = {
+export const startProcessAction = async (request: StartProcessRequest) => {
+   
+    if(request.processConfig.type === ProcessConfigType.STERILIZATION) {
+        request.processConfig.targetF = 0.01;
+        request.processConfig.customTemp = 121.1;
+        request.processConfig.finishTemp = 121.1;
+        request.processConfig.maintainPressure = 1;
+        request.processConfig.maintainTemp = 121.1;
+    }
+    else if(request.processConfig.type === ProcessConfigType.PASTERIZATION) {
+        request.processConfig.targetF = 0.01;
+        request.processConfig.customTemp = 70;
+        request.processConfig.finishTemp = 70;
+        request.processConfig.maintainPressure = 1;
+        request.processConfig.maintainTemp = 70;
+    }    
+
+    const requestSample: StartProcessRequest = {
         processConfig: {
           customTemp: 0,
           finishTemp: 40,
@@ -66,8 +82,9 @@ export const startProcessAction = async () => {
         }
       } 
       
-      const response = await startProcess(request);
-      return response;
+      console.log(request);
+      //const response = await startProcess(request);
+      //return response;
  };
 
 
