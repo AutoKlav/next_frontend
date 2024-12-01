@@ -201,7 +201,13 @@ const DashboardPage = () => {
         { id: 2, name: 'Prilagođeno' },
     ];
 
+    const modeDropdownValues = [
+        { id: 0, name: 'Meta f' },
+        { id: 1, name: 'Meta t' },
+    ];
+
     const [typeDropdown, setTypeDropdown] = useState(typeDropdownValues[0]);
+    const [modeDropdown, setModeDropdown] = useState(modeDropdownValues[0]);
     
     return (
         <div className="grid p-2">
@@ -211,11 +217,15 @@ const DashboardPage = () => {
                         <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                             <div className="grid">
                                 <div className="col-6">
-                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
                                     <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} />
                                     <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
                                     <GeneralStringInput headerName="Unesite opis" inputValue={description} />
-                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />
+                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
+                                    <StartProcessDropdown label='Odaberite mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
+                                </div>
+                                <div className="col-6">
+                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />                                    
+                                    <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
                                     {typeDropdown.id === 2 && (
                                         <>
                                             <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
@@ -223,13 +233,6 @@ const DashboardPage = () => {
                                             <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
                                         </>
                                     )}
-                                </div>
-                                <div className="col-6">
-                                    <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
-                                    <GeneralNumberInput headerName="Unesite mod" inputValue={mode} />
-                                    <GeneralNumberInput headerName="Unesite ciljnu F" inputValue={targetF} />
-                                    <GeneralNumberInput headerName="Unesite ciljno vrijeme" inputValue={targetTime} />
-                                    <GeneralNumberInput headerName="Unesite tip" inputValue={type} />
                                 </div>
                             </div>
                         </Dialog>
