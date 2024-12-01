@@ -8,6 +8,7 @@ import { handleExportToPDF } from "@/utils/exportUtil";
 import { useMutation } from "@tanstack/react-query";
 import { getProcessLogsAction } from "@/app/(main)/api/actions";
 import { updateChartOptions } from "@/utils/chartOptionsUtil";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 interface TransformedData {
     timestamp: string[];
@@ -145,8 +146,17 @@ const MultiYAxisChart = () => {
     
     return (
         <div className="card">
-            <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-            <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions, chartInfo)} className="p-button-info mt-5" />
+            {isLogLoading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+                    <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
+                </div>
+            ): (
+                <>
+                    <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
+                    <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions, chartInfo)} className="p-button-info mt-5" />
+                </>
+            )}
+            
         </div>
     );
 };
