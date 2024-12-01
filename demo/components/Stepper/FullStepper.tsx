@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/layout/context/toastcontext";
 import CalibrationInput from "../Inputs/CalibrationInput"; // Placeholder component
 import CalibrationResults from "../Inputs/CalibrationResults"; // Placeholder component
-import SensorDropdown from "../Inputs/SensorDropdown"; // Placeholder component
+import SensorDropdown from "../Inputs/Dropdown/SensorDropdown"; // Placeholder component
 import { getStateMachineValuesAction } from "@/app/(main)/api/actions"; // Mutation action
 import { checkForErrors } from "@/utils/errorUtil";
 

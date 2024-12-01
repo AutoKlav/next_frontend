@@ -15,6 +15,8 @@ import { ProgressBar } from 'primereact/progressbar';
 import { StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
+import { Dropdown } from 'primereact/dropdown';
+import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -44,43 +46,47 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);    
+
+    const typeDropdownValues = [
+        { id: 0, name: 'Sterilizacija' },
+        { id: 1, name: 'Pasterizacija' },
+        { id: 2, name: 'Prilagođeno' },
+    ];
+
+    const modeDropdownValues = [
+        { id: 0, name: 'Meta f' },
+        { id: 1, name: 'Meta t' },
+    ];
+
+    const [typeDropdown, setTypeDropdown] = useState(typeDropdownValues[0]);
+    const [modeDropdown, setModeDropdown] = useState(modeDropdownValues[0]);
     
-    // const request: StartProcessRequest = {
-    //     processConfig: {
-    //       customTemp: 0,
-    //       finishTemp: 40,
-    //       maintainPressure: 2,
-    //       maintainTemp: 120,
-    //       mode: ProcessConfigMode.TARGETF,
-    //       targetF: 5,
-    //       targetTime: 20,
-    //       type: ProcessConfigType.STERILIZATION
-    //     },
-    //     processInfo: {
-    //       bacteria: 'nulla do laborum laboris labore',
-    //       description: 'reprehenderit magna eiusmod et',
-    //       processLength: 'ex',
-    //       processStart: '2024-01-01T00:00:00',
-    //       productName: 'deserunt enim tempor',
-    //       productQuantity: 'sint aliqua do laborum'
-    //     }
-    //   } 
     //#region  Modal inputs    
-    const bacteria = React.useRef<string>();
-    const description = React.useRef<string>();
-    const productName = React.useRef<string>();
-    const productQuantity = React.useRef<string>();
+    const productName = React.useRef<string>('');
+    const bacteria = React.useRef<string>('');
+    const description = React.useRef<string>('');
+    const productQuantity = React.useRef<string>('');
 
     const customTemp = React.useRef<number>(0);
     const finishTemp = React.useRef<number>(0);
     const maintainPressure = React.useRef<number>(0);
     const maintainTemp = React.useRef<number>(0);
-    const mode = React.useRef<number>(0);
     const targetF = React.useRef<number>(0);
     const targetTime = React.useRef<number>(0);
-    const type = React.useRef<number>(0);
     //#endregion
     
+    const resetInputs = () => {
+        productName.current = '';
+        bacteria.current = '';
+        description.current = '';
+        productQuantity.current = '';
+        customTemp.current = 0;
+        finishTemp.current = 0;
+        maintainPressure.current = 0;
+        maintainTemp.current = 0;
+        targetF.current = 0;
+        targetTime.current = 0;
+    }
 
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
@@ -168,18 +174,37 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.cooling || 0;
 
-    const handleStartProcess = () => {
-        setModalVisibility(true);
-        // if(state === 0){
-        //     startProcess();
-        //     return;
-        // }
+    const handleStartProcess = () => {        
+        if(state === 0){
+            const request: StartProcessRequest = {
+                processConfig: {
+                    customTemp: customTemp.current,
+                    finishTemp: finishTemp.current,
+                    maintainPressure: maintainPressure.current,
+                    maintainTemp: maintainTemp.current,
+                    mode: modeDropdown.id,
+                    targetF: targetF.current,
+                    targetTime: targetTime.current,
+                    type: typeDropdown.id,
+                },
+                processInfo: {
+                    productName: productName.current,
+                    bacteria: bacteria.current,
+                    description: description.current,
+                    productQuantity: productQuantity.current,
+                    processStart: new Date().toISOString(),
+                    processLength: 'ex',
+                },
+            };
 
-        // showWarn('Proces','Proces je već pokrenut');
-    };
-
-    const handleStopProcess = () => {
-        stopProcess();        
+            resetInputs();
+            startProcess(request);
+            setModalVisibility(false);           
+            return;
+        }
+        
+        setModalVisibility(false);            
+        showWarn('Proces','Proces je već pokrenut');
     };
 
     const handleSetVariable = (minValue: number, maxValue: number) => {
@@ -188,12 +213,10 @@ const DashboardPage = () => {
     
     const footerContent = (
         <div>
-            <Button label="No" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
-            <Button label="Yes" icon="pi pi-check" onClick={() => setModalVisibility(false)} autoFocus />
+            <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
+            <Button label="Unesi podatke" icon="pi pi-check" onClick={handleStartProcess} autoFocus />
         </div>
-    );
-
-    console.log(productName.current, bacteria.current);
+    );    
     
     return (
         <div className="grid p-2">
@@ -206,17 +229,19 @@ const DashboardPage = () => {
                                     <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} />
                                     <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
                                     <GeneralStringInput headerName="Unesite opis" inputValue={description} />
-                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />
-                                    <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
-                                    <GeneralNumberInput headerName="Unesite završnu temperaturu" inputValue={finishTemp} />
+                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
+                                    <StartProcessDropdown label='Odaberite mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
                                 </div>
                                 <div className="col-6">
+                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />                                    
                                     <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
-                                    <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
-                                    <GeneralNumberInput headerName="Unesite mod" inputValue={mode} />
-                                    <GeneralNumberInput headerName="Unesite ciljnu F" inputValue={targetF} />
-                                    <GeneralNumberInput headerName="Unesite ciljno vrijeme" inputValue={targetTime} />
-                                    <GeneralNumberInput headerName="Unesite tip" inputValue={type} />
+                                    {typeDropdown.id === 2 && (
+                                        <>
+                                            <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
+                                            <GeneralNumberInput headerName="Unesite završnu temperaturu" inputValue={finishTemp} />
+                                            <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </Dialog>
@@ -224,8 +249,8 @@ const DashboardPage = () => {
                 </p>
             </Dialog>
          <div className="col-6">
-            <Button label="Pokreni proces" onClick={handleStartProcess} className="p-button-success" />
-            <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />            
+            <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
+            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (

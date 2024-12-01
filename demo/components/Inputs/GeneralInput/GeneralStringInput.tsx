@@ -3,8 +3,7 @@ import { InputText } from 'primereact/inputtext';
 
 interface GeneralStringInputProps {    
     headerName: string;   
-    inputValue: React.MutableRefObject<string | undefined>;
-    
+    inputValue: React.MutableRefObject<string | undefined>;    
 }
 
 const GeneralStringInput: React.FC<GeneralStringInputProps> = (props) => {
