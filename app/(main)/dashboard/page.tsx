@@ -192,8 +192,6 @@ const DashboardPage = () => {
             <Button label="Yes" icon="pi pi-check" onClick={() => setModalVisibility(false)} autoFocus />
         </div>
     );
-
-    console.log(productName.current, bacteria.current);
     
     return (
         <div className="grid p-2">
