@@ -211,6 +211,7 @@ const DashboardPage = () => {
                         <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                             <div className="grid">
                                 <div className="col-6">
+                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
                                     <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} />
                                     <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
                                     <GeneralStringInput headerName="Unesite opis" inputValue={description} />
@@ -222,14 +223,13 @@ const DashboardPage = () => {
                                             <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
                                         </>
                                     )}
-                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
                                 </div>
                                 <div className="col-6">
                                     <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
                                     <GeneralNumberInput headerName="Unesite mod" inputValue={mode} />
                                     <GeneralNumberInput headerName="Unesite ciljnu F" inputValue={targetF} />
                                     <GeneralNumberInput headerName="Unesite ciljno vrijeme" inputValue={targetTime} />
-                                    <GeneralNumberInput headerName="Unesite tip" inputValue={type} />                                    
+                                    <GeneralNumberInput headerName="Unesite tip" inputValue={type} />
                                 </div>
                             </div>
                         </Dialog>

@@ -17,8 +17,8 @@ const StartProcessDropdown: React.FC<StartProcessDropdownProps> = (props) => {
     const { getter, setter, values, label } = props;   
     
     return (
-        <div className="flex flex-column gap-3">
-            <label>{label}</label>
+            <div className="flex flex-column gap-2 mt-3">
+                <label>{label}</label>
                 <Dropdown
                     id="dropdown"
                     options={values}
@@ -28,7 +28,7 @@ const StartProcessDropdown: React.FC<StartProcessDropdownProps> = (props) => {
                     placeholder="Odaberite tip"                                        
                     style={{ borderRadius: '6px', width: '53%', height:'44px' }}
                 />
-        </div>
+            </div>        
     );
 };
 
