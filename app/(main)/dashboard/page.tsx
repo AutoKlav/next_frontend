@@ -190,8 +190,8 @@ const DashboardPage = () => {
     
     const footerContent = (
         <div>
-            <Button label="No" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
-            <Button label="Yes" icon="pi pi-check" onClick={() => setModalVisibility(false)} autoFocus />
+            <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
+            <Button label="Unesi podatke" icon="pi pi-check" onClick={() => setModalVisibility(false)} autoFocus />
         </div>
     );
 
