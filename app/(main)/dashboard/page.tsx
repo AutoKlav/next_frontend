@@ -15,6 +15,8 @@ import { ProgressBar } from 'primereact/progressbar';
 import { StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
+import { Dropdown } from 'primereact/dropdown';
+import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -66,9 +68,9 @@ const DashboardPage = () => {
     //     }
     //   } 
     //#region  Modal inputs    
+    const productName = React.useRef<string>();
     const bacteria = React.useRef<string>();
     const description = React.useRef<string>();
-    const productName = React.useRef<string>();
     const productQuantity = React.useRef<string>();
 
     const customTemp = React.useRef<number>(0);
@@ -192,6 +194,14 @@ const DashboardPage = () => {
             <Button label="Yes" icon="pi pi-check" onClick={() => setModalVisibility(false)} autoFocus />
         </div>
     );
+
+    const typeDropdownValues = [
+        { id: 0, name: 'Sterilizacija' },
+        { id: 1, name: 'Pasteurizacija' },
+        { id: 2, name: 'Prilagođeno' },
+    ];
+
+    const [typeDropdown, setTypeDropdown] = useState(typeDropdownValues[0]);
     
     return (
         <div className="grid p-2">
@@ -205,16 +215,21 @@ const DashboardPage = () => {
                                     <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
                                     <GeneralStringInput headerName="Unesite opis" inputValue={description} />
                                     <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />
-                                    <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
-                                    <GeneralNumberInput headerName="Unesite završnu temperaturu" inputValue={finishTemp} />
+                                    {typeDropdown.id === 2 && (
+                                        <>
+                                            <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
+                                            <GeneralNumberInput headerName="Unesite završnu temperaturu" inputValue={finishTemp} />
+                                            <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
+                                        </>
+                                    )}
+                                    <StartProcessDropdown typeDropdown={typeDropdown} setTypeDropdown={setTypeDropdown} typeDropdownValues={typeDropdownValues}/>
                                 </div>
                                 <div className="col-6">
                                     <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
-                                    <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
                                     <GeneralNumberInput headerName="Unesite mod" inputValue={mode} />
                                     <GeneralNumberInput headerName="Unesite ciljnu F" inputValue={targetF} />
                                     <GeneralNumberInput headerName="Unesite ciljno vrijeme" inputValue={targetTime} />
-                                    <GeneralNumberInput headerName="Unesite tip" inputValue={type} />
+                                    <GeneralNumberInput headerName="Unesite tip" inputValue={type} />                                    
                                 </div>
                             </div>
                         </Dialog>
