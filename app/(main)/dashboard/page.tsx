@@ -222,7 +222,7 @@ const DashboardPage = () => {
                                             <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
                                         </>
                                     )}
-                                    <StartProcessDropdown typeDropdown={typeDropdown} setTypeDropdown={setTypeDropdown} typeDropdownValues={typeDropdownValues}/>
+                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
                                 </div>
                                 <div className="col-6">
                                     <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
