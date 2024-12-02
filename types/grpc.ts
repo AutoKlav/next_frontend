@@ -33,7 +33,7 @@ export interface SetVariable {
 // SensorValues message
 export interface SensorValues {
   temp: number;
-  tempK: number;
+  tempk: number;
   pressure: number;
 }
 

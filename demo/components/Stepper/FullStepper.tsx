@@ -9,7 +9,7 @@ import { useToast } from "@/layout/context/toastcontext";
 import CalibrationInput from "../Inputs/CalibrationInput"; // Placeholder component
 import CalibrationResults from "../Inputs/CalibrationResults"; // Placeholder component
 import SensorDropdown from "../Inputs/Dropdown/SensorDropdown"; // Placeholder component
-import { getStateMachineValuesAction } from "@/app/(main)/api/actions"; // Mutation action
+import { getSensorValuesAction } from "@/app/(main)/api/actions"; // Mutation action
 import { checkForErrors } from "@/utils/errorUtil";
 
 const FullStepper = () => {
@@ -41,7 +41,7 @@ const FullStepper = () => {
     };
     
     const { mutate: getSensorValuesMutation } = useMutation({
-        mutationFn: getStateMachineValuesAction,
+        mutationFn: getSensorValuesAction,
         onError: () => {
             showError(
                 "Greška",
@@ -53,7 +53,7 @@ const FullStepper = () => {
                 errorPresent.current = true;
                 return;
             }
-    
+            console.log("Raw Sensor values:", data);
             // Adjust the position logic to avoid overwriting x1x2[0]
             const position = stepRef.current === 1 ? 0 : stepRef.current === 2 ? 1 : -1;
             if (position >= 0) {
@@ -148,7 +148,6 @@ const FullStepper = () => {
         selectedSensorRef.current = null;
         y1y2.current = [0, 0];
         setX1X2([0, 0]);
-
     }
 
     const handleCalibrate = () => {
