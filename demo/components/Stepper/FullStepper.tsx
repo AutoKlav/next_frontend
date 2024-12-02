@@ -12,6 +12,13 @@ import SensorDropdown from "../Inputs/Dropdown/SensorDropdown"; // Placeholder c
 import { getSensorValuesAction } from "@/app/(main)/api/actions"; // Mutation action
 import { checkForErrors } from "@/utils/errorUtil";
 
+enum CalibrationSteps {
+    SelectSensor = 1,
+    InputMinValue = 2,
+    InputMaxValue = 3,
+    CalibrationResults = 4,
+}
+
 const FullStepper = () => {
     const { showWarn, showError } = useToast();
 
