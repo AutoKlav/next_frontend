@@ -13,10 +13,10 @@ import { getSensorValuesAction } from "@/app/(main)/api/actions"; // Mutation ac
 import { checkForErrors } from "@/utils/errorUtil";
 
 enum CalibrationSteps {
-    SelectSensor = 1,
-    InputMinValue = 2,
-    InputMaxValue = 3,
-    CalibrationResults = 4,
+    SelectSensor = 0,
+    InputMinValue = 1,
+    InputMaxValue = 2,
+    CalibrationResults = 3,
 }
 
 const FullStepper = () => {
@@ -62,7 +62,7 @@ const FullStepper = () => {
             }
             console.log("Raw Sensor values:", data);
             // Adjust the position logic to avoid overwriting x1x2[0]
-            const position = stepRef.current === 1 ? 0 : stepRef.current === 2 ? 1 : -1;
+            const position = stepRef.current === CalibrationSteps.InputMinValue ? 0 : stepRef.current === CalibrationSteps.InputMaxValue ? 1 : -1;
             if (position >= 0) {
                 const sensorId = selectedSensorRef.current?.id;
                 const sensorValue =
@@ -91,13 +91,12 @@ const FullStepper = () => {
             return;
         }
 
-        // there is no progress bar loading on the first step, so we can skip setInterval
-        if (currentStep == 0) {
+        if (currentStep === CalibrationSteps.SelectSensor) {
             setCurrentStep((prevStep) => prevStep + 1);
             return;
         }
 
-        if ((currentStep == 1 || currentStep == 2) && inputValue.current == null) {
+        if ((currentStep === CalibrationSteps.InputMinValue || currentStep === CalibrationSteps.InputMaxValue) && inputValue.current == null) {
             showWarn('Upozorenje', 'Molimo unesite vrijednost.');
             return;
         }
@@ -127,7 +126,7 @@ const FullStepper = () => {
                 setLoading(false);
                 setProgress(0);
 
-                y1y2.current[currentStep-1] = Number(inputValue.current) || 0;
+                y1y2.current[currentStep - 1] = Number(inputValue.current) || 0;
                 inputValue.current = 0;
 
                 if (currentStep < items.length - 1) {
@@ -172,15 +171,15 @@ const FullStepper = () => {
                     style={{ height: "24px", borderRadius: "50px", color: "white" }}
                     className="mb-3"
                 />
-                {currentStep === 0 && <SensorDropdown selectedSensorRef={selectedSensorRef} />}
-                {(currentStep === 1 || currentStep === 2) && (
+                {currentStep === CalibrationSteps.SelectSensor && <SensorDropdown selectedSensorRef={selectedSensorRef} />}
+                {(currentStep === CalibrationSteps.InputMinValue || currentStep === CalibrationSteps.InputMaxValue) && (
                     <CalibrationInput currentStep={currentStep} inputValue={inputValue} />
                 )}
-                {currentStep === 3 && (
+                {currentStep === CalibrationSteps.CalibrationResults && (
                     <CalibrationResults x1x2={x1x2} y1y2={y1y2.current} sensorName={selectedSensorRef.current?.name} />
                 )}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
-                    {currentStep !== 0 && (
+                    {currentStep !== CalibrationSteps.SelectSensor && (
                         <Button
                             label="Back"
                             icon="pi pi-arrow-left"
