@@ -260,22 +260,21 @@ const DashboardPage = () => {
                     <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
                 }
             </div>
-            <div className="flex flex-row justify-content-between gap-3">
+            <div className="flex flex-row justify-content-between gap-3 ml-2 mr-2">
             <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
-            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />            
-            <ProgressBar value={0} color='green' mode="determinate" style={{ height: '10px' }}/>
+            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />                        
             </div>
 
             <div className="col-6">                    
                     <div className='flex flex-column gap-3'>
-                        {relayMapper.slice(0,5) .map((chip, index) => (
+                        {relayMapper.slice(0,4) .map((chip, index) => (
                                 <ChipStates key={index} {...chip} />
                         ))}
                     </div>                    
             </div>
             <div className="col-5">
             <div className='flex flex-column gap-3'>
-                        {relayMapper.slice(5,6) .map((chip, index) => (
+                        {relayMapper.slice(4,6) .map((chip, index) => (
                                 <ChipStates key={index} {...chip} />
                         ))}
                     </div>
