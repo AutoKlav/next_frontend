@@ -256,7 +256,7 @@ const DashboardPage = () => {
                 {RenderState(state)}
                 {/* Display progress or empty bar */}
                 {state === 0 ?
-                    <ProgressBar value={0} color='green' mode="determinate" style={{ height: '10px' }}/> :
+                    <ProgressBar className='ml-1' value={0} color='green' mode="determinate" style={{ height: '10px' }}/> :
                     <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
                 }
             </div>
