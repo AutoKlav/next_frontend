@@ -11,7 +11,7 @@ interface DataCardProps {
 export const DataCard: React.FC<DataCardProps> = (dataProps) => {
     const { icon, headerName, value, unit, color } = dataProps;
 
-    // Round the unitted value to 2 decimal places
+    // Round the united value to 2 decimal places
     const roundedValue = parseAndFormatValue(value);
     console.log(roundedValue);
 
