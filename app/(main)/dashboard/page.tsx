@@ -248,19 +248,15 @@ const DashboardPage = () => {
                     </div>
                 </p>
             </Dialog>
-         <div className="col-6">
-            <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
-            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />            
+         <div className="col-4">
+            {/* <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
+            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" /> */}
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (
                             <DataCard key={index} {...item} />
                         ))}
                     </ul>
-                </div>
-            </div>
-            <div className="col-6">
-                <div className="card border-cyan-700">
                     <ul className="list-none p-0 m-0">
                         {stateValues.map((item, index) => (
                             <DataCard key={index} {...item} />
@@ -268,7 +264,8 @@ const DashboardPage = () => {
                     </ul>
                 </div>
             </div>
-            <div className="col-6">
+            
+            <div className="col-4">
                 <div className="card border-blue-700">
                     <ul className="list-none p-0 m-0">
                         {pressures.map((item, index) => (
@@ -298,8 +295,8 @@ const DashboardPage = () => {
                 </div>
             </div>
                 </div>
-            </div>
-        </div>
+    </div>
+    </div>
     );
 };
 
