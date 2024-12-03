@@ -1,3 +1,5 @@
+import { parseAndFormatValue } from "@/utils/numberUtil";
+
 interface DataCardProps {
     icon: string;
     headerName: string;
@@ -10,7 +12,7 @@ export const DataCard: React.FC<DataCardProps> = (dataProps) => {
     const { icon, headerName, value, unit, color } = dataProps;
 
     // Round the unitted value to 2 decimal places
-    const roundedValue = parseFloat(value).toExponential(2);
+    const roundedValue = parseAndFormatValue(value);
     console.log(roundedValue);
 
     return (
