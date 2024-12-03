@@ -1,3 +1,5 @@
+import { parseAndFormatValue } from "@/utils/numberUtil";
+
 interface DataCardProps {
     icon: string;
     headerName: string;
@@ -9,6 +11,10 @@ interface DataCardProps {
 export const DataCard: React.FC<DataCardProps> = (dataProps) => {
     const { icon, headerName, value, unit, color } = dataProps;
 
+    // Round the united value to 2 decimal places
+    const roundedValue = parseAndFormatValue(value);
+    console.log(roundedValue);
+
     return (
         <li className="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
             <div className="flex flex-column">
@@ -19,9 +25,10 @@ export const DataCard: React.FC<DataCardProps> = (dataProps) => {
                 <div className="flex justify-between items-center bg-gray-900 p-2" style={{ borderRadius: '10px' }}>
                     <input
                         type="text"
-                        value={value}
+                        value={roundedValue} // Display the rounded value
                         readOnly
-                        className={`text-${color}-500 text-2xl font-bold border-none bg-transparent`}
+                        className={`text-${color}-500 text-2xl font-bold border-none bg-transparent` }
+                        style={{ width: '250px' }} // Adjust the width as needed
                     />
                     <span className={`text-${color}-500 text-2xl font-bold`}>{unit}</span>
                 </div>

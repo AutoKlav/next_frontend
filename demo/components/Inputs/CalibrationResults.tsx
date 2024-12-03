@@ -25,8 +25,8 @@ const calibrateSensor = (x1x2: number[], y1y2: number[]) => {
     const b = y1 - m * x1;
     console.log(`Line equation: y = ${m}x + ${b}`);
     
-    const calibratedMinimum = m * x1 + b;
-    const calibratedMaximum = m * x2 + b;
+    const calibratedMinimum = m * 0 + b;
+    const calibratedMaximum = m * 1023 + b;
     console.log(`Calibrated minimum: ${calibratedMinimum}, calibrated maximum: ${calibratedMaximum}`);
     return [calibratedMinimum, calibratedMaximum];
 };
