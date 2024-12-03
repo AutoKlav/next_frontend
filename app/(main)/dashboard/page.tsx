@@ -35,12 +35,12 @@ const pressures = [
 ];
 
 const relayMapper = [
-    { name: 'waterfill', label: 'Pumpa vode', value: 0 },
+    { name: 'cooling', label: 'Hlađenje', value: 0 },
     { name: 'heating', label: 'Grijači', value: 0 },
     { name: 'pump', label: 'Pumpa', value: 0 },
     { name: 'bypass', label: 'Bypass', value: 0 },
     { name: 'inpressure', label: 'Ulazni tlak', value: 0 },
-    { name: 'cooling', label: 'Hlađenje', value: 0 },
+    { name: 'waterfill', label: 'Pumpa vode', value: 0 },
 ];
 
 const DashboardPage = () => {
@@ -167,12 +167,12 @@ const DashboardPage = () => {
     
     const state = stateMachineValues?.state || 0;
     
-    relayMapper[0].value = relaySensorValues?.waterfill || 0;
+    relayMapper[0].value = relaySensorValues?.cooling || 0;
     relayMapper[1].value = relaySensorValues?.heating || 0;
     relayMapper[2].value = relaySensorValues?.pump || 0;
     relayMapper[3].value = relaySensorValues?.bypass || 0;
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
-    relayMapper[5].value = relaySensorValues?.cooling || 0;
+    relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
     const handleStartProcess = () => {        
         if(state === 0){
@@ -247,26 +247,49 @@ const DashboardPage = () => {
                         </Dialog>
                     </div>
                 </p>
-            </Dialog>
-         <div className="col-4">
-            {/* <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
-            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" /> */}
+            </Dialog>            
+        <div className="col-4">
+            {/* Control Relays */}            
+            <div className="card f-height border-green-600">
+            <div className="grid gap-2">
+            <div className="col-12">
+                {RenderState(state)}
+                {/* Display progress or empty bar */}
+                {state === 0 ?
+                    <ProgressBar value={0} color='green' mode="determinate" style={{ height: '10px' }}/> :
+                    <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
+                }
+            </div>
+            <div className="flex flex-row justify-content-between gap-3">
+            <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
+            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />            
+            <ProgressBar value={0} color='green' mode="determinate" style={{ height: '10px' }}/>
+            </div>
+
+            <div className="col-6">                    
+                    <div className='flex flex-column gap-3'>
+                        {relayMapper.slice(0,5) .map((chip, index) => (
+                                <ChipStates key={index} {...chip} />
+                        ))}
+                    </div>                    
+            </div>
+            <div className="col-5">
+            <div className='flex flex-column gap-3'>
+                        {relayMapper.slice(5,6) .map((chip, index) => (
+                                <ChipStates key={index} {...chip} />
+                        ))}
+                    </div>
+            </div>
+            </div>
+            </div>
+        </div>
+         <div className="col-4">            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (
                             <DataCard key={index} {...item} />
                         ))}
-                    </ul>
-                    <ul className="list-none p-0 m-0">
-                        {stateValues.map((item, index) => (
-                            <DataCard key={index} {...item} />
-                        ))}
-                    </ul>
-                </div>
-            </div>
-            
-            <div className="col-4">
-                <div className="card border-blue-700">
+                    </ul>                    
                     <ul className="list-none p-0 m-0">
                         {pressures.map((item, index) => (
                             <DataCard key={index} {...item} />
@@ -274,28 +297,16 @@ const DashboardPage = () => {
                     </ul>
                 </div>
             </div>
-    <div className="col-6">
-        {/* Control Relays */}
-        <div className="card f-height border-green-600">
-            <div className="grid gap-2">
-                <div className="col-4">
-                    <div className='flex flex-column gap-3'>
-                       {relayMapper.map((chip, index) => (
-                            <ChipStates key={index} {...chip} />
+            
+            <div className="col-4">
+                <div className="card border-cyan-700">
+                <ul className="list-none p-0 m-0">
+                        {stateValues.map((item, index) => (
+                            <DataCard key={index} {...item} />
                         ))}
-                    </div>
+                    </ul>
                 </div>
-                <div className="col-3">                    
-                </div>
-                <div className="col-4">
-                {RenderState(state)}
-                {state !== 0 &&(
-                    <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }} className='ml-2 mr-2'></ProgressBar>
-                )}
-                </div>
-            </div>
-                </div>
-    </div>
+            </div>    
     </div>
     );
 };
