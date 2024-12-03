@@ -1,7 +1,5 @@
 "use client";
 
-import { Chip } from 'primereact/chip';
-
 export enum Severity {
     Success = 0,
     Info = 0,    
@@ -62,22 +60,107 @@ const thirdColumn = (time:string, state: number) => {
                 </div>
             </div>;
 }
-export const RenderState = (state:number) => {
+
+export const RenderState = (state: number) => {
+    const baseClass =
+        "text-lg font-medium mb-3 pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-center";
+    const iconClassMultipleRows = "text-2xl mr-3 ml-1 mt-2";
+    const iconClassOneRow = "text-2xl";
+    const spanClass = "text-xl";
+
     switch (state) {
         case 0:
-            return <Chip key={'0'} label="Proces je spreman za početak" icon="pi pi-info-circle" className="bg-blue-500 text-900 text-sm font-medium mb-3" />;
+            return (
+                <div
+                    className={`bg-blue-500 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Proces je spreman za početak</span>
+                    <div className="flex items-center">
+                        <i className={`pi pi-info-circle ${iconClassMultipleRows}`}></i>
+                    </div>
+                </div>
+            );
+
         case 2:
-            return <Chip key={'1'} label="Proces je u izvođenju (Punjenje)" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-sm font-medium mb-3" />;
+            return (
+                <div
+                    className={`bg-yellow-800 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Proces je u izvođenju (Punjenje)</span>
+                    <div className="flex items-center">
+                        <i className={`pi pi-exclamation-triangle ${iconClassMultipleRows}`}></i>
+                    </div>
+                </div>
+            );
+
         case 3:
-            return <Chip key={'2'} label="Proces je u izvođenju (Zagrijavanje)" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-sm font-medium mb-3" />;
+            return (
+                <div
+                    className={`bg-yellow-800 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Proces je u izvođenju (Zagrijavanje)</span>
+                    <div className="flex items-center flex-col">
+                        <i className={`pi pi-exclamation-triangle ${iconClassMultipleRows}`}></i>
+                    </div>
+                </div>
+            );
+
         case 4:
-            return <Chip key={'3'} label="Proces je u izvođenju (Hlađenje)" icon="pi pi-exclamation-triangle" className="bg-yellow-800 text-900 text-sm font-medium mb-3" />;
-        case 5:
-            return <Chip key={'6'} label="Proces je pri kraju" icon="pi pi-check" className="bg-green-700 text-900 text-sm font-medium mb-3" />;
+            return (
+                <div
+                    className={`bg-yellow-800 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Proces je u izvođenju (Hlađenje)</span>
+                    <div className="flex items-center flex-col">
+                        <i className={`pi pi-exclamation-triangle ${iconClassMultipleRows}`}></i>
+                    </div>
+                </div>
+            );
+
+            case 5:
+                return (
+                    <div
+                        className={`bg-green-700 text-900 ${baseClass}`}
+                        style={{ borderRadius: "12px" }}
+                    >
+                        <div className="flex items-center justify-between w-full">
+                            <span className={spanClass}>Proces je pri kraju</span>
+                            <i className={`pi pi-check ml-7 ${iconClassOneRow}`}></i>
+                        </div>
+                    </div>
+                );
+            
+
         case 6:
-            return <Chip key={'6'} label="Proces je završio" icon="pi pi-check" className="bg-green-700 text-900 text-sm font-medium mb-3" />;
+            return (
+                <div
+                    className={`bg-green-700 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Proces je završio</span>
+                    <div className="flex items-center flex-col">
+                        <i className={`pi pi-check ml-8 ${iconClassOneRow}`}></i>
+                    </div>
+                </div>
+            );
+
         case -1:
-            return <Chip key={'5'} label="Greška u izvođenju" icon="pi pi-times" className="bg-red-700 text-900 text-sm font-medium mb-3" />;
+            return (
+                <div
+                    className={`bg-red-700 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Greška u izvođenju</span>
+                    <div className="flex items-center flex-col">
+                        <i className={`pi pi-times ml-7 ${iconClassOneRow}`}></i>
+                    </div>
+                </div>
+            );
+
         default:
             return null;
     }
