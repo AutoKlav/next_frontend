@@ -15,7 +15,6 @@ import { ProgressBar } from 'primereact/progressbar';
 import { StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
-import { Dropdown } from 'primereact/dropdown';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 
 const temperatures = [
@@ -251,21 +250,23 @@ const DashboardPage = () => {
         <div className="col-4">
             {/* Control Relays */}            
             <div className="card f-height border-green-600">
-            <div className="grid gap-2">
+            <div className="grid gap-2">            
             <div className="col-12">
                 {RenderState(state)}
-                {/* Display progress or empty bar */}
-                {state === 0 ?
-                    <ProgressBar className='ml-1' value={0} color='green' mode="determinate" style={{ height: '10px' }}/> :
-                    <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
-                }
+                {/* Display progress or empty bar */}                
             </div>
             <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">
             <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
             <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />                        
             </div>
-
-            <div className="col-6">                    
+            <div className='col-12'>
+                {state === 0 ?
+                        <ProgressBar className='ml-1' value={0} color='green' mode="determinate" style={{ height: '10px' }}/> :
+                        <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
+                    }
+            </div>
+            
+            <div className="col-6">
                     <div className='flex flex-column gap-3 ml-2 mr-2'>
                         {relayMapper.slice(0,4) .map((chip, index) => (
                                 <ChipStates key={index} {...chip} />
@@ -277,7 +278,7 @@ const DashboardPage = () => {
                         {relayMapper.slice(4,6) .map((chip, index) => (
                                 <ChipStates key={index} {...chip} />
                         ))}
-                    </div>
+            </div>
             </div>
             </div>
             </div>
