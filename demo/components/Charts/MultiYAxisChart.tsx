@@ -18,8 +18,13 @@ interface TransformedData {
     fr: number[];
     pressure: number[];
 }
+interface ChartInfo {    
+    id: number;
+    title: string;
+    subtitle: string;
+}
 
-const MultiYAxisChart = () => {
+export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) => {    
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
     const chartRef = useRef<any>(null);
@@ -133,16 +138,9 @@ const MultiYAxisChart = () => {
     };  
 
     useEffect(() => {
-        
-        
-        getProcessLogMutation({ ids: [55], source: "graph" });
-        setChartOptions(updateChartOptions("white", "white", chartInfo)); // Initial white theme
+        getProcessLogMutation({ ids: [chartInfoProps.id], source: "graph" });
+        setChartOptions(updateChartOptions("white", "white", chartInfoProps)); // Initial white theme
     }, []);
-    
-    const chartInfo = {
-        title: ["Ime: [Product Name]","Količina: [Product Quantity]", "Početak: [Start]", "Trajanje: [Length]"].join(" - "), // Title of the chart
-        subtitle: ["Bakterija: [Ime bakterije]","Opis: [Opis]"].join(" - "), // Subtitle of the chart
-    }
     
     return (
         <div className="card">
@@ -150,15 +148,12 @@ const MultiYAxisChart = () => {
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
                     <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
                 </div>
-            ): (
+            ) : (
                 <>
                     <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-                    <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions, chartInfo)} className="p-button-info mt-5" />
+                    <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions, chartInfoProps)} className="p-button-info mt-5" />
                 </>
-            )}
-            
+            )}            
         </div>
     );
 };
-
-export default MultiYAxisChart;
