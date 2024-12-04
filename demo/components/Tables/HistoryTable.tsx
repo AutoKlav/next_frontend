@@ -176,7 +176,7 @@ const HistoryTable = () => {
                 value={processesDataQuery || []}
                 loading={loading || isLogLoading}
                 paginator
-                rows={5}
+                rows={6}
                 dataKey="id"
                 filters={filters}
                 selection={selectedProcesses}
