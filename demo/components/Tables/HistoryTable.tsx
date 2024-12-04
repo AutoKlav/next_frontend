@@ -39,9 +39,9 @@ const HistoryTable = () => {
             console.log("Process logs:", data);
 
             if (source === "print") {
-                console.log("Handle print logic here.");
+                
             } else if (source === "graph") {
-                console.log("Handle graph logic here.");
+                
             }
         },
     });
@@ -83,21 +83,21 @@ const HistoryTable = () => {
                     onClick={clearFilter}
                 />
                 <div className="flex justify-content-between gap-3">
-                    {selectedProcesses.length > 0 && (
-                        <>
-                            <Button
-                                icon="pi pi-print"
-                                className="p-button-text p-button-plain"
-                                size="large"
-                                onClick={handlePrint}
-                            />
-                            <Button
-                                icon="pi pi-chart-line"
-                                className="p-button-text p-button-plain"
-                                size="large"
-                                onClick={handleGraph}
-                            />
-                        </>
+                    {selectedProcesses.length === 1 && (
+                        <Button
+                        icon="pi pi-chart-line"
+                        className="p-button-text p-button-plain"
+                        size="large"
+                        onClick={handleGraph}
+                    />
+                    )}
+                    {selectedProcesses.length > 0 && (                        
+                        <Button
+                            icon="pi pi-print"
+                            className="p-button-text p-button-plain"
+                            size="large"
+                            onClick={handlePrint}
+                        />
                     )}
                     <InputText
                         value={globalFilterValue}
