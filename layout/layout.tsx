@@ -142,7 +142,7 @@ const Layout = ({ children }: ChildContainerProps) => {
                 <div className="layout-main-container">
                     <div className="layout-main">{children}</div>                    
                 </div>
-                <AppConfig />
+                {/* <AppConfig /> */}
                 <div className="layout-mask"></div>
             </div>
             {/* Wrapping SearchParamsComponent in Suspense */}
