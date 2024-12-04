@@ -12,8 +12,7 @@ export const DataCard: React.FC<DataCardProps> = (dataProps) => {
     const { icon, headerName, value, unit, color } = dataProps;
 
     // Round the united value to 2 decimal places
-    const roundedValue = parseAndFormatValue(value);
-    console.log(roundedValue);
+    const roundedValue = parseAndFormatValue(value);    
 
     return (
         <li className="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">

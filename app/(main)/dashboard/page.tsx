@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getSensorRelayValuesAction, getStateMachineValuesAction, setVariableAction, startProcessAction, stopProcessAction, updateSensorAction } from '../api/actions';
+import { getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -206,10 +206,6 @@ const DashboardPage = () => {
         showWarn('Proces','Proces je već pokrenut');
     };
 
-    const handleSetVariable = (minValue: number, maxValue: number) => {
-        updateSensorAction();
-    }
-    
     const footerContent = (
         <div>
             <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
