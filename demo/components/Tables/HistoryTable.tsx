@@ -10,8 +10,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actions";
 import { useToast } from "@/layout/context/toastcontext";
 import DateFilterDialog from "../Dialogs/DateFilterSelector";
+import { useRouter } from "next/navigation";
 
 const HistoryTable = () => {
+    const router = useRouter()
     const { showError } = useToast();
     const { data: processesDataQuery, isLoading: loading } = useQuery({
         queryKey: ["processesDataQuery"],
@@ -40,11 +42,11 @@ const HistoryTable = () => {
 
             if (source === "print") {
                 
-            } else if (source === "graph") {
-                
+            } else if (source === "graph") {                
+                router.push(`/chart/${data.processlogsList[0].id}`);
             }
         },
-    });
+    }); 
 
     const [globalFilterValue, setGlobalFilterValue] = useState("");
     const [filters, setFilters] = useState<DataTableFilterMeta | undefined>(undefined);
