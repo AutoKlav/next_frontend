@@ -43,7 +43,7 @@ const HistoryTable = () => {
             if (source === "print") {
                 
             } else if (source === "graph") {                
-                router.push(`/chart/${data.processlogsList[0].id}`);
+                router.push(`/chart/${data?.processlogsList[0]?.id}`);
             }
         },
     }); 
