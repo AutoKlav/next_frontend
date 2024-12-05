@@ -9,3 +9,27 @@ export const getCurrentDateTime = (): string => {
 
     return `${year}-${month}-${day}-${hours}-${minutes}-${seconds}`;
 };
+
+/**
+ * Formats a date string into a formatted date and time string.
+ * @param dateString - The date string to format.
+ * @returns The formatted date and time string. (hh:mm:ss dd/mm/yyyy)
+ */
+export const formatDateTime = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false, // Ensure 24-hour format
+    };
+
+    const dateOptions: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    };
+
+    return `${date.toLocaleDateString('en-GB', dateOptions)}, ${date.toLocaleTimeString('en-GB', timeOptions)} `;
+};

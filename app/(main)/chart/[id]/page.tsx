@@ -3,7 +3,7 @@
 import { MultiYAxisChart } from '@/demo/components/Charts/MultiYAxisChart';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { getProcessesAction } from '../../api/actions';
 import { useToast } from '@/layout/context/toastcontext';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -12,12 +12,14 @@ const ChartPage = () => {
     const { showError } = useToast();
     const { id } = useParams();
 
-    const { data: filteredProcessQuery, isLoading: loading } = useQuery({
-        queryKey: ["processesDataQuery"],
+    const { data: filteredProcessQuery, isLoading: loading, refetch } = useQuery({
+        queryKey: ["processesDataQuery", id],
         queryFn: async () => {
             const response = await getProcessesAction();
             console.log("Processes:", response?.processesList);
-            return response?.processesList?.filter((process) => process.id.toString() === id);
+            
+            return response?.processesList
+            ?.filter((process) => process.id.toString() === id);
         },
         onError(err) {
             showError(
@@ -26,21 +28,28 @@ const ChartPage = () => {
             );
             console.log(err);
         },
+        enabled: !!id, // Ensure the query runs only if id is available
     });
+
+    useEffect(() => {
+        if (id) {
+            refetch();
+        }
+    }, [id, refetch]);
 
     const process = filteredProcessQuery?.[0]; // Get the first matching process
     const chartInfo = process ? {
             id: process.id,
             title: [
-                `Ime: ${process.productname?? "[]"}`,
+                `Ime: ${process.productname ?? "[]"}`,
                 `Količina: ${process.productquantity ?? "[]"}`,
                 `Početak: ${process.processstart ?? "[]"}`,
-                `Trajanje: ${process.processlength ?? "[]"}`
-            ].join(" - "),
+                `Trajanje: ${process.processlength ?? "[]"}`,
+            ].join(" | "),
             subtitle: [
                 `Bakterija: ${process.bacteria ?? "[Ime bakterije]"}`,
-                `Opis: ${process.description ?? "[Opis]"}`
-            ].join(" - "),
+                `Opis: ${process.description ?? "[Opis]"}`,
+            ].join(" | "),
         } : { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
 
     return (
