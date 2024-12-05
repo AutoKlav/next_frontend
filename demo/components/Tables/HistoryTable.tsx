@@ -53,7 +53,7 @@ const HistoryTable = () => {
 
             if (source === "print") {
                 updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
-                handleExportToPDF(chartRef, chartOptions, { title:'a', subtitle:'b'});
+                handleExportToPDF(chartRef, chartOptions, { id:1, title:'a', subtitle:'b'});
             } else if (source === "graph") {                
                 router.push(`/chart/${data?.processlogsList[0]?.id}`);
             }
