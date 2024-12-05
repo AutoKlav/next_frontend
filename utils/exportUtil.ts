@@ -1,9 +1,9 @@
 import { ChartOptions } from "chart.js";
 import { getCurrentDateTime } from "./dateUtil";
 import jsPDF from "jspdf";
-import { updateChartOptions } from "./chartOptionsUtil";
+import { TitleInfo, updateChartOptions } from "./chartOptionsUtil";
 
-export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOptions: ChartOptions<"line">, chartInfo:{title:string,subtitle:string}) => {
+export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOptions: ChartOptions<"line">, chartInfo: TitleInfo) => {
     const chartInstance = chartRef.current?.getChart();
     if (chartInstance && chartOptions) {        
 

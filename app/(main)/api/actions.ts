@@ -87,7 +87,6 @@ export const startProcessAction = async (request: StartProcessRequest) => {
       return response;
  };
 
-
 export const stopProcessAction = async () => {
     const response = await stopProcess();
     return response;

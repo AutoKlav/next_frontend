@@ -117,8 +117,8 @@ export interface ProcessInfo {
 // ProcessInfoRow message
 export interface ProcessInfoRow {
   id: number;
-  productName: string;
-  productQuantity: string;
+  productname: string;
+  productquantity: string;
   bacteria: string;
   description: string;
   processstart: string;

@@ -1,17 +1,22 @@
 import { ChartOptions } from "chart.js";
 
+export interface TitleInfo {
+  id: number;
+  title: string;
+  subtitle: string;
+}
 /**
  * Updates the chart options with the specified text color and grid color. Must be separated
  * because of dark theme app and white paper prepared for print
  * @param textColor The color of the text in the chart.
  * @param gridColor The color of the grid lines in the chart.
- * @param chartInfo The title and subtitle of the chart about the process.
+ * @param titleInfo The title and subtitle of the chart about the process.
  * @returns The updated chart options.
  */
 export const updateChartOptions = (
   textColor: string, 
   gridColor: string, 
-  chartInfo: { title: string, subtitle: string }
+  titleInfo: TitleInfo
 ): ChartOptions<"line"> => ({
   maintainAspectRatio: true,
   aspectRatio: 1.6,
@@ -23,7 +28,7 @@ export const updateChartOptions = (
   plugins: {
     title: {
       display: true,
-      text: chartInfo.title,
+      text: titleInfo.title,
       font: {
         size: 24,
       },
@@ -35,7 +40,7 @@ export const updateChartOptions = (
     },
     subtitle: {
       display: true,
-      text: chartInfo.subtitle,
+      text: titleInfo.subtitle,
       font: {
         size: 20,
       },
@@ -97,3 +102,44 @@ export const updateChartOptions = (
     },
   },
 });
+
+type Process = {
+  id: number;
+  productname?: string;
+  productquantity?: string;
+  processstart?: string;
+  processlength?: string;
+  bacteria?: string;
+  description?: string;
+};
+
+type ChartInfo = {
+  id: number;
+  title: string;
+  subtitle: string;
+};
+
+/**
+ * Retrieves the chart information based on the given process.
+ * @param process - The process object.
+ * @returns The chart information object.
+ */
+export const getChartInfo = (process: Process | null | undefined): ChartInfo => {
+  if (!process) {
+      return { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
+  }
+
+  return {
+      id: process.id,
+      title: [
+          `Ime: ${process.productname ?? "[]"}`,
+          `Količina: ${process.productquantity ?? "[]"}`,
+          `Početak: ${process.processstart ?? "[]"}`,
+          `Trajanje: ${process.processlength ?? "[]"}`,
+      ].join(" | "),
+      subtitle: [
+          `Bakterija: ${process.bacteria ?? "[Ime bakterije]"}`,
+          `Opis: ${process.description ?? "[Opis]"}`,
+      ].join(" | "),
+  };
+};
