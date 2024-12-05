@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 import { getProcessesAction } from '../../api/actions';
 import { useToast } from '@/layout/context/toastcontext';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { getChartInfo } from '@/utils/chartOptionsUtil';
 
 const ChartPage = () => {
     const { showError } = useToast();
@@ -16,8 +17,7 @@ const ChartPage = () => {
         queryKey: ["processesDataQuery", id],
         queryFn: async () => {
             const response = await getProcessesAction();
-            console.log("Processes:", response?.processesList);
-            
+                        
             return response?.processesList
             ?.filter((process) => process.id.toString() === id);
         },
@@ -38,19 +38,7 @@ const ChartPage = () => {
     }, [id, refetch]);
 
     const process = filteredProcessQuery?.[0]; // Get the first matching process
-    const chartInfo = process ? {
-            id: process.id,
-            title: [
-                `Ime: ${process.productname ?? "[]"}`,
-                `Količina: ${process.productquantity ?? "[]"}`,
-                `Početak: ${process.processstart ?? "[]"}`,
-                `Trajanje: ${process.processlength ?? "[]"}`,
-            ].join(" | "),
-            subtitle: [
-                `Bakterija: ${process.bacteria ?? "[Ime bakterije]"}`,
-                `Opis: ${process.description ?? "[Opis]"}`,
-            ].join(" | "),
-        } : { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
+    const chartInfo = getChartInfo(process);
 
     return (
         <div className="grid">            

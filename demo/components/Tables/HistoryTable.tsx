@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import { Chart } from "primereact/chart";
+import { ChartOptions } from "chart.js";
+import React, { useEffect, useRef, useState } from "react";
 import { FilterMatchMode } from "primereact/api";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -11,10 +13,19 @@ import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actio
 import { useToast } from "@/layout/context/toastcontext";
 import DateFilterDialog from "../Dialogs/DateFilterSelector";
 import { useRouter } from "next/navigation";
+import { updateChartOptions } from "@/utils/chartOptionsUtil";
+import { transformData, updateChartData } from "@/utils/transformData";
+import { handleExportToPDF } from "@/utils/exportUtil";
 
 const HistoryTable = () => {
+    const [chartData, setChartData] = useState({});
+    const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
+    const chartRef = useRef<any>(null);
+
+
     const router = useRouter()
     const { showError } = useToast();
+    
     const { data: processesDataQuery, isLoading: loading } = useQuery({
         queryKey: ["processesDataQuery"],
         queryFn: async () => {
@@ -41,12 +52,18 @@ const HistoryTable = () => {
             console.log("Process logs:", data);
 
             if (source === "print") {
-                
+                updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
+                handleExportToPDF(chartRef, chartOptions, { title:'a', subtitle:'b'});
             } else if (source === "graph") {                
                 router.push(`/chart/${data?.processlogsList[0]?.id}`);
             }
         },
     }); 
+
+    useEffect(() => {
+        // Usage    
+        setChartOptions(updateChartOptions("white", "white", {id:1, title:'a', subtitle:'b'})); // Initial white theme
+    },[]);
 
     const [globalFilterValue, setGlobalFilterValue] = useState("");
     const [filters, setFilters] = useState<DataTableFilterMeta | undefined>(undefined);
@@ -120,6 +137,7 @@ const HistoryTable = () => {
     const handlePrint = () => {
         const ids = selectedProcesses.map((process) => process.id);
         getProcessLogMutation({ ids: ids, source: "print" });
+        setShowChart(true); // Make the chart visible before exporting
     };
 
     const handleGraph = () => {
@@ -167,7 +185,21 @@ const HistoryTable = () => {
         });
     };
 
+    useEffect(() => {
+        // Usage    
+        setChartOptions(updateChartOptions("white", "white", {id:1, title:'a', subtitle:'b'})); // Initial white theme
+    }, []);
+
     const header = renderHeader();
+
+    const [showChart, setShowChart] = useState(false); // State to control chart visibility
+    useEffect(() => {
+        // Hide chart again after a short delay (optional, if required for export operations)
+        if (showChart) {
+            const timer = setTimeout(() => setShowChart(false), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [showChart]);
 
     return (
         <div className="card">
@@ -208,8 +240,16 @@ const HistoryTable = () => {
                 dateFilterOption={dateFilterOption}
                 setDateFilterOption={setDateFilterOption}
             />
+                
+            {/* {false && (
+            )} */}
+            {/* Conditionally render the Chart */}
+            {showChart && (
+                <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
+            )}
         </div>
     );
 };
 
 export default HistoryTable;
+
