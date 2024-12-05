@@ -51,8 +51,7 @@ const HistoryTable = () => {
         onSuccess: ({data, source}) => {
             console.log("Process logs:", data);
 
-            if (source === "print") {
-                setShowChart(true); // Make the chart visible before exporting
+            if (source === "print") {                
                 updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
                 
                 const chartInfo = getChartInfo(selectedProcesses[0]);                
@@ -135,6 +134,7 @@ const HistoryTable = () => {
     const handlePrint = () => {
         const ids = selectedProcesses.map((process) => process.id);
         getProcessLogMutation({ ids: ids, source: "print" });        
+        setShowChart(true); // Make the chart visible before exporting
     };
 
     const handleGraph = () => {
@@ -196,7 +196,7 @@ const HistoryTable = () => {
             const timer = setTimeout(() => setShowChart(false), 1000);
             return () => clearTimeout(timer);
         }
-    }, [showChart]);
+    }, [showChart]);    
     console.log("Selected",selectedProcesses);
     return (
         <div className="card">
@@ -238,10 +238,8 @@ const HistoryTable = () => {
                 setDateFilterOption={setDateFilterOption}
             />
                 
-            {/* {false && (
-            )} */}
-            {/* Conditionally render the Chart */}            
             <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
+            
         </div>
     );
 };
