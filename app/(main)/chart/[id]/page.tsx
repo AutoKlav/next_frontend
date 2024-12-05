@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import React from 'react';
 import { getProcessesAction } from '../../api/actions';
 import { useToast } from '@/layout/context/toastcontext';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const ChartPage = () => {
     const { showError } = useToast();
@@ -14,10 +15,8 @@ const ChartPage = () => {
     const { data: filteredProcessQuery, isLoading: loading } = useQuery({
         queryKey: ["processesDataQuery"],
         queryFn: async () => {
-            const response =  await getProcessesAction();
-            
+            const response = await getProcessesAction();
             console.log("Processes:", response?.processesList);
-            
             return response?.processesList?.filter((process) => process.id.toString() === id);
         },
         onError(err) {
@@ -29,18 +28,31 @@ const ChartPage = () => {
         },
     });
 
-    console.log("ProcessesDataQuery:", filteredProcessQuery);
+    const process = filteredProcessQuery?.[0]; // Get the first matching process
+    const chartInfo = process ? {
+            id: process.id,
+            title: [
+                `Ime: ${process.productname?? "[]"}`,
+                `Količina: ${process.productquantity ?? "[]"}`,
+                `Početak: ${process.processstart ?? "[]"}`,
+                `Trajanje: ${process.processlength ?? "[]"}`
+            ].join(" - "),
+            subtitle: [
+                `Bakterija: ${process.bacteria ?? "[Ime bakterije]"}`,
+                `Opis: ${process.description ?? "[Opis]"}`
+            ].join(" - "),
+        } : { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
 
-    const chartInfo = {
-        id: 55,
-        title: ["Ime: [Product Name]","Količina: [Product Quantity]", "Početak: [Start]", "Trajanje: [Length]"].join(" - "), // Title of the chart
-        subtitle: ["Bakterija: [Ime bakterije]","Opis: [Opis]"].join(" - "), // Subtitle of the chart
-    }
-    
     return (
-        <div className='grid'>            
-            <div className='col-12'>            
-                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} />
+        <div className="grid">            
+            <div className="col-12">                
+            {loading ? (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '70vh' }}>
+                    <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
+                </div>
+            ) : 
+                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} />                
+            }
             </div>
         </div>
     );
