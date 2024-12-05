@@ -13,7 +13,7 @@ import { getProcessLogsAction, getProcessesAction } from "@/app/(main)/api/actio
 import { useToast } from "@/layout/context/toastcontext";
 import DateFilterDialog from "../Dialogs/DateFilterSelector";
 import { useRouter } from "next/navigation";
-import { updateChartOptions } from "@/utils/chartOptionsUtil";
+import { getChartInfo, updateChartOptions } from "@/utils/chartOptionsUtil";
 import { transformData, updateChartData } from "@/utils/transformData";
 import { handleExportToPDF } from "@/utils/exportUtil";
 
@@ -52,18 +52,16 @@ const HistoryTable = () => {
             console.log("Process logs:", data);
 
             if (source === "print") {
+                setShowChart(true); // Make the chart visible before exporting
                 updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
-                handleExportToPDF(chartRef, chartOptions, { id:1, title:'a', subtitle:'b'});
+                
+                const chartInfo = getChartInfo(selectedProcesses[0]);                
+                handleExportToPDF(chartRef, chartOptions, chartInfo);
             } else if (source === "graph") {                
                 router.push(`/chart/${data?.processlogsList[0]?.id}`);
             }
         },
     }); 
-
-    useEffect(() => {
-        // Usage    
-        setChartOptions(updateChartOptions("white", "white", {id:1, title:'a', subtitle:'b'})); // Initial white theme
-    },[]);
 
     const [globalFilterValue, setGlobalFilterValue] = useState("");
     const [filters, setFilters] = useState<DataTableFilterMeta | undefined>(undefined);
@@ -136,8 +134,7 @@ const HistoryTable = () => {
 
     const handlePrint = () => {
         const ids = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation({ ids: ids, source: "print" });
-        setShowChart(true); // Make the chart visible before exporting
+        getProcessLogMutation({ ids: ids, source: "print" });        
     };
 
     const handleGraph = () => {
@@ -187,7 +184,7 @@ const HistoryTable = () => {
 
     useEffect(() => {
         // Usage    
-        setChartOptions(updateChartOptions("white", "white", {id:1, title:'a', subtitle:'b'})); // Initial white theme
+        setChartOptions(updateChartOptions("#1f2937", "#1f2937", {id:1, title:'', subtitle:''})); // Initial white theme
     }, []);
 
     const header = renderHeader();
@@ -200,7 +197,7 @@ const HistoryTable = () => {
             return () => clearTimeout(timer);
         }
     }, [showChart]);
-
+    console.log("Selected",selectedProcesses);
     return (
         <div className="card">
             <h2>Povijest procesa</h2>
@@ -243,10 +240,8 @@ const HistoryTable = () => {
                 
             {/* {false && (
             )} */}
-            {/* Conditionally render the Chart */}
-            {showChart && (
-                <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-            )}
+            {/* Conditionally render the Chart */}            
+            <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
         </div>
     );
 };
