@@ -139,10 +139,7 @@ const FullStepper = () => {
     };
 
     const handleBack = () => {
-        if (currentStep > 0) {
-            setCurrentStep((prevStep) => prevStep - 1);
-            stepRef.current = currentStep - 1; // Sync ref when stepping back
-        }
+        resetValues();
     };
 
     const resetValues = () => {
@@ -156,14 +153,15 @@ const FullStepper = () => {
         y1y2.current = [0, 0];
         setX1X2([0, 0]);
     }
-    console.log("Result", result);
 
     const handleCalibrate = () => {
         if(result.some((r) => isNaN(r))){
-            showError('Greška', 'Vrijednosti sa senzora su iste za najveću i najmanju vrijednost.');
+            showError('Greška', 'Kalibrirane vrijednosti su nesipravne. Molimo projverite unesene i očitane vrijednosti.', 5000);
+            resetValues();
+            return;
         }
         
-        resetValues();
+        //TODO Call API to save calibration values
     }
     
     return (
