@@ -33,6 +33,7 @@ const FullStepper = () => {
     const selectedSensorRef = useRef<SensorDropdown | null>(null);
     const y1y2 = useRef<number[]>([0, 0]);
     const [x1x2, setX1X2] = useState<number[]>([0, 0]);
+    const [result, setResult] = useState([0,0]);
 
     const updateIndex = (index: number, value: number) => {
         if (index < 0 || index >= x1x2.length) {
@@ -155,8 +156,13 @@ const FullStepper = () => {
         y1y2.current = [0, 0];
         setX1X2([0, 0]);
     }
+    console.log("Result", result);
 
     const handleCalibrate = () => {
+        if(result.some((r) => isNaN(r))){
+            showError('Greška', 'Vrijednosti sa senzora su iste za najveću i najmanju vrijednost.');
+        }
+        
         resetValues();
     }
     
@@ -176,12 +182,12 @@ const FullStepper = () => {
                     <CalibrationInput currentStep={currentStep} inputValue={inputValue} />
                 )}
                 {currentStep === CalibrationSteps.CalibrationResults && (
-                    <CalibrationResults x1x2={x1x2} y1y2={y1y2.current} sensorName={selectedSensorRef.current?.name} />
+                    <CalibrationResults x1x2={x1x2} y1y2={y1y2.current} sensorName={selectedSensorRef.current?.name} setResult={setResult}/>
                 )}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
-                    {currentStep !== CalibrationSteps.SelectSensor && (
+                    {currentStep === items.length -1 && (
                         <Button
-                            label="Back"
+                            label="Vrati se na početak"
                             icon="pi pi-arrow-left"
                             className="p-button-secondary w-full md:w-auto p-button-rounded p-2"
                             onClick={handleBack}
@@ -189,7 +195,7 @@ const FullStepper = () => {
                     )}
                     {currentStep < items.length - 1 && (
                         <Button
-                            label="Next"
+                            label="Sljedeći korak"
                             icon="pi pi-arrow-right"
                             iconPos={loading ? "left" : "right"}
                             onClick={handleNext}
