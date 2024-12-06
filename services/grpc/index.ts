@@ -97,6 +97,12 @@ export const getSensorValues = () => {
   return gRpcCall<SensorValues>("getSensorValues", data);
 };
 
+export const getSensorPinValues = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<SensorValues>("getSensorPinValues", data);
+};
+
 export const getSensorRelayValues = () => {
   const data = new Messages.Empty();
 

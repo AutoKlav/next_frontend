@@ -6,11 +6,11 @@ import { ProgressBar } from "primereact/progressbar";
 import { Toast } from "primereact/toast";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/layout/context/toastcontext";
-import CalibrationInput from "../Inputs/CalibrationInput"; // Placeholder component
-import CalibrationResults from "../Inputs/CalibrationResults"; // Placeholder component
-import SensorDropdown from "../Inputs/Dropdown/SensorDropdown"; // Placeholder component
-import { getSensorValuesAction } from "@/app/(main)/api/actions"; // Mutation action
+import CalibrationInput from "../Inputs/CalibrationInput"; 
+import CalibrationResults from "../Inputs/CalibrationResults"; 
+import SensorDropdown from "../Inputs/Dropdown/SensorDropdown";
 import { checkForErrors } from "@/utils/errorUtil";
+import { getSensorPinValuesAction } from "@/app/(main)/api/actions";
 
 enum CalibrationSteps {
     SelectSensor = 0,
@@ -48,7 +48,7 @@ const FullStepper = () => {
     };
     
     const { mutate: getSensorValuesMutation } = useMutation({
-        mutationFn: getSensorValuesAction,
+        mutationFn: getSensorPinValuesAction,
         onError: () => {
             showError(
                 "Greška",
