@@ -230,6 +230,17 @@ getSensorValues: {
     responseSerialize: serialize_autoklav_SensorValues,
     responseDeserialize: deserialize_autoklav_SensorValues,
   },
+  getSensorPinValues: {
+    path: '/autoklav.Autoklav/getSensorPinValues',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.Empty,
+    responseType: services_grpc_autoklav_pb.SensorValues,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_SensorValues,
+    responseDeserialize: deserialize_autoklav_SensorValues,
+  },
   getSensorRelayValues: {
     path: '/autoklav.Autoklav/getSensorRelayValues',
     requestStream: false,
