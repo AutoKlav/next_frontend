@@ -73,6 +73,9 @@ export const stopProcess = () => {
 
 export const updateSensor = () => {
   const data = new Messages.UpdateSensorRequest();
+  data.setName("temp");
+  data.setMinValue(5);
+  data.setMaxValue(10);
 
   return gRpcCall<Status>("updateSensor", data);
 }

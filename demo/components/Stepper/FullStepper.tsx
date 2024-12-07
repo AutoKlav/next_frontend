@@ -10,7 +10,7 @@ import CalibrationInput from "../Inputs/CalibrationInput";
 import CalibrationResults from "../Inputs/CalibrationResults"; 
 import SensorDropdown from "../Inputs/Dropdown/SensorDropdown";
 import { checkForErrors } from "@/utils/errorUtil";
-import { getSensorPinValuesAction } from "@/app/(main)/api/actions";
+import { getSensorPinValuesAction, updateSensorAction } from "@/app/(main)/api/actions";
 
 enum CalibrationSteps {
     SelectSensor = 0,
@@ -20,7 +20,7 @@ enum CalibrationSteps {
 }
 
 const FullStepper = () => {
-    const { showWarn, showError } = useToast();
+    const { showSuccess, showWarn, showError } = useToast();
 
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -79,6 +79,24 @@ const FullStepper = () => {
         },
     });
 
+    const { mutate: setSensorMutation } = useMutation({
+        mutationFn: updateSensorAction,
+        onError: () => {
+            showError(
+                "Greška",
+                "Nije moguće upisati podatke. Provjerite konekciju i pokušajte ponovno."
+            );
+        },
+        onSuccess: (data) => {            
+            if(checkForErrors(data)){            
+                errorPresent.current = true;
+                return;
+            }
+            
+            showSuccess("Uspjeh", "Podaci su uspješno upisani.");
+        },
+    });
+
     const items = [
         { label: "Odabir senzora" },
         { label: "Upis najmanje vrijednosti" },
@@ -87,6 +105,7 @@ const FullStepper = () => {
     ];
 
     const handleNext = () => {
+        setSensorMutation();
         if (!selectedSensorRef.current) {
             showWarn("Upozorenje", "Molimo odaberite senzor.");
             return;
@@ -160,8 +179,6 @@ const FullStepper = () => {
             resetValues();
             return;
         }
-        
-        //TODO Call API to save calibration values
     }
     
     return (
