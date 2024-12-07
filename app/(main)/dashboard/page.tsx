@@ -70,7 +70,7 @@ const DashboardPage = () => {
     const finishTemp = React.useRef<number>(0);
     const maintainPressure = React.useRef<number>(0);
     const maintainTemp = React.useRef<number>(0);
-    const targetF = React.useRef<number>(0);
+    const targetF = React.useRef<string>('');
     const targetTime = React.useRef<number>(0);
     //#endregion
     
@@ -83,7 +83,7 @@ const DashboardPage = () => {
         finishTemp.current = 0;
         maintainPressure.current = 0;
         maintainTemp.current = 0;
-        targetF.current = 0;
+        targetF.current = '';
         targetTime.current = 0;
     }
 
@@ -182,13 +182,13 @@ const DashboardPage = () => {
                     maintainPressure: maintainPressure.current,
                     maintainTemp: maintainTemp.current,
                     mode: modeDropdown.id,
-                    targetF: targetF.current,
                     targetTime: targetTime.current,
                     type: typeDropdown.id,
                 },
                 processInfo: {
                     productName: productName.current,
                     bacteria: bacteria.current,
+                    targetF: targetF.current,
                     description: description.current,
                     productQuantity: productQuantity.current,
                     processStart: new Date().toISOString(),

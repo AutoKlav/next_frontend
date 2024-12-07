@@ -51,15 +51,13 @@ export const getProcessLogsAction = async ({ids, source} : {ids: number[], sourc
 
 export const startProcessAction = async (request: StartProcessRequest) => {
    
-    if(request.processConfig.type === ProcessConfigType.STERILIZATION) {
-        request.processConfig.targetF = 0.01;
+    if(request.processConfig.type === ProcessConfigType.STERILIZATION) {        
         request.processConfig.customTemp = 121.1;
         request.processConfig.finishTemp = 121.1;
         request.processConfig.maintainPressure = 1;
         request.processConfig.maintainTemp = 121.1;
     }
-    else if(request.processConfig.type === ProcessConfigType.PASTERIZATION) {
-        request.processConfig.targetF = 0.01;
+    else if(request.processConfig.type === ProcessConfigType.PASTERIZATION) {        
         request.processConfig.customTemp = 70;
         request.processConfig.finishTemp = 70;
         request.processConfig.maintainPressure = 1;
@@ -72,8 +70,7 @@ export const startProcessAction = async (request: StartProcessRequest) => {
           finishTemp: 40,
           maintainPressure: 2,
           maintainTemp: 120,
-          mode: ProcessConfigMode.TIME,
-          targetF: 5,
+          mode: ProcessConfigMode.TARGETF,          
           targetTime: 20,
           type: ProcessConfigType.STERILIZATION
         },
@@ -83,6 +80,7 @@ export const startProcessAction = async (request: StartProcessRequest) => {
           processLength: 'ex',
           processStart: '2024-01-01T00:00:00',
           productName: 'deserunt enim tempor',
+          targetF: '5',
           productQuantity: 'sint aliqua do laborum'
         }
       } 

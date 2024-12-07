@@ -47,6 +47,7 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   processInfo.setBacteria(startProcessRequest.processInfo.bacteria);
   processInfo.setDescription(startProcessRequest.processInfo.description);
   processInfo.setProcessstart(startProcessRequest.processInfo.processStart);
+  processInfo.setTargetf(startProcessRequest.processInfo.targetF);
   processInfo.setProcesslength(startProcessRequest.processInfo.processLength);
   data.setProcessinfo(processInfo);
 
@@ -54,7 +55,6 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   processConfig.setType(startProcessRequest.processConfig.type);
   processConfig.setCustomtemp(startProcessRequest.processConfig.customTemp);
   processConfig.setMode(startProcessRequest.processConfig.mode);
-  processConfig.setTargetf(startProcessRequest.processConfig.targetF);
   processConfig.setTargettime(startProcessRequest.processConfig.targetTime);
   processConfig.setMaintaintemp(startProcessRequest.processConfig.maintainTemp);
   processConfig.setMaintainpressure(

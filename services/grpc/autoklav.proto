@@ -35,11 +35,10 @@ message Status {
 }
 
 message Variables {
-    double targetK = 1;
-    int32 serialDataTime = 2;
-    int32 stateMachineTick = 3;
-    double sterilizationTemp = 4;
-    double pasterizationTemp = 5;
+    int32 serialDataTime = 1;
+    int32 stateMachineTick = 2;
+    double sterilizationTemp = 3;
+    double pasterizationTemp = 4;
 }
 
 message SetVariable {
@@ -108,12 +107,11 @@ enum ProcessConfigMode {
 message ProcessConfig {
     ProcessConfigType type = 1;
     double customTemp = 2;
-    ProcessConfigMode mode = 3;
-    double targetF = 4;
-    uint32 targetTime = 5;
-    double maintainTemp = 6;
-    double maintainPressure = 7;
-    double finishTemp = 8;
+    ProcessConfigMode mode = 3;    
+    uint32 targetTime = 4;
+    double maintainTemp = 5;
+    double maintainPressure = 6;
+    double finishTemp = 7;
 }
 
 message ProcessInfo {
@@ -123,7 +121,8 @@ message ProcessInfo {
     string bacteria = 4;
     string description = 5;
     string processStart = 6;
-    string processLength = 7;
+    string targetF = 7;
+    string processLength = 8;
 }
 
 message StartProcessRequest {
