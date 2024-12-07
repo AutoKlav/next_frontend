@@ -96,8 +96,7 @@ export enum ProcessConfigMode {
 export interface ProcessConfig {
   type: ProcessConfigType;
   customTemp: number;
-  mode: ProcessConfigMode;
-  targetF: number;
+  mode: ProcessConfigMode;  
   targetTime: number;
   maintainTemp: number;
   maintainPressure: number;
@@ -111,6 +110,7 @@ export interface ProcessInfo {
   bacteria: string;
   description: string;
   processStart: string;
+  targetF: string;
   processLength: string;
 }
 
