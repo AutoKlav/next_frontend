@@ -211,7 +211,7 @@ const FullStepper = () => {
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
                     {currentStep === items.length -1 && (
                         <Button
-                            label="Vrati se na početak"
+                            label="Poništi i vrati se na početak"
                             icon="pi pi-arrow-left"
                             className="p-button-secondary w-full md:w-auto p-button-rounded p-2"
                             onClick={handleBack}
