@@ -1,7 +1,7 @@
 "use server"
 
-import { getAllProcessLogs, getAllProcesses, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
-import { ProcessConfigMode, ProcessConfigType, StartProcessRequest } from "@/types/grpc";
+import { getAllProcessLogs, getAllProcesses, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
+import { ProcessConfigMode, ProcessConfigType, StartProcessRequest, UpdateSensorRequest } from "@/types/grpc";
 
 //#region GET Actions
 
@@ -17,6 +17,11 @@ export const getStateMachineValuesAction = async () => {
 
 export const getSensorValuesAction = async () => {
     const sensors = await getSensorValues();
+    return sensors;
+}
+
+export const getSensorPinValuesAction = async () => {
+    const sensors = await getSensorPinValues();
     return sensors;
 }
 
@@ -67,7 +72,7 @@ export const startProcessAction = async (request: StartProcessRequest) => {
           finishTemp: 40,
           maintainPressure: 2,
           maintainTemp: 120,
-          mode: ProcessConfigMode.TARGETF,
+          mode: ProcessConfigMode.TIME,
           targetF: 5,
           targetTime: 20,
           type: ProcessConfigType.STERILIZATION
@@ -97,8 +102,8 @@ export const setVariableAction = async ({ newData, index, variable }: { newData:
     return {response, newData, index};
 }
 
-export const updateSensorAction = async () => {
-    const response = await updateSensor();
+export const updateSensorAction = async (updateSensorRequest: UpdateSensorRequest) => {
+    const response = await updateSensor(updateSensorRequest);
     return response;
 }
 

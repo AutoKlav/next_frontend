@@ -7,6 +7,7 @@ import {
   StartProcessRequest,
   StateMachineValues,
   Status,
+  UpdateSensorRequest,
   Variables,
 } from "@/types/grpc";
 import { gRpcCall } from "./client";
@@ -71,8 +72,11 @@ export const stopProcess = () => {
   return gRpcCall<Status>("stopProcess", data);
 };
 
-export const updateSensor = () => {
+export const updateSensor = (updateSensorRequest: UpdateSensorRequest) => {
   const data = new Messages.UpdateSensorRequest();
+  data.setName(updateSensorRequest.name);
+  data.setMinvalue(updateSensorRequest.minValue);
+  data.setMaxvalue(updateSensorRequest.maxValue);
 
   return gRpcCall<Status>("updateSensor", data);
 }
@@ -95,6 +99,12 @@ export const getSensorValues = () => {
   const data = new Messages.Empty();
 
   return gRpcCall<SensorValues>("getSensorValues", data);
+};
+
+export const getSensorPinValues = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<SensorValues>("getSensorPinValues", data);
 };
 
 export const getSensorRelayValues = () => {

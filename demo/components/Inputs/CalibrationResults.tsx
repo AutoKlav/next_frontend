@@ -1,40 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { InputNumber } from 'primereact/inputnumber';
+import { calculateSlope } from '@/utils/calibrationUtil';
 
 interface CalibrationResultsProps {
     x1x2: number[];
     y1y2: number[];
     sensorName: string | undefined;
+    setResult: (results: number[]) => void;
 }
 
-const calibrateSensor = (x1x2: number[], y1y2: number[]) => {
-    if (x1x2.length !== 2 || y1y2.length !== 2) {
-        console.error("Invalid input arrays. Both arrays must contain exactly two elements.");
-        return;
-    }
-
-    // Input from sensor
-    const [x1, x2] = x1x2;
-
-    // Input from user
-    const [y1, y2] = y1y2;
-    console.log(`x1: ${x1}, x2: ${x2}, y1: ${y1}, y2: ${y2}`);
-
-    // Calculate line equation
-    const m = (y2 - y1) / (x2 - x1);
-    const b = y1 - m * x1;
-    console.log(`Line equation: y = ${m}x + ${b}`);
-    
-    const calibratedMinimum = m * 0 + b;
-    const calibratedMaximum = m * 1023 + b;
-    console.log(`Calibrated minimum: ${calibratedMinimum}, calibrated maximum: ${calibratedMaximum}`);
-    return [calibratedMinimum, calibratedMaximum];
-};
-
 const CalibrationResults: React.FC<CalibrationResultsProps> = (props) => {
-    const { x1x2, y1y2, sensorName } = props;
-    const result = calibrateSensor(x1x2, y1y2);
+    const { x1x2, y1y2, sensorName, setResult } = props;
+    const result = calculateSlope(x1x2, y1y2);
     const [calibratedMinimum, calibratedMaximum] = result || [0, 0];
+
+    useEffect(() => {
+        setResult([calibratedMinimum, calibratedMaximum]);
+    }, [x1x2, y1y2, setResult]);
 
     console.log("X1X2 Calibration", x1x2);
     

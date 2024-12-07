@@ -6,11 +6,12 @@ import { ProgressBar } from "primereact/progressbar";
 import { Toast } from "primereact/toast";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/layout/context/toastcontext";
-import CalibrationInput from "../Inputs/CalibrationInput"; // Placeholder component
-import CalibrationResults from "../Inputs/CalibrationResults"; // Placeholder component
-import SensorDropdown from "../Inputs/Dropdown/SensorDropdown"; // Placeholder component
-import { getSensorValuesAction } from "@/app/(main)/api/actions"; // Mutation action
+import CalibrationInput from "../Inputs/CalibrationInput"; 
+import CalibrationResults from "../Inputs/CalibrationResults"; 
+import SensorDropdown from "../Inputs/Dropdown/SensorDropdown";
 import { checkForErrors } from "@/utils/errorUtil";
+import { getSensorPinValuesAction, updateSensorAction } from "@/app/(main)/api/actions";
+import { UpdateSensorRequest } from "@/types/grpc";
 
 enum CalibrationSteps {
     SelectSensor = 0,
@@ -20,7 +21,7 @@ enum CalibrationSteps {
 }
 
 const FullStepper = () => {
-    const { showWarn, showError } = useToast();
+    const { showSuccess, showWarn, showError } = useToast();
 
     const [currentStep, setCurrentStep] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -33,6 +34,7 @@ const FullStepper = () => {
     const selectedSensorRef = useRef<SensorDropdown | null>(null);
     const y1y2 = useRef<number[]>([0, 0]);
     const [x1x2, setX1X2] = useState<number[]>([0, 0]);
+    const [result, setResult] = useState([0,0]);
 
     const updateIndex = (index: number, value: number) => {
         if (index < 0 || index >= x1x2.length) {
@@ -48,7 +50,7 @@ const FullStepper = () => {
     };
     
     const { mutate: getSensorValuesMutation } = useMutation({
-        mutationFn: getSensorValuesAction,
+        mutationFn: getSensorPinValuesAction,
         onError: () => {
             showError(
                 "Greška",
@@ -70,11 +72,29 @@ const FullStepper = () => {
                         ? data.pressure
                         : sensorId === "temp"
                         ? data.temp
-                        : sensorId === "tempk"
+                        : sensorId === "tempK"
                         ? data.tempk
                         : 0;
                 updateIndex(position, sensorValue);
             }
+        },
+    });
+
+    const { mutate: setSensorMutation } = useMutation({
+        mutationFn: updateSensorAction,
+        onError: () => {
+            showError(
+                "Greška",
+                "Nije moguće upisati podatke. Provjerite konekciju i pokušajte ponovno."
+            );
+        },
+        onSuccess: (data) => {            
+            if(checkForErrors(data)){            
+                errorPresent.current = true;
+                return;
+            }
+            
+            showSuccess("Uspjeh", "Podaci su uspješno upisani.");
         },
     });
 
@@ -85,7 +105,7 @@ const FullStepper = () => {
         { label: "Rezultati kalibracije" },
     ];
 
-    const handleNext = () => {
+    const handleNext = () => {        
         if (!selectedSensorRef.current) {
             showWarn("Upozorenje", "Molimo odaberite senzor.");
             return;
@@ -138,10 +158,7 @@ const FullStepper = () => {
     };
 
     const handleBack = () => {
-        if (currentStep > 0) {
-            setCurrentStep((prevStep) => prevStep - 1);
-            stepRef.current = currentStep - 1; // Sync ref when stepping back
-        }
+        resetValues();
     };
 
     const resetValues = () => {
@@ -157,6 +174,19 @@ const FullStepper = () => {
     }
 
     const handleCalibrate = () => {
+        if(result.some((r) => isNaN(r))){
+            showError('Greška', 'Kalibrirane vrijednosti su nesipravne. Molimo projverite unesene i očitane vrijednosti.', 5000);
+            resetValues();
+            return;
+        }
+
+        const updateSensor: UpdateSensorRequest = {
+            name: selectedSensorRef.current?.id,
+            minValue: result[0],
+            maxValue: result[1],
+        }
+
+        setSensorMutation(updateSensor);
         resetValues();
     }
     
@@ -176,12 +206,12 @@ const FullStepper = () => {
                     <CalibrationInput currentStep={currentStep} inputValue={inputValue} />
                 )}
                 {currentStep === CalibrationSteps.CalibrationResults && (
-                    <CalibrationResults x1x2={x1x2} y1y2={y1y2.current} sensorName={selectedSensorRef.current?.name} />
+                    <CalibrationResults x1x2={x1x2} y1y2={y1y2.current} sensorName={selectedSensorRef.current?.name} setResult={setResult}/>
                 )}
                 <div className="flex justify-content-between align-items-center gap-4 mt-4">
-                    {currentStep !== CalibrationSteps.SelectSensor && (
+                    {currentStep === items.length -1 && (
                         <Button
-                            label="Back"
+                            label="Poništi i vrati se na početak"
                             icon="pi pi-arrow-left"
                             className="p-button-secondary w-full md:w-auto p-button-rounded p-2"
                             onClick={handleBack}
@@ -189,7 +219,7 @@ const FullStepper = () => {
                     )}
                     {currentStep < items.length - 1 && (
                         <Button
-                            label="Next"
+                            label="Sljedeći korak"
                             icon="pi pi-arrow-right"
                             iconPos={loading ? "left" : "right"}
                             onClick={handleNext}
