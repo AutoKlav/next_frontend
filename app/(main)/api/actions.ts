@@ -72,7 +72,7 @@ export const startProcessAction = async (request: StartProcessRequest) => {
           finishTemp: 40,
           maintainPressure: 2,
           maintainTemp: 120,
-          mode: ProcessConfigMode.TIME,
+          mode: ProcessConfigMode.TARGETF,
           targetF: 5,
           targetTime: 20,
           type: ProcessConfigType.STERILIZATION
