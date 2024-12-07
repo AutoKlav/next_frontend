@@ -11,6 +11,7 @@ import CalibrationResults from "../Inputs/CalibrationResults";
 import SensorDropdown from "../Inputs/Dropdown/SensorDropdown";
 import { checkForErrors } from "@/utils/errorUtil";
 import { getSensorPinValuesAction, updateSensorAction } from "@/app/(main)/api/actions";
+import { UpdateSensorRequest } from "@/types/grpc";
 
 enum CalibrationSteps {
     SelectSensor = 0,
@@ -71,7 +72,7 @@ const FullStepper = () => {
                         ? data.pressure
                         : sensorId === "temp"
                         ? data.temp
-                        : sensorId === "tempk"
+                        : sensorId === "tempK"
                         ? data.tempk
                         : 0;
                 updateIndex(position, sensorValue);
@@ -104,8 +105,7 @@ const FullStepper = () => {
         { label: "Rezultati kalibracije" },
     ];
 
-    const handleNext = () => {
-        setSensorMutation();
+    const handleNext = () => {        
         if (!selectedSensorRef.current) {
             showWarn("Upozorenje", "Molimo odaberite senzor.");
             return;
@@ -179,6 +179,15 @@ const FullStepper = () => {
             resetValues();
             return;
         }
+
+        const updateSensor: UpdateSensorRequest = {
+            name: selectedSensorRef.current?.id,
+            minValue: result[0],
+            maxValue: result[1],
+        }
+
+        setSensorMutation(updateSensor);
+        resetValues();
     }
     
     return (

@@ -135,3 +135,9 @@ export interface StartProcessRequest {
   processConfig: ProcessConfig;
   processInfo: ProcessInfo;
 }
+
+export interface UpdateSensorRequest {
+  name: string | undefined;
+  minValue: number;
+  maxValue: number;
+}
