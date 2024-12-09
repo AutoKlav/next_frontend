@@ -156,7 +156,7 @@ const DashboardPage = () => {
 
     const [processSuggestions, setProcessSuggestions] = useState<ProcessSuggestions>();
 
-    async function runParallelProcesses() {
+    const getSuggestions = async () => {
         try {
             const results = await Promise.all([
                 getDistinctProcessValues(ProcessInfoFields.ProductName),
@@ -172,7 +172,7 @@ const DashboardPage = () => {
                 bacteria: results[2]?.valuesList ?? [],
                 description: results[3]?.valuesList ?? [],
             };
-            console.log('structuredResults:', structuredResults);
+            
             setProcessSuggestions(structuredResults);            
         } catch (error) {
             console.error('An error occurred during the process:', error);
@@ -252,7 +252,7 @@ const DashboardPage = () => {
     };
 
     const handleOpenDialog = () => {
-        runParallelProcesses();
+        getSuggestions();
         
         //nameAndQuantityFilterMode({
         //    "productName": "deserunt enim tempor",

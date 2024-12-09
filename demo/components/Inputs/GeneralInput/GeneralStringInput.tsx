@@ -14,7 +14,6 @@ const GeneralStringInput: React.FC<GeneralStringInputProps> = (props) => {
     const [value, setValue] = useState('');
     const [items, setItems] = useState<string[]>([]);    
     
-    console.log('suggestions from component', suggestions);
     const search = (event: { query: string }) => {
         const filteredItems = suggestions?.filter(item =>
             item.toLowerCase().includes(event.query.toLowerCase())
