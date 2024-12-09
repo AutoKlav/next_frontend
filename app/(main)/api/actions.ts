@@ -86,13 +86,13 @@ export const startProcessAction = async (request: StartProcessRequest) => {
           type: ProcessConfigType.STERILIZATION
         },
         processInfo: {
-          bacteria: 'nulla do laborum laboris labore',
-          description: 'reprehenderit magna eiusmod et',
-          processLength: 'ex',
-          processStart: '2024-01-01T00:00:00',
-          productName: 'deserunt enim tempor',
+          bacteria: '',
+          description: '',
+          processLength: 'Proces nije završen',
+          processStart: new Date().toISOString(),
+          productName: '',
           targetF: '5',
-          productQuantity: 'sint aliqua do laborum'
+          productQuantity: ''
         }
       } 
       
