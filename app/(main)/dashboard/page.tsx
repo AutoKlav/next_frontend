@@ -258,11 +258,9 @@ const DashboardPage = () => {
 
     const handleOpenDialog = () => {
         getSuggestions();
-        
-        //nameAndQuantityFilterMode({
-        //    "productName": "deserunt enim tempor",
-        //    "productQuantity": "sint aliqua do laborum"
-        //});
+        // nameAndQuantityFilterMode({
+        //     "productName": "deserunt enim tempor",
+        //    "productQuantity": "sint aliqua do laborum" });
         setModalVisibility(true);
     }
 
