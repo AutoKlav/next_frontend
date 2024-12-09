@@ -1,4 +1,7 @@
 import {
+  FilteredModeProcessList,
+  FilteredProcessList,
+  ProcessFilterRequest,
   ProcessInfoList,
   ProcessLogList,
   SensorRelayValues,
@@ -86,6 +89,22 @@ export const getAllProcesses = () => {
 
   return gRpcCall<ProcessInfoList>("getAllProcesses", data);
 };
+
+export const getDistinctProcessValues = (columnName: string) =>{
+  const data = new Messages.ProcessFilterRequest();
+  data.setColumnname(columnName);
+
+  return gRpcCall<FilteredProcessList>("getDistinctProcessValues", data);
+}
+
+export const getFilteredModeValues = (filterModeRequest: ProcessFilterRequest) => {
+  const data = new Messages.ProcessModeFilterRequest();
+  data.setProductname(filterModeRequest.productName);
+  data.setProductquantity(filterModeRequest.productQuantity);
+
+  return gRpcCall<FilteredModeProcessList>("getFilteredModeValues", data);
+
+}
 
 export const getAllProcessLogs = (ids: number[]) => {
   const data = new Messages.ProcessLogRequest();  

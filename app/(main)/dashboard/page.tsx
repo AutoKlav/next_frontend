@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
+import { AutoComplete } from "primereact/autocomplete";
 
-import { getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getDistinctProcessValuesAction, getFilteredModeValuesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -12,10 +13,11 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { StartProcessRequest } from '@/types/grpc';
+import { ProcessInfo, ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
+import { ProcessInfoFields } from '@/types/app';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -136,6 +138,53 @@ const DashboardPage = () => {
         },
     });
 
+    const { mutate: nameAndQuantityFilterMode } = useMutation({
+        mutationFn: getFilteredModeValuesAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+            showError('Proces', 'Greška prilikom dohvaćanja podataka');
+        },
+        onSuccess: (data) => {
+            if(checkForErrors(data)){
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
+                return;
+            }
+        },
+    });
+
+    const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
+
+    const [processSuggestions, setProcessSuggestions] = useState<ProcessSuggestions>({
+        productName: [],
+        productQuantity: [],
+        bacteria: [],
+        description: [],
+    });
+
+    const getSuggestions = async () => {
+        try {
+            const results = await Promise.all([
+                getDistinctProcessValues(ProcessInfoFields.ProductName),
+                getDistinctProcessValues(ProcessInfoFields.ProductQuantity),
+                getDistinctProcessValues(ProcessInfoFields.Bacteria),
+                getDistinctProcessValues(ProcessInfoFields.Description),
+            ]);
+    
+             // Map results to corresponding keys
+            const structuredResults: ProcessSuggestions = {
+                productName: results[0]?.valuesList ?? [],
+                productQuantity: results[1]?.valuesList ?? [],
+                bacteria: results[2]?.valuesList ?? [],
+                description: results[3]?.valuesList ?? [],
+            };
+            
+            setProcessSuggestions(structuredResults);            
+        } catch (error) {
+            console.error('An error occurred during the process:', error);
+            showError('Proces', 'Greška prilikom dohvaćanja podataka');
+        }
+    }
+
     const { data: relaySensorValues } = useQuery(
         { 
             queryKey: ['relaySensorValues'],
@@ -173,8 +222,9 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {        
-        if(state === 0){
+    const handleStartProcess = () => {       
+
+        if(state === 1){
             const request: StartProcessRequest = {
                 processConfig: {
                     customTemp: customTemp.current,
@@ -206,12 +256,22 @@ const DashboardPage = () => {
         showWarn('Proces','Proces je već pokrenut');
     };
 
+    const handleOpenDialog = () => {
+        getSuggestions();
+        
+        //nameAndQuantityFilterMode({
+        //    "productName": "deserunt enim tempor",
+        //    "productQuantity": "sint aliqua do laborum"
+        //});
+        setModalVisibility(true);
+    }
+
     const footerContent = (
         <div>
             <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
             <Button label="Unesi podatke" icon="pi pi-check" onClick={handleStartProcess} autoFocus />
         </div>
-    );    
+    );        
     
     return (
         <div className="grid p-2">
@@ -220,15 +280,15 @@ const DashboardPage = () => {
                     <div className="grid p-2">
                         <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                             <div className="grid">
-                                <div className="col-6">
-                                    <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} />
-                                    <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
-                                    <GeneralStringInput headerName="Unesite opis" inputValue={description} />
+                                <div className="col-6">                                    
+                                    <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} suggestions={processSuggestions?.productName}/>
+                                    <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
+                                    <GeneralStringInput headerName="Unesite opis" inputValue={description} suggestions={processSuggestions?.description}/>
                                     <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
                                     <StartProcessDropdown label='Odaberite mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
                                 </div>
                                 <div className="col-6">
-                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />                                    
+                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} suggestions={processSuggestions?.productQuantity}/>                                    
                                     <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
                                     {typeDropdown.id === 2 && (
                                         <>
@@ -252,7 +312,7 @@ const DashboardPage = () => {
                 {/* Display progress or empty bar */}                
             </div>
             <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">
-            <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
+            <Button label="Pokreni proces" onClick={handleOpenDialog} className="p-button-success" />
             <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />                        
             </div>
             <div className='col-12'>

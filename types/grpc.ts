@@ -68,6 +68,21 @@ export interface ProcessLogList {
   processlogsList: StateMachineValues[];
 }
 
+export interface FilteredProcessList {
+  values: string[];
+  valuesList: string[];
+}
+
+export interface ProcessFilterRequest {
+  productName: string;
+  productQuantity: string;
+}
+
+export interface FilteredModeProcessList {
+  targetFValues: string[];
+  processLengthValues: string[];
+}
+
 // Enum ProcessConfigType
 export enum ProcessConfigType {
   STERILIZATION = 0,
@@ -112,6 +127,16 @@ export interface ProcessInfo {
   processStart: string;
   targetF: string;
   processLength: string;
+}
+
+export interface ProcessSuggestions {
+  productName?: string[];
+  productQuantity?: string[];
+  bacteria?: string[];
+  description?: string[];
+  processStart?: string[];
+  targetF?: string[];
+  processLength?: string[];
 }
 
 // ProcessInfoRow message
