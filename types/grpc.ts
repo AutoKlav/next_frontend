@@ -169,6 +169,19 @@ export interface ProcessInfoList {
   processesList: ProcessInfoRow[];
 }
 
+export interface ProcessTypeRequest {
+  customTemp: number;
+  finishTemp: number;
+  maintainPressure: number;
+  name: string;
+  pressure: number;
+  type: string;
+}
+
+export interface TypeRequest {
+  id: number;
+}
+
 // StartProcessRequest message
 export interface StartProcessRequest {
   processConfig: ProcessConfig;

@@ -4,6 +4,7 @@ import {
   ProcessFilterRequest,
   ProcessInfoList,
   ProcessLogList,
+  ProcessTypeRequest,
   ProcessTypesResponse,
   SensorRelayValues,
   SensorValues,
@@ -11,6 +12,7 @@ import {
   StartProcessRequest,
   StateMachineValues,
   Status,
+  TypeRequest,
   UpdateSensorRequest,
   Variables,
 } from "@/types/grpc";
@@ -83,6 +85,25 @@ export const updateSensor = (updateSensorRequest: UpdateSensorRequest) => {
   data.setMaxvalue(updateSensorRequest.maxValue);
 
   return gRpcCall<Status>("updateSensor", data);
+}
+
+export const createProcessType = (processRequest: ProcessTypeRequest) => {
+  const data = new Messages.ProcessTypeRequest();
+  data.setName(processRequest.name);
+  data.setType(processRequest.type);
+  data.setCustomtemp(processRequest.customTemp);
+  data.setFinishtemp(processRequest.finishTemp);
+  data.setMaintainpressure(processRequest.maintainPressure);
+  data.setPressure(processRequest.pressure);
+
+  return gRpcCall<Status>("createProcessType", data);
+}
+
+export const deleteProcessType = (typeRequest: TypeRequest) => {
+  const data = new Messages.TypeRequest();
+  data.setId(typeRequest.id);
+
+  return gRpcCall<Status>("deleteProcessType", data);
 }
 
 export const getAllProcesses = () => {

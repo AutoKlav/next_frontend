@@ -1,8 +1,9 @@
 "use server"
 
-import { getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
-import { ProcessConfigMode, ProcessConfigType, ProcessFilterRequest, StartProcessRequest, UpdateSensorRequest } from "@/types/grpc";
+import { ProcessConfigMode, ProcessConfigType, ProcessFilterRequest, ProcessTypeRequest, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
+import { create } from "domain";
 
 //#region GET Actions
 
@@ -59,6 +60,18 @@ export const getProcessLogsAction = async ({ids, source} : {ids: number[], sourc
 export const getProcessTypesAction = async () => {
     const processTypes = await getAllProcessTypes();
     return processTypes;
+}
+
+// TODO not tested
+export const createProcessTypeAction = async (processType: ProcessTypeRequest) => {
+    const status = await createProcessType(processType);
+    return status;
+}
+
+// TODO not tested
+export const deleteProcessTypeAction = async (processRequest: TypeRequest) => {
+    const status = await deleteProcessType(processRequest);
+    return status;
 }
 
 //#endregion
