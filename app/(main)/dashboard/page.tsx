@@ -274,7 +274,7 @@ const DashboardPage = () => {
                     description: description.current,
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
-                    processLength: 'ex',
+                    processLength: 'Proces nije završen',
                 },
             };
 
