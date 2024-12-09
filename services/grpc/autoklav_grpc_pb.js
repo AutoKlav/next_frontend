@@ -15,6 +15,39 @@ function deserialize_autoklav_Empty(buffer_arg) {
   return services_grpc_autoklav_pb.Empty.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_autoklav_FilteredModeProcessList(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.FilteredModeProcessList)) {
+    throw new Error('Expected argument of type autoklav.FilteredModeProcessList');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_FilteredModeProcessList(buffer_arg) {
+  return services_grpc_autoklav_pb.FilteredModeProcessList.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_autoklav_FilteredProcessList(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.FilteredProcessList)) {
+    throw new Error('Expected argument of type autoklav.FilteredProcessList');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_FilteredProcessList(buffer_arg) {
+  return services_grpc_autoklav_pb.FilteredProcessList.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_autoklav_ProcessFilterRequest(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.ProcessFilterRequest)) {
+    throw new Error('Expected argument of type autoklav.ProcessFilterRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_ProcessFilterRequest(buffer_arg) {
+  return services_grpc_autoklav_pb.ProcessFilterRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_autoklav_ProcessInfoList(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.ProcessInfoList)) {
     throw new Error('Expected argument of type autoklav.ProcessInfoList');
@@ -46,6 +79,17 @@ function serialize_autoklav_ProcessLogRequest(arg) {
 
 function deserialize_autoklav_ProcessLogRequest(buffer_arg) {
   return services_grpc_autoklav_pb.ProcessLogRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_autoklav_ProcessModeFilterRequest(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.ProcessModeFilterRequest)) {
+    throw new Error('Expected argument of type autoklav.ProcessModeFilterRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_ProcessModeFilterRequest(buffer_arg) {
+  return services_grpc_autoklav_pb.ProcessModeFilterRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_autoklav_SensorRelayValues(arg) {
@@ -184,6 +228,28 @@ getAllProcesses: {
     requestDeserialize: deserialize_autoklav_Empty,
     responseSerialize: serialize_autoklav_ProcessInfoList,
     responseDeserialize: deserialize_autoklav_ProcessInfoList,
+  },
+  getDistinctProcessValues: {
+    path: '/autoklav.Autoklav/getDistinctProcessValues',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.ProcessFilterRequest,
+    responseType: services_grpc_autoklav_pb.FilteredProcessList,
+    requestSerialize: serialize_autoklav_ProcessFilterRequest,
+    requestDeserialize: deserialize_autoklav_ProcessFilterRequest,
+    responseSerialize: serialize_autoklav_FilteredProcessList,
+    responseDeserialize: deserialize_autoklav_FilteredProcessList,
+  },
+  getFilteredModeValues: {
+    path: '/autoklav.Autoklav/getFilteredModeValues',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.ProcessModeFilterRequest,
+    responseType: services_grpc_autoklav_pb.FilteredModeProcessList,
+    requestSerialize: serialize_autoklav_ProcessModeFilterRequest,
+    requestDeserialize: deserialize_autoklav_ProcessModeFilterRequest,
+    responseSerialize: serialize_autoklav_FilteredModeProcessList,
+    responseDeserialize: deserialize_autoklav_FilteredModeProcessList,
   },
   getProcessLogs: {
     path: '/autoklav.Autoklav/getProcessLogs',
