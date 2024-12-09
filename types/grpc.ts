@@ -73,6 +73,16 @@ export interface FilteredProcessList {
   valuesList: string[];
 }
 
+export interface ProcessFilterRequest {
+  productName: string;
+  productQuantity: string;
+}
+
+export interface FilteredModeProcessList {
+  targetFValues: string[];
+  processLengthValues: string[];
+}
+
 // Enum ProcessConfigType
 export enum ProcessConfigType {
   STERILIZATION = 0,

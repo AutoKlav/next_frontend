@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 import { AutoComplete } from "primereact/autocomplete";
 
-import { getDistinctProcessValuesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getDistinctProcessValuesAction, getFilteredModeValuesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -138,6 +138,20 @@ const DashboardPage = () => {
         },
     });
 
+    const { mutate: nameAndQuantityFilterMode } = useMutation({
+        mutationFn: getFilteredModeValuesAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+            showError('Proces', 'Greška prilikom dohvaćanja podataka');
+        },
+        onSuccess: (data) => {
+            if(checkForErrors(data)){
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
+                return;
+            }
+        },
+    });
+
     const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
 
     async function runParallelProcesses() {
@@ -202,7 +216,13 @@ const DashboardPage = () => {
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
     const handleStartProcess = () => {
-        runParallelProcesses();
+        //runParallelProcesses();
+        const input = {
+            "productName": "deserunt enim tempor",
+            "productQuantity": "sint aliqua do laborum"
+        };
+        nameAndQuantityFilterMode(input);
+
         if(state === 1){
             const request: StartProcessRequest = {
                 processConfig: {
