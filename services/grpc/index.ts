@@ -4,12 +4,15 @@ import {
   ProcessFilterRequest,
   ProcessInfoList,
   ProcessLogList,
+  ProcessTypeRequest,
+  ProcessTypesResponse,
   SensorRelayValues,
   SensorValues,
   SetVariable,
   StartProcessRequest,
   StateMachineValues,
   Status,
+  TypeRequest,
   UpdateSensorRequest,
   Variables,
 } from "@/types/grpc";
@@ -84,6 +87,25 @@ export const updateSensor = (updateSensorRequest: UpdateSensorRequest) => {
   return gRpcCall<Status>("updateSensor", data);
 }
 
+export const createProcessType = (processRequest: ProcessTypeRequest) => {
+  const data = new Messages.ProcessTypeRequest();
+  data.setName(processRequest.name);
+  data.setType(processRequest.type);
+  data.setCustomtemp(processRequest.customTemp);
+  data.setFinishtemp(processRequest.finishTemp);
+  data.setMaintainpressure(processRequest.maintainPressure);
+  data.setPressure(processRequest.pressure);
+
+  return gRpcCall<Status>("createProcessType", data);
+}
+
+export const deleteProcessType = (typeRequest: TypeRequest) => {
+  const data = new Messages.TypeRequest();
+  data.setId(typeRequest.id);
+
+  return gRpcCall<Status>("deleteProcessType", data);
+}
+
 export const getAllProcesses = () => {
   const data = new Messages.Empty();
 
@@ -95,6 +117,12 @@ export const getDistinctProcessValues = (columnName: string) =>{
   data.setColumnname(columnName);
 
   return gRpcCall<FilteredProcessList>("getDistinctProcessValues", data);
+}
+
+export const getAllProcessTypes = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<ProcessTypesResponse>("getAllProcessTypes", data);
 }
 
 export const getFilteredModeValues = (filterModeRequest: ProcessFilterRequest) => {

@@ -92,6 +92,28 @@ function deserialize_autoklav_ProcessModeFilterRequest(buffer_arg) {
   return services_grpc_autoklav_pb.ProcessModeFilterRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_autoklav_ProcessTypeRequest(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.ProcessTypeRequest)) {
+    throw new Error('Expected argument of type autoklav.ProcessTypeRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_ProcessTypeRequest(buffer_arg) {
+  return services_grpc_autoklav_pb.ProcessTypeRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_autoklav_ProcessTypesList(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.ProcessTypesList)) {
+    throw new Error('Expected argument of type autoklav.ProcessTypesList');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_ProcessTypesList(buffer_arg) {
+  return services_grpc_autoklav_pb.ProcessTypesList.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_autoklav_SensorRelayValues(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.SensorRelayValues)) {
     throw new Error('Expected argument of type autoklav.SensorRelayValues');
@@ -156,6 +178,17 @@ function serialize_autoklav_Status(arg) {
 
 function deserialize_autoklav_Status(buffer_arg) {
   return services_grpc_autoklav_pb.Status.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_autoklav_TypeRequest(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.TypeRequest)) {
+    throw new Error('Expected argument of type autoklav.TypeRequest');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_TypeRequest(buffer_arg) {
+  return services_grpc_autoklav_pb.TypeRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_autoklav_UpdateSensorRequest(arg) {
@@ -261,6 +294,39 @@ getAllProcesses: {
     requestDeserialize: deserialize_autoklav_ProcessLogRequest,
     responseSerialize: serialize_autoklav_ProcessLogList,
     responseDeserialize: deserialize_autoklav_ProcessLogList,
+  },
+  getAllProcessTypes: {
+    path: '/autoklav.Autoklav/getAllProcessTypes',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.Empty,
+    responseType: services_grpc_autoklav_pb.ProcessTypesList,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_ProcessTypesList,
+    responseDeserialize: deserialize_autoklav_ProcessTypesList,
+  },
+  createProcessType: {
+    path: '/autoklav.Autoklav/createProcessType',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.ProcessTypeRequest,
+    responseType: services_grpc_autoklav_pb.Status,
+    requestSerialize: serialize_autoklav_ProcessTypeRequest,
+    requestDeserialize: deserialize_autoklav_ProcessTypeRequest,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
+  },
+  deleteProcessType: {
+    path: '/autoklav.Autoklav/deleteProcessType',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.TypeRequest,
+    responseType: services_grpc_autoklav_pb.Status,
+    requestSerialize: serialize_autoklav_TypeRequest,
+    requestDeserialize: deserialize_autoklav_TypeRequest,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
   },
   startProcess: {
     path: '/autoklav.Autoklav/startProcess',

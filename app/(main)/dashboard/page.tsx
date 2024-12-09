@@ -1,10 +1,9 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
-import { AutoComplete } from "primereact/autocomplete";
 
-import { getDistinctProcessValuesAction, getFilteredModeValuesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getDistinctProcessValuesAction, getFilteredModeValuesAction, getProcessTypesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -13,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessInfo, ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
+import { ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -63,10 +62,11 @@ const DashboardPage = () => {
     const [modeDropdown, setModeDropdown] = useState(modeDropdownValues[0]);
     
     //#region  Modal inputs    
-    const productName = React.useRef<string>('');
+    const [productName, setProductName] = useState('');
+    const [productQuantity, setProductQuantity] = useState('');
+    
     const bacteria = React.useRef<string>('');
     const description = React.useRef<string>('');
-    const productQuantity = React.useRef<string>('');
 
     const customTemp = React.useRef<number>(0);
     const finishTemp = React.useRef<number>(0);
@@ -77,10 +77,11 @@ const DashboardPage = () => {
     //#endregion
     
     const resetInputs = () => {
-        productName.current = '';
+        
+        setProductQuantity('');
+        setProductName('');
         bacteria.current = '';
         description.current = '';
-        productQuantity.current = '';
         customTemp.current = 0;
         finishTemp.current = 0;
         maintainPressure.current = 0;
@@ -147,10 +148,42 @@ const DashboardPage = () => {
         onSuccess: (data) => {
             if(checkForErrors(data)){
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
-                return;
+                return;                
             }
+
+            console.log(data);
         },
     });
+
+    const { mutate: processTypes } = useMutation({
+        mutationFn: getProcessTypesAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+            showError('Proces', 'Greška prilikom dohvaćanja podataka');
+        },
+        onSuccess: (data) => {
+            if(checkForErrors(data)){
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
+                return;                
+            }
+
+            console.log(data);
+        },
+    });
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            nameAndQuantityFilterMode({
+                productName: productName,
+                productQuantity: productQuantity
+            });
+        }, 3000); // 3 seconds debounce
+
+        // Cleanup the timeout if productName or productQuantity changes before the timeout completes
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [productName, productQuantity, nameAndQuantityFilterMode]);
 
     const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
 
@@ -222,8 +255,7 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {       
-
+    const handleStartProcess = () => {               
         if(state === 1){
             const request: StartProcessRequest = {
                 processConfig: {
@@ -236,13 +268,13 @@ const DashboardPage = () => {
                     type: typeDropdown.id,
                 },
                 processInfo: {
-                    productName: productName.current,
+                    productName: productName,
                     bacteria: bacteria.current,
                     targetF: targetF.current,
                     description: description.current,
-                    productQuantity: productQuantity.current,
+                    productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
-                    processLength: 'ex',
+                    processLength: 'Proces nije završen',
                 },
             };
 
@@ -257,12 +289,8 @@ const DashboardPage = () => {
     };
 
     const handleOpenDialog = () => {
-        getSuggestions();
-        
-        //nameAndQuantityFilterMode({
-        //    "productName": "deserunt enim tempor",
-        //    "productQuantity": "sint aliqua do laborum"
-        //});
+        getSuggestions();        
+        processTypes();
         setModalVisibility(true);
     }
 
@@ -281,14 +309,14 @@ const DashboardPage = () => {
                         <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                             <div className="grid">
                                 <div className="col-6">                                    
-                                    <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} suggestions={processSuggestions?.productName}/>
-                                    <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
-                                    <GeneralStringInput headerName="Unesite opis" inputValue={description} suggestions={processSuggestions?.description}/>
+                                    <GeneralStringInput headerName="Unesite naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
+                                    <GeneralStringInput headerName="Unesite naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
+                                    <GeneralStringInput headerName="Unesite opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
                                     <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
                                     <StartProcessDropdown label='Odaberite mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
                                 </div>
                                 <div className="col-6">
-                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} suggestions={processSuggestions?.productQuantity}/>                                    
+                                    <GeneralStringInput headerName="Unesite količinu" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
                                     <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
                                     {typeDropdown.id === 2 && (
                                         <>

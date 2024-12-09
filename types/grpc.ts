@@ -83,6 +83,20 @@ export interface FilteredModeProcessList {
   processLengthValues: string[];
 }
 
+interface ProcessType {
+  id: number;
+  name: string;
+  type: string;
+  customTemp: number;
+  finishTemp: number;
+  maintainPressure: number;
+  pressure: number;
+}
+
+export interface ProcessTypesResponse {
+  processTypes: ProcessType[];
+}
+
 // Enum ProcessConfigType
 export enum ProcessConfigType {
   STERILIZATION = 0,
@@ -153,6 +167,19 @@ export interface ProcessInfoRow {
 // ProcessInfoList message
 export interface ProcessInfoList {
   processesList: ProcessInfoRow[];
+}
+
+export interface ProcessTypeRequest {
+  customTemp: number;
+  finishTemp: number;
+  maintainPressure: number;
+  name: string;
+  pressure: number;
+  type: string;
+}
+
+export interface TypeRequest {
+  id: number;
 }
 
 // StartProcessRequest message

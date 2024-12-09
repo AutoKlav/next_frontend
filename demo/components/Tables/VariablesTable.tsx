@@ -15,7 +15,6 @@ interface VariableProps {
 
 const VariablesTable  = (variables: VariableProps) => {
     const [config, setConfig] = useState([
-        { id: 'targetK', label: 'Target K', value: variables?.data?.targetk || '0'},
         { id: 'serialDataTime', label: 'Serial Data Time', value: variables?.data?.serialdatatime || '0' },
         { id: 'stateMachineTick', label: 'State Machine Tick', value: variables?.data?.statemachinetick || '0' },
         { id: 'sterilizationTemp', label: 'Sterilization Temperature', value: variables?.data?.sterilizationtemp || '0' },
