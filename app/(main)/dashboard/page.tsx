@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
+import { AutoComplete } from "primereact/autocomplete";
 
 import { getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
@@ -212,6 +213,31 @@ const DashboardPage = () => {
             <Button label="Unesi podatke" icon="pi pi-check" onClick={handleStartProcess} autoFocus />
         </div>
     );    
+
+    const [value, setValue] = useState('');
+    const [items, setItems] = useState<{ id: number, name: string }[]>([]);
+
+    const producers = [
+        { id: 1, name: 'Kraš' },
+        { id: 2, name: 'Podravka' },
+        { id: 3, name: 'Vajda' },
+        { id: 4, name: 'Vajda' },
+        { id: 5, name: 'Lučko' },
+        { id: 6, name: 'Pionir' },
+        { id: 7, name: 'Zlatiborac' },
+        { id: 8, name: 'Dijamant' },
+        { id: 9, name: 'Brik' },
+        { id: 10, name: 'Heinz' },
+        { id: 11, name: 'Häagen-Dazs' }
+    ];
+    
+    const search = (event: { query: string }) => {
+        const filteredItems = producers.filter(item =>
+            item.name.toLowerCase().includes(event.query.toLowerCase())
+        );
+        setItems(filteredItems);
+    }
+
     
     return (
         <div className="grid p-2">
@@ -221,6 +247,7 @@ const DashboardPage = () => {
                         <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                             <div className="grid">
                                 <div className="col-6">
+                                    <AutoComplete value={value} suggestions={items.map(item => item.name)} completeMethod={search} onChange={(e) => setValue(e.value)} />
                                     <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} />
                                     <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
                                     <GeneralStringInput headerName="Unesite opis" inputValue={description} />
