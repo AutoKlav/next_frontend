@@ -129,6 +129,16 @@ export interface ProcessInfo {
   processLength: string;
 }
 
+export interface ProcessSuggestions {
+  productName?: string[];
+  productQuantity?: string[];
+  bacteria?: string[];
+  description?: string[];
+  processStart?: string[];
+  targetF?: string[];
+  processLength?: string[];
+}
+
 // ProcessInfoRow message
 export interface ProcessInfoRow {
   id: number;

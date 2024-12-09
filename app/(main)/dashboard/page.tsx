@@ -13,7 +13,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { StartProcessRequest } from '@/types/grpc';
+import { ProcessInfo, ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -154,6 +154,8 @@ const DashboardPage = () => {
 
     const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
 
+    const [processSuggestions, setProcessSuggestions] = useState<ProcessSuggestions>();
+
     async function runParallelProcesses() {
         try {
             const results = await Promise.all([
@@ -164,14 +166,14 @@ const DashboardPage = () => {
             ]);
     
              // Map results to corresponding keys
-            const structuredResults = {
-                ProductName: results[0]?.valuesList ?? [],
-                ProductQuantity: results[1]?.valuesList ?? [],
-                Bacteria: results[2]?.valuesList ?? [],
-                Description: results[3]?.valuesList ?? [],
+            const structuredResults: ProcessSuggestions = {
+                productName: results[0]?.valuesList ?? [],
+                productQuantity: results[1]?.valuesList ?? [],
+                bacteria: results[2]?.valuesList ?? [],
+                description: results[3]?.valuesList ?? [],
             };
-            console.log(structuredResults);
-            showSuccess('Proces', 'Proces je uspješno pokrenut');
+            console.log('structuredResults:', structuredResults);
+            setProcessSuggestions(structuredResults);            
         } catch (error) {
             console.error('An error occurred during the process:', error);
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
@@ -215,13 +217,7 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {
-        //runParallelProcesses();
-        const input = {
-            "productName": "deserunt enim tempor",
-            "productQuantity": "sint aliqua do laborum"
-        };
-        nameAndQuantityFilterMode(input);
+    const handleStartProcess = () => {       
 
         if(state === 1){
             const request: StartProcessRequest = {
@@ -255,37 +251,22 @@ const DashboardPage = () => {
         showWarn('Proces','Proces je već pokrenut');
     };
 
+    const handleOpenDialog = () => {
+        runParallelProcesses();
+        
+        //nameAndQuantityFilterMode({
+        //    "productName": "deserunt enim tempor",
+        //    "productQuantity": "sint aliqua do laborum"
+        //});
+        setModalVisibility(true);
+    }
+
     const footerContent = (
         <div>
             <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
             <Button label="Unesi podatke" icon="pi pi-check" onClick={handleStartProcess} autoFocus />
         </div>
-    );    
-
-    const [value, setValue] = useState('');
-    const [items, setItems] = useState<{ id: number, name: string }[]>([]);
-
-    const producers = [
-        { id: 1, name: 'Kraš' },
-        { id: 2, name: 'Podravka' },
-        { id: 3, name: 'Vajda' },
-        { id: 4, name: 'Vajda' },
-        { id: 5, name: 'Lučko' },
-        { id: 6, name: 'Pionir' },
-        { id: 7, name: 'Zlatiborac' },
-        { id: 8, name: 'Dijamant' },
-        { id: 9, name: 'Brik' },
-        { id: 10, name: 'Heinz' },
-        { id: 11, name: 'Häagen-Dazs' }
-    ];
-    
-    const search = (event: { query: string }) => {
-        const filteredItems = producers.filter(item =>
-            item.name.toLowerCase().includes(event.query.toLowerCase())
-        );
-        setItems(filteredItems);
-    }
-
+    );        
     
     return (
         <div className="grid p-2">
@@ -294,16 +275,15 @@ const DashboardPage = () => {
                     <div className="grid p-2">
                         <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                             <div className="grid">
-                                <div className="col-6">
-                                    <AutoComplete value={value} suggestions={items.map(item => item.name)} completeMethod={search} onChange={(e) => setValue(e.value)} />
-                                    <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} />
-                                    <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} />
-                                    <GeneralStringInput headerName="Unesite opis" inputValue={description} />
+                                <div className="col-6">                                    
+                                    <GeneralStringInput headerName="Unesite naziv produkta" inputValue={productName} suggestions={processSuggestions?.productName}/>
+                                    <GeneralStringInput headerName="Unesite naziv bakterije" inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
+                                    <GeneralStringInput headerName="Unesite opis" inputValue={description} suggestions={processSuggestions?.description}/>
                                     <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
                                     <StartProcessDropdown label='Odaberite mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
                                 </div>
                                 <div className="col-6">
-                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} />                                    
+                                    <GeneralStringInput headerName="Unesite količinu" inputValue={productQuantity} suggestions={processSuggestions?.productQuantity}/>                                    
                                     <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
                                     {typeDropdown.id === 2 && (
                                         <>
@@ -327,7 +307,7 @@ const DashboardPage = () => {
                 {/* Display progress or empty bar */}                
             </div>
             <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">
-            <Button label="Pokreni proces" onClick={() => setModalVisibility(true)} className="p-button-success" />
+            <Button label="Pokreni proces" onClick={handleOpenDialog} className="p-button-success" />
             <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />                        
             </div>
             <div className='col-12'>
