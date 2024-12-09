@@ -68,6 +68,11 @@ export interface ProcessLogList {
   processlogsList: StateMachineValues[];
 }
 
+export interface FilteredProcessList {
+  values: string[];
+  valuesList: string[];
+}
+
 // Enum ProcessConfigType
 export enum ProcessConfigType {
   STERILIZATION = 0,

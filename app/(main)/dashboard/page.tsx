@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 import { AutoComplete } from "primereact/autocomplete";
 
-import { getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getDistinctProcessValuesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -17,6 +17,7 @@ import { StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
+import { ProcessInfoFields } from '@/types/app';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -137,6 +138,32 @@ const DashboardPage = () => {
         },
     });
 
+    const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
+
+    async function runParallelProcesses() {
+        try {
+            const results = await Promise.all([
+                getDistinctProcessValues(ProcessInfoFields.ProductName),
+                getDistinctProcessValues(ProcessInfoFields.ProductQuantity),
+                getDistinctProcessValues(ProcessInfoFields.Bacteria),
+                getDistinctProcessValues(ProcessInfoFields.Description),
+            ]);
+    
+             // Map results to corresponding keys
+            const structuredResults = {
+                ProductName: results[0]?.valuesList ?? [],
+                ProductQuantity: results[1]?.valuesList ?? [],
+                Bacteria: results[2]?.valuesList ?? [],
+                Description: results[3]?.valuesList ?? [],
+            };
+            console.log(structuredResults);
+            showSuccess('Proces', 'Proces je uspješno pokrenut');
+        } catch (error) {
+            console.error('An error occurred during the process:', error);
+            showError('Proces', 'Greška prilikom dohvaćanja podataka');
+        }
+    }
+
     const { data: relaySensorValues } = useQuery(
         { 
             queryKey: ['relaySensorValues'],
@@ -174,8 +201,9 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {        
-        if(state === 0){
+    const handleStartProcess = () => {
+        runParallelProcesses();
+        if(state === 1){
             const request: StartProcessRequest = {
                 processConfig: {
                     customTemp: customTemp.current,
