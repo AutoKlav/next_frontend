@@ -154,7 +154,12 @@ const DashboardPage = () => {
 
     const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
 
-    const [processSuggestions, setProcessSuggestions] = useState<ProcessSuggestions>();
+    const [processSuggestions, setProcessSuggestions] = useState<ProcessSuggestions>({
+        productName: [],
+        productQuantity: [],
+        bacteria: [],
+        description: [],
+    });
 
     const getSuggestions = async () => {
         try {
