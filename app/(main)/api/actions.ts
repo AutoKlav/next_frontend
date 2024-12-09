@@ -1,6 +1,6 @@
 "use server"
 
-import { getAllProcessLogs, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
+import { getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
 import { ProcessConfigMode, ProcessConfigType, ProcessFilterRequest, StartProcessRequest, UpdateSensorRequest } from "@/types/grpc";
 
@@ -54,6 +54,11 @@ export const getFilteredModeValuesAction = async (filterModeRequest: ProcessFilt
 export const getProcessLogsAction = async ({ids, source} : {ids: number[], source:string}) => {    
     const processLogs = await getAllProcessLogs(ids);    
     return {data: processLogs, source: source};
+}
+
+export const getProcessTypesAction = async () => {
+    const processTypes = await getAllProcessTypes();
+    return processTypes;
 }
 
 //#endregion

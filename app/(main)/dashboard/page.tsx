@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
-import { AutoComplete } from "primereact/autocomplete";
 
-import { getDistinctProcessValuesAction, getFilteredModeValuesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getDistinctProcessValuesAction, getFilteredModeValuesAction, getProcessTypesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -13,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessInfo, ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
+import { ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -156,6 +155,22 @@ const DashboardPage = () => {
         },
     });
 
+    const { mutate: processTypes } = useMutation({
+        mutationFn: getProcessTypesAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+            showError('Proces', 'Greška prilikom dohvaćanja podataka');
+        },
+        onSuccess: (data) => {
+            if(checkForErrors(data)){
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
+                return;                
+            }
+
+            console.log(data);
+        },
+    });
+
     useEffect(() => {
         const handler = setTimeout(() => {
             nameAndQuantityFilterMode({
@@ -240,8 +255,7 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {       
-
+    const handleStartProcess = () => {               
         if(state === 1){
             const request: StartProcessRequest = {
                 processConfig: {
@@ -275,10 +289,8 @@ const DashboardPage = () => {
     };
 
     const handleOpenDialog = () => {
-        getSuggestions();
-        // nameAndQuantityFilterMode({
-        //     "productName": "deserunt enim tempor",
-        //    "productQuantity": "sint aliqua do laborum" });
+        getSuggestions();        
+        processTypes();
         setModalVisibility(true);
     }
 

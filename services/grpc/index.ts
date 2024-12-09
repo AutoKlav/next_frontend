@@ -4,6 +4,7 @@ import {
   ProcessFilterRequest,
   ProcessInfoList,
   ProcessLogList,
+  ProcessTypesResponse,
   SensorRelayValues,
   SensorValues,
   SetVariable,
@@ -95,6 +96,12 @@ export const getDistinctProcessValues = (columnName: string) =>{
   data.setColumnname(columnName);
 
   return gRpcCall<FilteredProcessList>("getDistinctProcessValues", data);
+}
+
+export const getAllProcessTypes = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<ProcessTypesResponse>("getAllProcessTypes", data);
 }
 
 export const getFilteredModeValues = (filterModeRequest: ProcessFilterRequest) => {
