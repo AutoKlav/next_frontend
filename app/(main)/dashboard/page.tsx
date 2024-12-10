@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 
@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
+import { ProcessSuggestions, ProcessTypesResponse, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -45,7 +45,9 @@ const relayMapper = [
 
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
-    const [isModalVisible, setModalVisibility] = useState(false);    
+    const [isModalVisible, setModalVisibility] = useState(false);  
+    const refetchInterval = 10000;    
+    const debounceInterval = 3000;
 
     const typeDropdownValues = [
         { id: 0, name: 'Sterilizacija' },
@@ -74,6 +76,8 @@ const DashboardPage = () => {
     const maintainTemp = React.useRef<number>(0);
     const targetF = React.useRef<string>('');
     const targetTime = React.useRef<number>(0);
+
+    const fetchedTypes = useRef<ProcessTypesResponse>();
     //#endregion
     
     const resetInputs = () => {
@@ -110,7 +114,7 @@ const DashboardPage = () => {
         { 
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
-            refetchInterval: 1000,
+            refetchInterval: refetchInterval,
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
                 showError('Proces','Greška prilikom dohvaćanja podataka');
@@ -168,18 +172,24 @@ const DashboardPage = () => {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
-
-            console.log('Types ',data);
+            fetchedTypes.current = data;
         },
     });
+    console.log('Fetched types ', fetchedTypes.current);
 
+    // Fetch process types on component mount
+    useEffect(() => {
+        processTypes();
+    }, []);
+
+    // Debounce the name and quantity filter mode after changed
     useEffect(() => {
         const handler = setTimeout(() => {
             nameAndQuantityFilterMode({
                 productName: productName,
                 productQuantity: productQuantity
             });
-        }, 3000); // 3 seconds debounce
+        }, debounceInterval); // 3 seconds debounce
 
         // Cleanup the timeout if productName or productQuantity changes before the timeout completes
         return () => {
@@ -224,7 +234,7 @@ const DashboardPage = () => {
         { 
             queryKey: ['relaySensorValues'],
             queryFn: () => getSensorRelayValuesAction(),
-            refetchInterval: 1000,
+            refetchInterval: refetchInterval,
             onError: (error) => {
                 console.error('Error getting relay sensor values:', error);
                 showError('Relej','Greška prilikom dohvaćanja podataka');
@@ -291,8 +301,7 @@ const DashboardPage = () => {
     };
 
     const handleOpenDialog = () => {
-        getSuggestions();        
-        processTypes();
+        getSuggestions();
         setModalVisibility(true);
     }
 
@@ -356,14 +365,14 @@ const DashboardPage = () => {
             <div className="col-6">
                     <div className='flex flex-column gap-3 ml-2 mr-2'>
                         {relayMapper.slice(0,4) .map((chip, index) => (
-                                <ChipStates key={index} {...chip} />
+                                <ChipStates key={chip.name} {...chip} />
                         ))}
                     </div>                    
             </div>
             <div className="col-5">
             <div className='flex flex-column gap-3 -ml-2 -mr-2 '>
                         {relayMapper.slice(4,6) .map((chip, index) => (
-                                <ChipStates key={index} {...chip} />
+                                <ChipStates key={chip.name} {...chip} />
                         ))}
             </div>
             </div>
@@ -374,12 +383,12 @@ const DashboardPage = () => {
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (
-                            <DataCard key={index} {...item} />
+                            <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>                    
                     <ul className="list-none p-0 m-0">
                         {pressures.map((item, index) => (
-                            <DataCard key={index} {...item} />
+                            <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>
                 </div>
@@ -389,7 +398,7 @@ const DashboardPage = () => {
                 <div className="card border-cyan-700">
                 <ul className="list-none p-0 m-0">
                         {stateValues.map((item, index) => (
-                            <DataCard key={index} {...item} />
+                            <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>
                 </div>
