@@ -3,11 +3,13 @@ import { InputNumber } from 'primereact/inputnumber';
 
 interface GeneralNumberInputProps {    
     headerName: string;
-    inputValue: React.MutableRefObject<number>;    
+    inputValue: React.MutableRefObject<number>;
+    placeholder?: string;
+    disabled?: boolean;
 }
 
 const CalibrationInput: React.FC<GeneralNumberInputProps> = (props) => {
-    const {  headerName, inputValue } = props;
+    const {  headerName, inputValue, disabled, placeholder } = props;
     return (        
         <div className="flex flex-row gap-3 mt-3">
         <div className="flex flex-column gap-2">
@@ -15,7 +17,9 @@ const CalibrationInput: React.FC<GeneralNumberInputProps> = (props) => {
             <InputNumber                
                 defaultValue={inputValue.current} // Clear value on next step
                 onChange={(e) => (inputValue.current = e.value ? e.value : 0)}
-                mode="decimal"                
+                placeholder={placeholder}
+                mode="decimal"
+                disabled={disabled}
                 className="p-inputtext-sm"
                 style={{ borderRadius: '13px', width: '110%' }}
             />

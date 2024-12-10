@@ -151,7 +151,9 @@ const DashboardPage = () => {
                 return;                
             }
 
-            console.log(data);
+            targetF.current = data?.targetFValues[0].toString();
+            targetTime.current = Number(data?.processLengthValues[0]);
+            console.log('TargetF and TargetTime ', targetF, targetTime);
         },
     });
 
@@ -167,7 +169,7 @@ const DashboardPage = () => {
                 return;                
             }
 
-            console.log(data);
+            console.log('Types ',data);
         },
     });
 
@@ -304,32 +306,33 @@ const DashboardPage = () => {
     return (
         <div className="grid p-2">
             <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
-                <p className="m-0">
-                    <div className="grid p-2">
-                        <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
-                            <div className="grid">
-                                <div className="col-6">                                    
-                                    <GeneralStringInput headerName="Unesite naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
-                                    <GeneralStringInput headerName="Unesite naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
-                                    <GeneralStringInput headerName="Unesite opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
-                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
-                                    <StartProcessDropdown label='Odaberite mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
-                                </div>
-                                <div className="col-6">
-                                    <GeneralStringInput headerName="Unesite količinu" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                                    <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
-                                    {typeDropdown.id === 2 && (
-                                        <>
-                                            <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
-                                            <GeneralNumberInput headerName="Unesite završnu temperaturu" inputValue={finishTemp} />
-                                            <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        </Dialog>
-                    </div>
-                </p>
+            <div className="m-0">
+    <div className="grid p-2">
+        <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+            <div className="grid">
+                <div className="col-6">                                    
+                    <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
+                    <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
+                    <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
+                    <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
+                    <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
+                </div>
+                <div className="col-6">
+                    <GeneralStringInput headerName="Količinu" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
+                    <GeneralNumberInput headerName="Održavanje tlaka" inputValue={maintainPressure} />
+                    <GeneralNumberInput headerName="Ciljna temperaturu" inputValue={customTemp} />
+                    <GeneralNumberInput headerName="Završna temperaturu" disabled={true} inputValue={finishTemp} />
+                    <GeneralNumberInput headerName="Održavanje temperature" disabled={true} inputValue={maintainTemp} />
+                    {typeDropdown.id === 2 && (
+                        <>
+                        </>
+                    )}
+                </div>
+            </div>
+        </Dialog>
+    </div>
+</div>
+
             </Dialog>            
         <div className="col-4">
             {/* Control Relays */}            
