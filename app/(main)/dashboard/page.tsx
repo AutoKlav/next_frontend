@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 
@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessSuggestions, ProcessTypesResponse, StartProcessRequest } from '@/types/grpc';
+import { ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -49,19 +49,14 @@ const DashboardPage = () => {
     const refetchInterval = 10000;    
     const debounceInterval = 3000;
 
-    const typeDropdownValues = [
-        { id: 0, name: 'Sterilizacija' },
-        { id: 1, name: 'Pasterizacija' },
-        { id: 2, name: 'Prilagođeno' },
-    ];
-
-    const modeDropdownValues = [
+    const modeDropdownValues: ProcessType[] = [
         { id: 0, name: 'Meta f' },
         { id: 1, name: 'Meta t' },
     ];
 
-    const [typeDropdown, setTypeDropdown] = useState(typeDropdownValues[0]);
-    const [modeDropdown, setModeDropdown] = useState(modeDropdownValues[0]);
+    // Sterilizacija / Pasterizacija
+    const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
+    const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
     
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
@@ -77,7 +72,7 @@ const DashboardPage = () => {
     const targetF = React.useRef<string>('');
     const targetTime = React.useRef<number>(0);
 
-    const fetchedTypes = useRef<ProcessTypesResponse>();
+    const fetchedTypes = useRef<ProcessType[]>();
     //#endregion
     
     const resetInputs = () => {
@@ -150,14 +145,19 @@ const DashboardPage = () => {
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
         },
         onSuccess: (data) => {
+            console.log('Filtered mode values:', data);
             if(checkForErrors(data)){
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
 
-            targetF.current = data?.targetFValues[0].toString();
-            targetTime.current = Number(data?.processLengthValues[0]);
-            console.log('TargetF and TargetTime ', targetF, targetTime);
+            if (data?.targetFValues && data?.targetFValues.length > 0 || 
+                data?.processLengthValues && data?.processLengthValues.length > 0) {
+                targetF.current = data.targetFValues[0].toString();
+                targetTime.current = Number(data.processLengthValues[0]);
+                console.log('Target time:', targetTime.current);
+                console.log('Target F:', targetF.current);
+            }                        
         },
     });
 
@@ -172,16 +172,17 @@ const DashboardPage = () => {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
-            fetchedTypes.current = data;
+                        
+            fetchedTypes.current = data.processtypesList;
+            setTypeDropdown(data?.processtypesList?.[0]);            
         },
     });
-    console.log('Fetched types ', fetchedTypes.current);
-
+    
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
     }, []);
-
+    
     // Debounce the name and quantity filter mode after changed
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -275,9 +276,9 @@ const DashboardPage = () => {
                     finishTemp: finishTemp.current,
                     maintainPressure: maintainPressure.current,
                     maintainTemp: maintainTemp.current,
-                    mode: modeDropdown.id,
+                    mode: 1,//modeDropdown.id,
                     targetTime: targetTime.current,
-                    type: typeDropdown.id,
+                    type: 1,//typeDropdown.id,
                 },
                 processInfo: {
                     productName: productName,
@@ -323,19 +324,15 @@ const DashboardPage = () => {
                     <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
                     <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
                     <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
-                    <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
+                    <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
                     <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
                 </div>
                 <div className="col-6">
-                    <GeneralStringInput headerName="Količinu" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
+                    <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
                     <GeneralNumberInput headerName="Održavanje tlaka" inputValue={maintainPressure} />
                     <GeneralNumberInput headerName="Ciljna temperaturu" inputValue={customTemp} />
                     <GeneralNumberInput headerName="Završna temperaturu" disabled={true} inputValue={finishTemp} />
-                    <GeneralNumberInput headerName="Održavanje temperature" disabled={true} inputValue={maintainTemp} />
-                    {typeDropdown.id === 2 && (
-                        <>
-                        </>
-                    )}
+                    <GeneralNumberInput headerName="Održavanje temperature" disabled={true} inputValue={maintainTemp} />                    
                 </div>
             </div>
         </Dialog>

@@ -58,7 +58,7 @@ export const getProcessLogsAction = async ({ids, source} : {ids: number[], sourc
 }
 
 export const getProcessTypesAction = async () => {
-    const processTypes = await getAllProcessTypes();
+    const processTypes = await getAllProcessTypes();    
     return processTypes;
 }
 
