@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -57,7 +57,7 @@ const DashboardPage = () => {
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
-    
+    console.log('Type dropdown:', typeDropdown);
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
@@ -65,9 +65,9 @@ const DashboardPage = () => {
     const bacteria = React.useRef<string>('');
     const description = React.useRef<string>('');
 
-    const customTemp = React.useRef<number>(0);
-    const finishTemp = React.useRef<number>(0);
-    const maintainPressure = React.useRef<number>(0);
+    const customTemp = React.useRef<number>(-1);
+    const finishTemp = React.useRef<number>(-1);
+    const maintainPressure = React.useRef<number>(-1);    
     const maintainTemp = React.useRef<number>(0);
     const targetF = React.useRef<string>('');
     const targetTime = React.useRef<number>(0);
@@ -81,9 +81,9 @@ const DashboardPage = () => {
         setProductName('');
         bacteria.current = '';
         description.current = '';
-        customTemp.current = 0;
+        customTemp.current = -1;
         finishTemp.current = 0;
-        maintainPressure.current = 0;
+        maintainPressure.current = 0;        
         maintainTemp.current = 0;
         targetF.current = '';
         targetTime.current = 0;
@@ -173,7 +173,7 @@ const DashboardPage = () => {
                 return;                
             }
                         
-            fetchedTypes.current = data.processtypesList;
+            fetchedTypes.current = data.processtypesList;            
             setTypeDropdown(data?.processtypesList?.[0]);            
         },
     });
@@ -269,16 +269,29 @@ const DashboardPage = () => {
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
     const handleStartProcess = () => {               
-        if(state === 1){
-            const request: StartProcessRequest = {
-                processConfig: {
+        if(state === 0){
+            console.log('Temp ', customTemp.current);
+            console.log('Value ', typeDropdown?.customtemp);
+            if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
+                typeDropdown?.id === ProcessConfigType.PASTERIZATION)
+            {
+                console.log('Temp Before', customTemp.current);
+                customTemp.current = typeDropdown?.customtemp || -1;
+                finishTemp.current = typeDropdown?.finishtemp || -1;
+                maintainTemp.current = typeDropdown?.maintainpressure || -1;
+            }            
+            console.log('Temp After', customTemp.current);
+
+            // TODO finish this
+            const request: StartProcessRequest = {                
+                processConfig: {                                    
                     customTemp: customTemp.current,
                     finishTemp: finishTemp.current,
                     maintainPressure: maintainPressure.current,
                     maintainTemp: maintainTemp.current,
-                    mode: 1,//modeDropdown.id,
+                    mode: modeDropdown?.id || -1,
                     targetTime: targetTime.current,
-                    type: 1,//typeDropdown.id,
+                    type: typeDropdown?.id || -1
                 },
                 processInfo: {
                     productName: productName,
@@ -290,9 +303,10 @@ const DashboardPage = () => {
                     processLength: 'Proces nije završen',
                 },
             };
+            console.log('Proces request', request);
 
             resetInputs();
-            startProcess(request);
+            //startProcess(request);
             setModalVisibility(false);           
             return;
         }

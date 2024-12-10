@@ -87,9 +87,9 @@ export interface ProcessType {
   id: number;
   name: string;
   type?: string;
-  customTemp?: number;
-  finishTemp?: number;
-  maintainPressure?: number;
+  customtemp?: number;
+  finishtemp?: number;
+  maintainpressure?: number;
   pressure?: number;
 }
 
