@@ -270,19 +270,16 @@ const DashboardPage = () => {
 
     const handleStartProcess = () => {               
         if(state === 0){
-            console.log('Temp ', customTemp.current);
-            console.log('Value ', typeDropdown?.customtemp);
+            
             if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
                 typeDropdown?.id === ProcessConfigType.PASTERIZATION)
             {
-                console.log('Temp Before', customTemp.current);
                 customTemp.current = typeDropdown?.customtemp || -1;
                 finishTemp.current = typeDropdown?.finishtemp || -1;
                 maintainTemp.current = typeDropdown?.maintainpressure || -1;
-            }            
-            console.log('Temp After', customTemp.current);
-
-            // TODO finish this
+                maintainPressure.current = typeDropdown?.maintaintemp || -1;
+            }
+            
             const request: StartProcessRequest = {                
                 processConfig: {                                    
                     customTemp: customTemp.current,
