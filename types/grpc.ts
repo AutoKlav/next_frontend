@@ -79,8 +79,8 @@ export interface ProcessFilterRequest {
 }
 
 export interface FilteredModeProcessList {
-  targetFValues: string[];
-  processLengthValues: string[];
+  targetfvaluesList: string[];
+  processlengthvaluesList: string[];
 }
 
 export interface ProcessType {

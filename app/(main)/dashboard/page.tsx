@@ -158,15 +158,14 @@ const DashboardPage = () => {
                 return;                
             }
 
-            if (data?.targetFValues && data?.targetFValues.length > 0 || 
-                data?.processLengthValues && data?.processLengthValues.length > 0) {
-                targetF.current = Number(data.targetFValues[0]);
-                targetTime.current = Number(data.processLengthValues[0]);
-                console.log('Target time:', targetTime.current);
-                console.log('Target F:', targetF.current);
-            }                        
+            targetF.current = Number(data.targetfvaluesList[0]);
+            targetTime.current = Number(data.processlengthvaluesList[0]);            
+            
         },
     });
+    
+    console.log('Target time:', targetTime);
+    console.log('Target F:', targetF);
 
     const { mutate: processTypes } = useMutation({
         mutationFn: getProcessTypesAction,
@@ -333,8 +332,8 @@ const DashboardPage = () => {
             <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
             <Button label="Unesi podatke" icon="pi pi-check" onClick={handleStartProcess} autoFocus />
         </div>
-    );        
-    
+    );
+
     return (
         <div className="grid p-2">
             <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
