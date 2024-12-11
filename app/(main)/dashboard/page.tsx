@@ -345,10 +345,10 @@ const DashboardPage = () => {
                 </div>
                 <div className="col-6">
                     <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                    <GeneralNumberInput headerName="Održavanje tlaka" inputValue={maintainPressure} />
-                    <GeneralNumberInput headerName="Ciljna temperaturu" inputValue={customTemp} />
-                    <GeneralNumberInput headerName="Završna temperaturu" disabled={true} inputValue={finishTemp} />
+                    <GeneralNumberInput headerName="Prilagođena temperatura" inputValue={customTemp} />
                     <GeneralNumberInput headerName="Održavanje temperature" disabled={true} inputValue={maintainTemp} />                    
+                    <GeneralNumberInput headerName="Završna temperatura" disabled={true} inputValue={finishTemp} />
+                    <GeneralNumberInput headerName="Održavanje tlaka" inputValue={maintainPressure} />
                 </div>
             </div>
         </Dialog>
