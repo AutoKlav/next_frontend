@@ -159,8 +159,15 @@ const DashboardPage = () => {
                 return;                
             }
 
-            targetF.current = Number(data.targetfvaluesList[0]);
-            targetTime.current = Number(data.processlengthvaluesList[0]);            
+            console.log('1Mode1', data.processlengthvaluesList[0]);
+
+            if(data.processlengthvaluesList[0] !== undefined){
+                targetF.current = Number(data.targetfvaluesList[0]);                
+            }
+
+            if(data.targetfvaluesList[0] !== undefined){
+                targetTime.current = Number(data.processlengthvaluesList[0]);            
+            }
             
         },
     });
