@@ -322,6 +322,8 @@ const DashboardPage = () => {
         setModalVisibility(true);
     }
 
+    const disabledInput = typeDropdown?.id !== ProcessConfigType.CUSTOM;
+
     const footerContent = (
         <div>
             <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
@@ -345,10 +347,10 @@ const DashboardPage = () => {
                 </div>
                 <div className="col-6">
                     <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                    <GeneralNumberInput headerName="Prilagođena temperatura" inputValue={customTemp} />
-                    <GeneralNumberInput headerName="Održavanje temperature" disabled={true} inputValue={maintainTemp} />                    
-                    <GeneralNumberInput headerName="Završna temperatura" disabled={true} inputValue={finishTemp} />
-                    <GeneralNumberInput headerName="Održavanje tlaka" inputValue={maintainPressure} />
+                    <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={customTemp} />
+                    <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={maintainTemp} />                    
+                    <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={finishTemp} />
+                    <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={maintainPressure} />
                 </div>
             </div>
         </Dialog>
