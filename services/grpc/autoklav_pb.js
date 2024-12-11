@@ -966,7 +966,7 @@ proto.autoklav.ProcessTypeRequest.toObject = function(includeInstance, msg) {
     customtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
     finishtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
     maintainpressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    pressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
+    maintaintemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
   };
 
   if (includeInstance) {
@@ -1025,7 +1025,7 @@ proto.autoklav.ProcessTypeRequest.deserializeBinaryFromReader = function(msg, re
       break;
     case 6:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setPressure(value);
+      msg.setMaintaintemp(value);
       break;
     default:
       reader.skipField();
@@ -1091,7 +1091,7 @@ proto.autoklav.ProcessTypeRequest.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getPressure();
+  f = message.getMaintaintemp();
   if (f !== 0.0) {
     writer.writeDouble(
       6,
@@ -1192,10 +1192,10 @@ proto.autoklav.ProcessTypeRequest.prototype.setMaintainpressure = function(value
 
 
 /**
- * optional double pressure = 6;
+ * optional double maintainTemp = 6;
  * @return {number}
  */
-proto.autoklav.ProcessTypeRequest.prototype.getPressure = function() {
+proto.autoklav.ProcessTypeRequest.prototype.getMaintaintemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 6, 0.0));
 };
 
@@ -1204,7 +1204,7 @@ proto.autoklav.ProcessTypeRequest.prototype.getPressure = function() {
  * @param {number} value
  * @return {!proto.autoklav.ProcessTypeRequest} returns this
  */
-proto.autoklav.ProcessTypeRequest.prototype.setPressure = function(value) {
+proto.autoklav.ProcessTypeRequest.prototype.setMaintaintemp = function(value) {
   return jspb.Message.setProto3FloatField(this, 6, value);
 };
 
@@ -1247,7 +1247,7 @@ proto.autoklav.ProcessType.toObject = function(includeInstance, msg) {
     customtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
     finishtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
     maintainpressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    pressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
+    maintaintemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
   };
 
   if (includeInstance) {
@@ -1310,7 +1310,7 @@ proto.autoklav.ProcessType.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 7:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setPressure(value);
+      msg.setMaintaintemp(value);
       break;
     default:
       reader.skipField();
@@ -1383,7 +1383,7 @@ proto.autoklav.ProcessType.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getPressure();
+  f = message.getMaintaintemp();
   if (f !== 0.0) {
     writer.writeDouble(
       7,
@@ -1502,10 +1502,10 @@ proto.autoklav.ProcessType.prototype.setMaintainpressure = function(value) {
 
 
 /**
- * optional double pressure = 7;
+ * optional double maintainTemp = 7;
  * @return {number}
  */
-proto.autoklav.ProcessType.prototype.getPressure = function() {
+proto.autoklav.ProcessType.prototype.getMaintaintemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 7, 0.0));
 };
 
@@ -1514,7 +1514,7 @@ proto.autoklav.ProcessType.prototype.getPressure = function() {
  * @param {number} value
  * @return {!proto.autoklav.ProcessType} returns this
  */
-proto.autoklav.ProcessType.prototype.setPressure = function(value) {
+proto.autoklav.ProcessType.prototype.setMaintaintemp = function(value) {
   return jspb.Message.setProto3FloatField(this, 7, value);
 };
 

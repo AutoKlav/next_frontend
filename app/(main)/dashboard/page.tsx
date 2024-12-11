@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 
@@ -12,11 +12,12 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessSuggestions, StartProcessRequest } from '@/types/grpc';
+import { ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 import { ProcessInfoFields } from '@/types/app';
+import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -45,22 +46,19 @@ const relayMapper = [
 
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
-    const [isModalVisible, setModalVisibility] = useState(false);    
+    const [isModalVisible, setModalVisibility] = useState(false);  
+    const refetchInterval = 10000;    
+    const debounceInterval = 3000;
 
-    const typeDropdownValues = [
-        { id: 0, name: 'Sterilizacija' },
-        { id: 1, name: 'Pasterizacija' },
-        { id: 2, name: 'Prilagođeno' },
-    ];
-
-    const modeDropdownValues = [
+    const modeDropdownValues: ProcessType[] = [
         { id: 0, name: 'Meta f' },
         { id: 1, name: 'Meta t' },
     ];
 
-    const [typeDropdown, setTypeDropdown] = useState(typeDropdownValues[0]);
-    const [modeDropdown, setModeDropdown] = useState(modeDropdownValues[0]);
-    
+    // Sterilizacija / Pasterizacija
+    const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
+    const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
+    console.log('Type dropdown:', typeDropdown);
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
@@ -68,12 +66,14 @@ const DashboardPage = () => {
     const bacteria = React.useRef<string>('');
     const description = React.useRef<string>('');
 
-    const customTemp = React.useRef<number>(0);
-    const finishTemp = React.useRef<number>(0);
-    const maintainPressure = React.useRef<number>(0);
+    const customTemp = React.useRef<number>(-1);
+    const finishTemp = React.useRef<number>(-1);
+    const maintainPressure = React.useRef<number>(-1);    
     const maintainTemp = React.useRef<number>(0);
     const targetF = React.useRef<string>('');
     const targetTime = React.useRef<number>(0);
+
+    const fetchedTypes = useRef<ProcessType[]>();
     //#endregion
     
     const resetInputs = () => {
@@ -82,10 +82,12 @@ const DashboardPage = () => {
         setProductName('');
         bacteria.current = '';
         description.current = '';
-        customTemp.current = 0;
-        finishTemp.current = 0;
-        maintainPressure.current = 0;
-        maintainTemp.current = 0;
+        
+        customTemp.current = -1;
+        finishTemp.current = -1;
+        maintainPressure.current = -1;
+        maintainTemp.current = -1;
+        
         targetF.current = '';
         targetTime.current = 0;
     }
@@ -110,7 +112,7 @@ const DashboardPage = () => {
         { 
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
-            refetchInterval: 1000,
+            refetchInterval: refetchInterval,
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
                 showError('Proces','Greška prilikom dohvaćanja podataka');
@@ -146,12 +148,19 @@ const DashboardPage = () => {
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
         },
         onSuccess: (data) => {
+            console.log('Filtered mode values:', data);
             if(checkForErrors(data)){
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
 
-            console.log(data);
+            if (data?.targetFValues && data?.targetFValues.length > 0 || 
+                data?.processLengthValues && data?.processLengthValues.length > 0) {
+                targetF.current = data.targetFValues[0].toString();
+                targetTime.current = Number(data.processLengthValues[0]);
+                console.log('Target time:', targetTime.current);
+                console.log('Target F:', targetF.current);
+            }                        
         },
     });
 
@@ -166,18 +175,25 @@ const DashboardPage = () => {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
-
-            console.log(data);
+                        
+            fetchedTypes.current = data.processtypesList;            
+            setTypeDropdown(data?.processtypesList?.[0]);            
         },
     });
-
+    
+    // Fetch process types on component mount
+    useEffect(() => {
+        processTypes();
+    }, []);
+    
+    // Debounce the name and quantity filter mode after changed
     useEffect(() => {
         const handler = setTimeout(() => {
             nameAndQuantityFilterMode({
                 productName: productName,
                 productQuantity: productQuantity
             });
-        }, 3000); // 3 seconds debounce
+        }, debounceInterval); // 3 seconds debounce
 
         // Cleanup the timeout if productName or productQuantity changes before the timeout completes
         return () => {
@@ -222,7 +238,7 @@ const DashboardPage = () => {
         { 
             queryKey: ['relaySensorValues'],
             queryFn: () => getSensorRelayValuesAction(),
-            refetchInterval: 1000,
+            refetchInterval: refetchInterval,
             onError: (error) => {
                 console.error('Error getting relay sensor values:', error);
                 showError('Relej','Greška prilikom dohvaćanja podataka');
@@ -256,16 +272,28 @@ const DashboardPage = () => {
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
     const handleStartProcess = () => {               
-        if(state === 1){
-            const request: StartProcessRequest = {
-                processConfig: {
+        if(state === 0){
+            
+            if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
+                typeDropdown?.id === ProcessConfigType.PASTERIZATION)
+            {
+                customTemp.current = typeDropdown?.customtemp || -1;
+                finishTemp.current = typeDropdown?.finishtemp || -1;
+                maintainTemp.current = typeDropdown?.maintaintemp || -1;
+                maintainPressure.current = typeDropdown?.maintainpressure || -1;
+            }
+            const parsedType = getProcessConfigTypeById(typeDropdown?.id);
+            const parsedMode = getProcessConfigModeById(modeDropdown?.id);
+
+            const request: StartProcessRequest = {                
+                processConfig: {                                    
                     customTemp: customTemp.current,
                     finishTemp: finishTemp.current,
                     maintainPressure: maintainPressure.current,
                     maintainTemp: maintainTemp.current,
-                    mode: modeDropdown.id,
+                    mode: parsedMode,
                     targetTime: targetTime.current,
-                    type: typeDropdown.id,
+                    type: parsedType,
                 },
                 processInfo: {
                     productName: productName,
@@ -277,9 +305,10 @@ const DashboardPage = () => {
                     processLength: 'Proces nije završen',
                 },
             };
+            console.log('Proces request', request);
 
             resetInputs();
-            startProcess(request);
+            //startProcess(request);
             setModalVisibility(false);           
             return;
         }
@@ -289,8 +318,7 @@ const DashboardPage = () => {
     };
 
     const handleOpenDialog = () => {
-        getSuggestions();        
-        processTypes();
+        getSuggestions();
         setModalVisibility(true);
     }
 
@@ -304,32 +332,29 @@ const DashboardPage = () => {
     return (
         <div className="grid p-2">
             <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
-                <p className="m-0">
-                    <div className="grid p-2">
-                        <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
-                            <div className="grid">
-                                <div className="col-6">                                    
-                                    <GeneralStringInput headerName="Unesite naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
-                                    <GeneralStringInput headerName="Unesite naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
-                                    <GeneralStringInput headerName="Unesite opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
-                                    <StartProcessDropdown label='Odaberite tip' getter={typeDropdown} setter={setTypeDropdown} values={typeDropdownValues} />
-                                    <StartProcessDropdown label='Odaberite mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
-                                </div>
-                                <div className="col-6">
-                                    <GeneralStringInput headerName="Unesite količinu" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                                    <GeneralNumberInput headerName="Unesite održavanje tlaka" inputValue={maintainPressure} />
-                                    {typeDropdown.id === 2 && (
-                                        <>
-                                            <GeneralNumberInput headerName="Unesite ciljnu temperaturu" inputValue={customTemp} />
-                                            <GeneralNumberInput headerName="Unesite završnu temperaturu" inputValue={finishTemp} />
-                                            <GeneralNumberInput headerName="Unesite održavanje temperature" inputValue={maintainTemp} />
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        </Dialog>
-                    </div>
-                </p>
+            <div className="m-0">
+    <div className="grid p-2">
+        <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+            <div className="grid">
+                <div className="col-6">                                    
+                    <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
+                    <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
+                    <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
+                    <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
+                    <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
+                </div>
+                <div className="col-6">
+                    <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
+                    <GeneralNumberInput headerName="Održavanje tlaka" inputValue={maintainPressure} />
+                    <GeneralNumberInput headerName="Ciljna temperaturu" inputValue={customTemp} />
+                    <GeneralNumberInput headerName="Završna temperaturu" disabled={true} inputValue={finishTemp} />
+                    <GeneralNumberInput headerName="Održavanje temperature" disabled={true} inputValue={maintainTemp} />                    
+                </div>
+            </div>
+        </Dialog>
+    </div>
+</div>
+
             </Dialog>            
         <div className="col-4">
             {/* Control Relays */}            
@@ -353,14 +378,14 @@ const DashboardPage = () => {
             <div className="col-6">
                     <div className='flex flex-column gap-3 ml-2 mr-2'>
                         {relayMapper.slice(0,4) .map((chip, index) => (
-                                <ChipStates key={index} {...chip} />
+                                <ChipStates key={chip.name} {...chip} />
                         ))}
                     </div>                    
             </div>
             <div className="col-5">
             <div className='flex flex-column gap-3 -ml-2 -mr-2 '>
                         {relayMapper.slice(4,6) .map((chip, index) => (
-                                <ChipStates key={index} {...chip} />
+                                <ChipStates key={chip.name} {...chip} />
                         ))}
             </div>
             </div>
@@ -371,12 +396,12 @@ const DashboardPage = () => {
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.map((item, index) => (
-                            <DataCard key={index} {...item} />
+                            <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>                    
                     <ul className="list-none p-0 m-0">
                         {pressures.map((item, index) => (
-                            <DataCard key={index} {...item} />
+                            <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>
                 </div>
@@ -386,7 +411,7 @@ const DashboardPage = () => {
                 <div className="card border-cyan-700">
                 <ul className="list-none p-0 m-0">
                         {stateValues.map((item, index) => (
-                            <DataCard key={index} {...item} />
+                            <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>
                 </div>

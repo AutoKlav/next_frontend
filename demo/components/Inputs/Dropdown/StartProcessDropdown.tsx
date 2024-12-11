@@ -1,21 +1,16 @@
 import React from 'react';
 import { Dropdown } from 'primereact/dropdown';
-
-interface SensorDropdown {
-    id: number;
-    name: string;
-}
+import { ProcessType } from '@/types/grpc';
 
 interface StartProcessDropdownProps {
-    getter: SensorDropdown;
-    setter: (value: SensorDropdown) => void;
-    values: SensorDropdown[];
+    getter: ProcessType | undefined;
+    setter: (value: ProcessType) => void;
+    values: ProcessType[] | undefined;
     label: string;
 }
 
 const StartProcessDropdown: React.FC<StartProcessDropdownProps> = (props) => {    
-    const { getter, setter, values, label } = props;   
-    
+    const { getter, setter, values, label } = props;          
     return (
             <div className="flex flex-column gap-2 mt-3">
                 <label>{label}</label>

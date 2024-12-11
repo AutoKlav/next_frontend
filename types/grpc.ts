@@ -83,25 +83,26 @@ export interface FilteredModeProcessList {
   processLengthValues: string[];
 }
 
-interface ProcessType {
+export interface ProcessType {
   id: number;
   name: string;
-  type: string;
-  customTemp: number;
-  finishTemp: number;
-  maintainPressure: number;
-  pressure: number;
+  type?: string;
+  customtemp?: number;
+  finishtemp?: number;
+  maintainpressure?: number;
+  maintaintemp?: number;
 }
 
 export interface ProcessTypesResponse {
-  processTypes: ProcessType[];
+  processtypesList: ProcessType[];
 }
 
 // Enum ProcessConfigType
 export enum ProcessConfigType {
+  UNKNOWN = -1,
   STERILIZATION = 0,
   PASTERIZATION = 1,
-  CUSTOM = 2,
+  CUSTOM = 2,  
 }
 
 // Enum ProcessConfigState
@@ -117,6 +118,7 @@ export enum ProcessConfigState {
 
 // Enum ProcessConfigMode
 export enum ProcessConfigMode {
+  UNKNOWN = -1,
   TARGETF = 0,
   TIME = 1,
 }

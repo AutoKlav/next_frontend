@@ -58,7 +58,7 @@ export const getProcessLogsAction = async ({ids, source} : {ids: number[], sourc
 }
 
 export const getProcessTypesAction = async () => {
-    const processTypes = await getAllProcessTypes();
+    const processTypes = await getAllProcessTypes();    
     return processTypes;
 }
 
@@ -79,43 +79,7 @@ export const deleteProcessTypeAction = async (processRequest: TypeRequest) => {
 //#region POST Actions
 
 export const startProcessAction = async (request: StartProcessRequest) => {
-   
-    if(request.processConfig.type === ProcessConfigType.STERILIZATION) {        
-        request.processConfig.customTemp = 121.1;
-        request.processConfig.finishTemp = 121.1;
-        request.processConfig.maintainPressure = 1;
-        request.processConfig.maintainTemp = 121.1;
-    }
-    else if(request.processConfig.type === ProcessConfigType.PASTERIZATION) {        
-        request.processConfig.customTemp = 70;
-        request.processConfig.finishTemp = 70;
-        request.processConfig.maintainPressure = 1;
-        request.processConfig.maintainTemp = 70;
-    }    
-
-    const requestSample: StartProcessRequest = {
-        processConfig: {
-          customTemp: 0,
-          finishTemp: 40,
-          maintainPressure: 2,
-          maintainTemp: 120,
-          mode: ProcessConfigMode.TARGETF,          
-          targetTime: 20,
-          type: ProcessConfigType.STERILIZATION
-        },
-        processInfo: {
-          bacteria: '',
-          description: '',
-          processLength: 'Proces nije završen',
-          processStart: new Date().toISOString(),
-          productName: '',
-          targetF: '5',
-          productQuantity: ''
-        }
-      } 
-      
-      console.log(request);
-      const response = await startProcess(requestSample);
+      const response = await startProcess(request);
       return response;
  };
 
