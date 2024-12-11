@@ -1,4 +1,5 @@
 import { ChartOptions } from "chart.js";
+import { formatDateTime, secondsToHms } from "./dateUtil";
 
 export interface TitleInfo {
   id: number;
@@ -129,13 +130,16 @@ export const getChartInfo = (process: Process | null | undefined): ChartInfo => 
       return { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
   }
 
+  const formattedDate = formatDateTime(process.processstart ?? "");
+  const formattedLength = secondsToHms(Number(process.processlength));
+
   return {
       id: process.id,
       title: [
           `Ime: ${process.productname ?? "[]"}`,
           `Količina: ${process.productquantity ?? "[]"}`,
-          `Početak: ${process.processstart ?? "[]"}`,
-          `Trajanje: ${process.processlength ?? "[]"}`,
+          `Početak: ${formattedDate ?? "[]"}`,
+          `Trajanje: ${formattedLength ?? "[]"}`,
       ].join(" | "),
       subtitle: [
           `Bakterija: ${process.bacteria ?? "[Ime bakterije]"}`,
