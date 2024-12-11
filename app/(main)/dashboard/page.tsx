@@ -51,8 +51,8 @@ const DashboardPage = () => {
     const debounceInterval = 3000;
 
     const modeDropdownValues: ProcessType[] = [
-        { id: 0, name: 'Meta f' },
-        { id: 1, name: 'Meta t' },
+        { id: 0, name: 'Target F' },
+        { id: 1, name: 'Target T' },
     ];
 
     // Sterilizacija / Pasterizacija
@@ -85,15 +85,15 @@ const DashboardPage = () => {
         description.current = '';
         
         //#region modeDropdown
-        customTemp.current = -1;
-        finishTemp.current = -1;
-        maintainPressure.current = -1;
-        maintainTemp.current = -1;
+        customTemp.current = 0;
+        finishTemp.current = 0;
+        maintainPressure.current = 0;
+        maintainTemp.current = 0;
         //#endregion
         
         //#region typeDropdown
-        targetF.current = -1;
-        targetTime.current = -1;
+        targetF.current = 0;
+        targetTime.current = 0;
         //#endregion
     }
 
