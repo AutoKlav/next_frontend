@@ -12,7 +12,7 @@ interface StartProcessDropdownProps {
 const StartProcessDropdown: React.FC<StartProcessDropdownProps> = (props) => {    
     const { getter, setter, values, label } = props;          
     return (
-            <div className="flex flex-column gap-2 mt-3">
+            <div className="flex flex-column gap-2">
                 <label>{label}</label>
                 <Dropdown
                     id="dropdown"
@@ -20,7 +20,7 @@ const StartProcessDropdown: React.FC<StartProcessDropdownProps> = (props) => {
                     value={getter}
                     onChange={(e) =>  setter(e.value)}
                     optionLabel="name"                    
-                    style={{ borderRadius: '6px', width: '53%', height:'44px' }}
+                    style={{ borderRadius: '6px', height:'44px' }}
                 />
             </div>        
     );

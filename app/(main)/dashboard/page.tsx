@@ -70,8 +70,8 @@ const DashboardPage = () => {
     const finishTemp = React.useRef<number>(-1);
     const maintainPressure = React.useRef<number>(-1);    
     const maintainTemp = React.useRef<number>(0);
-    const targetF = React.useRef<string>('');
-    const targetTime = React.useRef<number>(0);
+    const targetF = React.useRef<number>(-1);
+    const targetTime = React.useRef<number>(-1);
 
     const fetchedTypes = useRef<ProcessType[]>();
     //#endregion
@@ -83,13 +83,17 @@ const DashboardPage = () => {
         bacteria.current = '';
         description.current = '';
         
+        //#region modeDropdown
         customTemp.current = -1;
         finishTemp.current = -1;
         maintainPressure.current = -1;
         maintainTemp.current = -1;
+        //#endregion
         
-        targetF.current = '';
-        targetTime.current = 0;
+        //#region typeDropdown
+        targetF.current = -1;
+        targetTime.current = -1;
+        //#endregion
     }
 
     const { mutate: stopProcess } = useMutation({
@@ -156,7 +160,7 @@ const DashboardPage = () => {
 
             if (data?.targetFValues && data?.targetFValues.length > 0 || 
                 data?.processLengthValues && data?.processLengthValues.length > 0) {
-                targetF.current = data.targetFValues[0].toString();
+                targetF.current = Number(data.targetFValues[0]);
                 targetTime.current = Number(data.processLengthValues[0]);
                 console.log('Target time:', targetTime.current);
                 console.log('Target F:', targetF.current);
@@ -298,7 +302,7 @@ const DashboardPage = () => {
                 processInfo: {
                     productName: productName,
                     bacteria: bacteria.current,
-                    targetF: targetF.current,
+                    targetF: targetF.current.toString(),
                     description: description.current,
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
@@ -335,29 +339,44 @@ const DashboardPage = () => {
         <div className="grid p-2">
             <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
             <div className="m-0">
-    <div className="grid p-2">
-        <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
-            <div className="grid">
-                <div className="col-6">                                    
-                    <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
-                    <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
-                    <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
-                    <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
-                    <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
-                </div>
-                <div className="col-6">
-                    <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                    <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={customTemp} />
-                    <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={maintainTemp} />                    
-                    <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={finishTemp} />
-                    <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={maintainPressure} />
-                </div>
+            <div className="grid p-2">
+                <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                    <div className="grid">
+                        <div className="col-6">                                    
+                            <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
+                            <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>                    
+                        </div>                
+                        <div className="col-6">
+                            <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
+                            <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>                    
+                        </div>
+                        <div className='col-12'>
+                            <hr/>
+                        </div>
+                        <div className="col-6">                    
+                            <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
+                        </div>
+                        <div className="col-6">
+                            <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={customTemp} />
+                            <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={maintainTemp} />                    
+                            <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={finishTemp} />
+                            <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={maintainPressure} />
+                        </div>
+                        <div className='col-12'>
+                            <hr/>
+                        </div>
+                        <div className="col-6">
+                            <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
+                        </div>
+                        <div className="col-6">
+                            <GeneralNumberInput headerName="Ciljno vrijeme" disabled={disabledInput} inputValue={targetTime} />
+                            <GeneralNumberInput headerName="Ciljni F" disabled={disabledInput} inputValue={targetF} />
+                        </div>
+                    </div>
+                </Dialog>
             </div>
-        </Dialog>
-    </div>
-</div>
-
-            </Dialog>            
+        </div>
+        </Dialog>            
         <div className="col-4">
             {/* Control Relays */}            
             <div className="card f-height border-green-600">
