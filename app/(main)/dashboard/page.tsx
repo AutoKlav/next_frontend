@@ -63,10 +63,10 @@ const DashboardPage = () => {
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
+        
+    const [bacteria, setBacteria] = useState('');
+    const [description, setDescription] = useState('');
     
-    const bacteria = React.useRef<string>('');
-    const description = React.useRef<string>('');
-
     const customTemp = React.useRef<number>(0);
     const finishTemp = React.useRef<number>(0);
     const maintainPressure = React.useRef<number>(0);    
@@ -81,8 +81,8 @@ const DashboardPage = () => {
         
         setProductQuantity('');
         setProductName('');
-        bacteria.current = '';
-        description.current = '';
+        setBacteria('');        
+        setDescription('');
         
         //#region modeDropdown
         customTemp.current = 0;
@@ -197,6 +197,7 @@ const DashboardPage = () => {
         processTypes();
     }, []);
 
+    // Set default values for custom process types
     useEffect(() => {
         
         if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
@@ -320,9 +321,9 @@ const DashboardPage = () => {
                 },
                 processInfo: {
                     productName: productName,
-                    bacteria: bacteria.current,
+                    bacteria: bacteria,
                     targetF: targetF.current.toString(),
-                    description: description.current,
+                    description: description,
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
@@ -363,11 +364,11 @@ const DashboardPage = () => {
                     <div className="grid">
                         <div className="col-6">                                    
                             <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
-                            <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>                    
+                            <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={[bacteria, setBacteria]} suggestions={processSuggestions?.bacteria}/>                    
                         </div>                
                         <div className="col-6">
                             <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                            <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>                    
+                            <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={[description, setDescription]} suggestions={processSuggestions?.description}/>                    
                         </div>
                         <div className='col-12'>
                             <hr/>
