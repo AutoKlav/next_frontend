@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -57,6 +57,7 @@ const DashboardPage = () => {
 
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
+    // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
     
     //#region  Modal inputs    
@@ -368,8 +369,11 @@ const DashboardPage = () => {
                             <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
                         </div>
                         <div className="col-6">
-                            <GeneralNumberInput headerName="Ciljno vrijeme" disabled={disabledInput} inputValue={targetTime} />
-                            <GeneralNumberInput headerName="Ciljni F" disabled={disabledInput} inputValue={targetF} />
+                            {modeDropdown?.id === ProcessConfigMode.TARGETF ?
+                                <GeneralNumberInput headerName="Ciljni F" disabled={disabledInput} inputValue={targetF} />
+                            :
+                                <GeneralNumberInput headerName="Ciljno vrijeme" disabled={disabledInput} inputValue={targetTime} />
+                            }
                         </div>
                     </div>
                 </Dialog>
