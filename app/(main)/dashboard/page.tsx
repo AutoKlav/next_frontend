@@ -196,6 +196,18 @@ const DashboardPage = () => {
     useEffect(() => {
         processTypes();
     }, []);
+
+    useEffect(() => {
+        
+        if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
+            typeDropdown?.id === ProcessConfigType.PASTERIZATION)
+        {
+            customTemp.current = typeDropdown?.customtemp || 0;
+            finishTemp.current = typeDropdown?.finishtemp || 0;
+            maintainTemp.current = typeDropdown?.maintaintemp || 0;
+            maintainPressure.current = typeDropdown?.maintainpressure || 0;
+        }
+    }, [typeDropdown]);
     
     // Debounce the name and quantity filter mode after changed
     useEffect(() => {
