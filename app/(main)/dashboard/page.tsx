@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -48,29 +48,32 @@ const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
     const refetchInterval = 10000;    
-    const debounceInterval = 3000;
+    const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
-        { id: 0, name: 'Meta f' },
-        { id: 1, name: 'Meta t' },
+        { id: 0, name: 'Target F' },
+        { id: 1, name: 'Target T' },
     ];
 
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
+    // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
-    console.log('Type dropdown:', typeDropdown);
+    
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
+        
+    const [bacteria, setBacteria] = useState('');
+    const [description, setDescription] = useState('');
+        
+    const [customTemp, setCustomTemp] = useState<number>(0);    
+    const [finishTemp, setFinishTemp] = useState<number>(0);
     
-    const bacteria = React.useRef<string>('');
-    const description = React.useRef<string>('');
-
-    const customTemp = React.useRef<number>(-1);
-    const finishTemp = React.useRef<number>(-1);
-    const maintainPressure = React.useRef<number>(-1);    
-    const maintainTemp = React.useRef<number>(0);
-    const targetF = React.useRef<string>('');
+    const [maintainPressure, setMaintainPressure] = useState<number>(0);  
+    const [maintainTemp, setMaintainTemp] = useState<number>(0);
+    
+    const targetF = React.useRef<number>(0);
     const targetTime = React.useRef<number>(0);
 
     const fetchedTypes = useRef<ProcessType[]>();
@@ -80,16 +83,20 @@ const DashboardPage = () => {
         
         setProductQuantity('');
         setProductName('');
-        bacteria.current = '';
-        description.current = '';
+        setBacteria('');        
+        setDescription('');
         
-        customTemp.current = -1;
-        finishTemp.current = -1;
-        maintainPressure.current = -1;
-        maintainTemp.current = -1;
+        //#region modeDropdown        
+        setCustomTemp(0);        
+        setFinishTemp(0);
+        setMaintainPressure(0);        
+        setMaintainTemp(0);
+        //#endregion
         
-        targetF.current = '';
+        //#region typeDropdown
+        targetF.current = 0;
         targetTime.current = 0;
+        //#endregion
     }
 
     const { mutate: stopProcess } = useMutation({
@@ -154,15 +161,21 @@ const DashboardPage = () => {
                 return;                
             }
 
-            if (data?.targetFValues && data?.targetFValues.length > 0 || 
-                data?.processLengthValues && data?.processLengthValues.length > 0) {
-                targetF.current = data.targetFValues[0].toString();
-                targetTime.current = Number(data.processLengthValues[0]);
-                console.log('Target time:', targetTime.current);
-                console.log('Target F:', targetF.current);
-            }                        
+            console.log('1Mode1', data.processlengthvaluesList[0]);
+
+            if(data.processlengthvaluesList[0] !== undefined){
+                targetF.current = Number(data.targetfvaluesList[0]);                
+            }
+
+            if(data.targetfvaluesList[0] !== undefined){
+                targetTime.current = Number(data.processlengthvaluesList[0]);            
+            }
+            
         },
     });
+    
+    console.log('Target time:', targetTime);
+    console.log('Target F:', targetF);
 
     const { mutate: processTypes } = useMutation({
         mutationFn: getProcessTypesAction,
@@ -185,6 +198,29 @@ const DashboardPage = () => {
     useEffect(() => {
         processTypes();
     }, []);
+
+    // Set default values for custom process types
+    useEffect(() => {
+        
+        if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
+            typeDropdown?.id === ProcessConfigType.PASTERIZATION)
+        {            
+            setCustomTemp(typeDropdown?.customtemp || 0);            
+            setFinishTemp(typeDropdown?.finishtemp || 0);            
+            setMaintainTemp(typeDropdown?.maintaintemp || 0);            
+            setMaintainPressure(typeDropdown?.maintainpressure || 0);
+        }
+
+        if(typeDropdown?.id === ProcessConfigType.CUSTOM){
+            setCustomTemp(0);
+            setFinishTemp(0);
+            setMaintainTemp(0);
+            setMaintainPressure(0);
+
+            targetF.current = 0;
+            targetTime.current = 0;
+        }
+    }, [typeDropdown]);
     
     // Debounce the name and quantity filter mode after changed
     useEffect(() => {
@@ -276,30 +312,30 @@ const DashboardPage = () => {
             
             if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
                 typeDropdown?.id === ProcessConfigType.PASTERIZATION)
-            {
-                customTemp.current = typeDropdown?.customtemp || -1;
-                finishTemp.current = typeDropdown?.finishtemp || -1;
-                maintainTemp.current = typeDropdown?.maintaintemp || -1;
-                maintainPressure.current = typeDropdown?.maintainpressure || -1;
+            {                
+                setCustomTemp(typeDropdown?.customtemp || 0);                
+                setFinishTemp(typeDropdown?.finishtemp || 0);                
+                setMaintainTemp(typeDropdown?.maintaintemp || 0);
+                setMaintainPressure(typeDropdown?.maintainpressure || 0);
             }
             const parsedType = getProcessConfigTypeById(typeDropdown?.id);
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
             const request: StartProcessRequest = {                
                 processConfig: {                                    
-                    customTemp: customTemp.current,
-                    finishTemp: finishTemp.current,
-                    maintainPressure: maintainPressure.current,
-                    maintainTemp: maintainTemp.current,
+                    customTemp: customTemp,
+                    finishTemp: finishTemp,
+                    maintainPressure: maintainPressure,
+                    maintainTemp: maintainTemp,
                     mode: parsedMode,
                     targetTime: targetTime.current,
                     type: parsedType,
                 },
                 processInfo: {
                     productName: productName,
-                    bacteria: bacteria.current,
-                    targetF: targetF.current,
-                    description: description.current,
+                    bacteria: bacteria,
+                    targetF: targetF.current.toString(),
+                    description: description,
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
@@ -322,40 +358,60 @@ const DashboardPage = () => {
         setModalVisibility(true);
     }
 
+    const disabledInput = typeDropdown?.id !== ProcessConfigType.CUSTOM;
+
     const footerContent = (
         <div>
             <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
             <Button label="Unesi podatke" icon="pi pi-check" onClick={handleStartProcess} autoFocus />
         </div>
-    );        
-    
+    );
+
     return (
         <div className="grid p-2">
             <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
             <div className="m-0">
-    <div className="grid p-2">
-        <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
-            <div className="grid">
-                <div className="col-6">                                    
-                    <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
-                    <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={bacteria} suggestions={processSuggestions?.bacteria}/>
-                    <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={description} suggestions={processSuggestions?.description}/>
-                    <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
-                    <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
-                </div>
-                <div className="col-6">
-                    <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                    <GeneralNumberInput headerName="Održavanje tlaka" inputValue={maintainPressure} />
-                    <GeneralNumberInput headerName="Ciljna temperaturu" inputValue={customTemp} />
-                    <GeneralNumberInput headerName="Završna temperaturu" disabled={true} inputValue={finishTemp} />
-                    <GeneralNumberInput headerName="Održavanje temperature" disabled={true} inputValue={maintainTemp} />                    
-                </div>
+            <div className="grid p-2">
+                <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                    <div className="grid">
+                        <div className="col-6">                                    
+                            <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
+                            <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={[bacteria, setBacteria]} suggestions={processSuggestions?.bacteria}/>                    
+                        </div>                
+                        <div className="col-6">
+                            <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
+                            <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={[description, setDescription]} suggestions={processSuggestions?.description}/>                    
+                        </div>
+                        <div className='col-12'>
+                            <hr/>
+                        </div>
+                        <div className="col-6">                    
+                            <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
+                        </div>
+                        <div className="col-6">
+                            <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
+                            <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />                    
+                            <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
+                            <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={[maintainPressure, setMaintainPressure]} />
+                        </div>
+                        <div className='col-12'>
+                            <hr/>
+                        </div>
+                        <div className="col-6">
+                            <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
+                        </div>
+                        <div className="col-6">
+                            {modeDropdown?.id === ProcessConfigMode.TARGETF ?
+                                <GeneralNumberInput headerName="Ciljni F" disabled={disabledInput} inputValue={targetF} />
+                            :
+                                <GeneralNumberInput headerName="Ciljno vrijeme" disabled={disabledInput} inputValue={targetTime} />
+                            }
+                        </div>
+                    </div>
+                </Dialog>
             </div>
-        </Dialog>
-    </div>
-</div>
-
-            </Dialog>            
+        </div>
+        </Dialog>            
         <div className="col-4">
             {/* Control Relays */}            
             <div className="card f-height border-green-600">

@@ -20,7 +20,7 @@ const StartProcessDropdown: React.FC<StartProcessDropdownProps> = (props) => {
                     value={getter}
                     onChange={(e) =>  setter(e.value)}
                     optionLabel="name"                    
-                    style={{ borderRadius: '6px', width: '53%', height:'44px' }}
+                    style={{ borderRadius: '6px', height:'44px', width: '73%' }}
                 />
             </div>        
     );
