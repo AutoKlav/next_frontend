@@ -29,7 +29,7 @@ const GeneralStringInput: React.FC<GeneralStringInputProps> = (props) => {
     }
 
     return (        
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-row gap-3 mt-3">
             <div className="flex flex-column gap-2">
                 <label>{headerName}</label>
                 <AutoComplete 

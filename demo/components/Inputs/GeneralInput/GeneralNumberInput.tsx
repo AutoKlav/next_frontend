@@ -11,7 +11,7 @@ interface GeneralNumberInputProps {
 const CalibrationInput: React.FC<GeneralNumberInputProps> = (props) => {
     const {  headerName, inputValue, disabled, placeholder } = props;
     return (        
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-row gap-3 mt-3">
         <div className="flex flex-column gap-2">
             <label>{headerName}</label>
             <InputNumber                
@@ -21,7 +21,7 @@ const CalibrationInput: React.FC<GeneralNumberInputProps> = (props) => {
                 mode="decimal"
                 disabled={disabled}
                 className="p-inputtext-sm"
-                style={{ borderRadius: '13px', width: '110%' }}
+                style={{ borderRadius: '13px', width: '115%' }}
             />
         </div>
     </div>

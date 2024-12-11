@@ -58,7 +58,7 @@ const DashboardPage = () => {
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
-    console.log('Type dropdown:', typeDropdown);
+    
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
