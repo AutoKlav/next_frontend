@@ -99,9 +99,10 @@ export interface ProcessTypesResponse {
 
 // Enum ProcessConfigType
 export enum ProcessConfigType {
+  UNKNOWN = -1,
   STERILIZATION = 0,
   PASTERIZATION = 1,
-  CUSTOM = 2,
+  CUSTOM = 2,  
 }
 
 // Enum ProcessConfigState
@@ -117,6 +118,7 @@ export enum ProcessConfigState {
 
 // Enum ProcessConfigMode
 export enum ProcessConfigMode {
+  UNKNOWN = -1,
   TARGETF = 0,
   TIME = 1,
 }

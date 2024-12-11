@@ -17,6 +17,7 @@ import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStr
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 import { ProcessInfoFields } from '@/types/app';
+import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
@@ -81,10 +82,12 @@ const DashboardPage = () => {
         setProductName('');
         bacteria.current = '';
         description.current = '';
+        
         customTemp.current = -1;
-        finishTemp.current = 0;
-        maintainPressure.current = 0;        
-        maintainTemp.current = 0;
+        finishTemp.current = -1;
+        maintainPressure.current = -1;
+        maintainTemp.current = -1;
+        
         targetF.current = '';
         targetTime.current = 0;
     }
@@ -276,19 +279,21 @@ const DashboardPage = () => {
             {
                 customTemp.current = typeDropdown?.customtemp || -1;
                 finishTemp.current = typeDropdown?.finishtemp || -1;
-                maintainTemp.current = typeDropdown?.maintainpressure || -1;
-                maintainPressure.current = typeDropdown?.maintaintemp || -1;
+                maintainTemp.current = typeDropdown?.maintaintemp || -1;
+                maintainPressure.current = typeDropdown?.maintainpressure || -1;
             }
-            
+            const parsedType = getProcessConfigTypeById(typeDropdown?.id);
+            const parsedMode = getProcessConfigModeById(modeDropdown?.id);
+
             const request: StartProcessRequest = {                
                 processConfig: {                                    
                     customTemp: customTemp.current,
                     finishTemp: finishTemp.current,
                     maintainPressure: maintainPressure.current,
                     maintainTemp: maintainTemp.current,
-                    mode: modeDropdown?.id || -1,
+                    mode: parsedMode,
                     targetTime: targetTime.current,
-                    type: typeDropdown?.id || -1
+                    type: parsedType,
                 },
                 processInfo: {
                     productName: productName,
