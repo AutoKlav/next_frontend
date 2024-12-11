@@ -22,7 +22,6 @@ const HistoryTable = () => {
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
     const chartRef = useRef<any>(null);
 
-
     const router = useRouter()
     const { showError } = useToast();
     
@@ -196,8 +195,8 @@ const HistoryTable = () => {
             const timer = setTimeout(() => setShowChart(false), 1000);
             return () => clearTimeout(timer);
         }
-    }, [showChart]);    
-    console.log("Selected",selectedProcesses);
+    }, [showChart]);
+    
     return (
         <div className="card">
             <h2>Povijest procesa</h2>
