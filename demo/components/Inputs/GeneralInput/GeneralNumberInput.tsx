@@ -8,24 +8,25 @@ interface GeneralNumberInputProps {
     disabled?: boolean;
 }
 
-const CalibrationInput: React.FC<GeneralNumberInputProps> = (props) => {
-    const {  headerName, inputValue, disabled, placeholder } = props;
+const GeneralNumberInput: React.FC<GeneralNumberInputProps> = (props) => {
+    const { headerName, inputValue, disabled, placeholder } = props;
     return (        
         <div className="flex flex-row gap-3 mt-3">
-        <div className="flex flex-column gap-2">
-            <label>{headerName}</label>
-            <InputNumber                
-                defaultValue={inputValue.current} // Clear value on next step
-                onChange={(e) => (inputValue.current = e.value ? e.value : 0)}
-                placeholder={placeholder}
-                mode="decimal"
-                disabled={disabled}
-                className="p-inputtext-sm"
-                style={{ borderRadius: '13px', width: '115%' }}
-            />
+            <div className="flex flex-column gap-2">
+                <label>{headerName}</label>
+                <InputNumber
+                    useGrouping={false} // Avoid using commas for thousands
+                    value={inputValue.current} // Use value instead of defaultValue
+                    onChange={(e) => (inputValue.current = e.value ? e.value : 0)}
+                    placeholder={placeholder}
+                    mode="decimal"
+                    disabled={disabled}
+                    className="p-inputtext-sm"
+                    style={{ borderRadius: '13px', width: '115%' }}
+                />
+            </div>
         </div>
-    </div>
     );
 };
 
-export default CalibrationInput;
+export default GeneralNumberInput;

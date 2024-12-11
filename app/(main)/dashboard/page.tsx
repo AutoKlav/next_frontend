@@ -66,12 +66,12 @@ const DashboardPage = () => {
     const bacteria = React.useRef<string>('');
     const description = React.useRef<string>('');
 
-    const customTemp = React.useRef<number>(-1);
-    const finishTemp = React.useRef<number>(-1);
-    const maintainPressure = React.useRef<number>(-1);    
+    const customTemp = React.useRef<number>(0);
+    const finishTemp = React.useRef<number>(0);
+    const maintainPressure = React.useRef<number>(0);    
     const maintainTemp = React.useRef<number>(0);
-    const targetF = React.useRef<number>(-1);
-    const targetTime = React.useRef<number>(-1);
+    const targetF = React.useRef<number>(0);
+    const targetTime = React.useRef<number>(0);
 
     const fetchedTypes = useRef<ProcessType[]>();
     //#endregion
