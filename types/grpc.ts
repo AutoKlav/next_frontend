@@ -90,7 +90,7 @@ export interface ProcessType {
   customtemp?: number;
   finishtemp?: number;
   maintainpressure?: number;
-  pressure?: number;
+  maintaintemp?: number;
 }
 
 export interface ProcessTypesResponse {
