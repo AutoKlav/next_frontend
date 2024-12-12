@@ -31,5 +31,21 @@ export const formatDateTime = (dateString: string) => {
         year: 'numeric',
     };
 
-    return `${date.toLocaleDateString('en-GB', dateOptions)}, ${date.toLocaleTimeString('en-GB', timeOptions)} `;
+    return `${date.toLocaleTimeString('en-GB', timeOptions)}, ${date.toLocaleDateString('en-GB', dateOptions)}`;
+};
+
+// create method that will convert seconds to hh:mm format
+export const secondsToHms = (input: number) => {
+    if(isNaN(input)) return '0h:0m';
+
+    input = Number(input);
+    const h = Math.floor(input / 3600);
+    const m = Math.floor(input % 3600 / 60);
+    const s = Math.floor(input % 3600 % 60);
+
+    const hDisplay = h > 0 ? String(h).padStart(2, '0') : '00';
+    const mDisplay = m > 0 ? String(m).padStart(2, '0') : '00';
+    //const sDisplay = s > 0 ? String(s).padStart(2, '0') : '00';
+
+    return `${hDisplay}h:${mDisplay}m`;
 };
