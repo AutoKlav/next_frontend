@@ -31,8 +31,8 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
             const parsedData = data?.processlogsList.map((process, index) => {
                 const currentTimestamp = new Date(process.timestamp).getTime();
                 const timeDifference = currentTimestamp - initialTimestamp; // Subtract initial timestamp
-                const adjustedTimestamp = index === 0 ? "0" : `+${index}min`; // Adjust the timestamp format
-    
+                const minutesElapsed = Math.floor(timeDifference / 60000); 
+                const adjustedTimestamp = index === 0 ? "0" : `+${minutesElapsed}min`;
                 return {
                     ...process,
                     processstart: timeDifference, // Store the difference in milliseconds
