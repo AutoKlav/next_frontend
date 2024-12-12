@@ -7,3 +7,12 @@ export enum ProcessInfoFields {
     Description = "description",
     ProcessStart = "processStart"
 }
+
+export interface TransformedData {
+    timestamp: string[];
+    temp: number[];
+    tempk: number[];
+    sumfr: number[];
+    fr: number[];
+    pressure: number[];
+}

@@ -11,14 +11,6 @@ import { updateChartOptions } from "@/utils/chartOptionsUtil";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { transformData, updateChartData } from "@/utils/transformData";
 
-export interface TransformedData {
-    timestamp: string[];
-    temp: number[];
-    tempk: number[];
-    sumfr: number[];
-    fr: number[];
-    pressure: number[];
-}
 interface ChartInfo {    
     id: number;
     title: string;
@@ -31,10 +23,29 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
     const chartRef = useRef<any>(null);
 
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
-        onSuccess: ({ data }) => {            
-            updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
+        onSuccess: ({ data }) => {    
+            // Get the first process start timestamp
+            const initialTimestamp = new Date(data?.processlogsList[0]?.timestamp).getTime();
+            console.log("Initial Timestamp:", initialTimestamp);
+            
+            const parsedData = data?.processlogsList.map((process, index) => {
+                const currentTimestamp = new Date(process.timestamp).getTime();
+                const timeDifference = currentTimestamp - initialTimestamp; // Subtract initial timestamp
+                const minutesElapsed = Math.floor(timeDifference / 60000); 
+                const adjustedTimestamp = index === 0 ? "0" : `+${minutesElapsed}min`;
+                return {
+                    ...process,
+                    processstart: timeDifference, // Store the difference in milliseconds
+                    timestamp: adjustedTimestamp, // Set timestamp as "0" for first, "+1" for second, etc.
+                };
+            });
+            
+            console.log("Parsed Data:", parsedData);
+            updateChartData(transformData({ processlogsList: parsedData }), setChartData);
         },
     });
+    
+    
 
     useEffect(() => {
         getProcessLogMutation({ ids: [chartInfoProps.id], source: "graph" });

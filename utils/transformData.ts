@@ -1,4 +1,4 @@
-import { TransformedData } from "@/demo/components/Charts/MultiYAxisChart";
+import { TransformedData } from "@/types/app";
 
 type Log = {
     timestamp: string;
