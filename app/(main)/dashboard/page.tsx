@@ -329,7 +329,7 @@ const DashboardPage = () => {
             console.log('Proces request', request);
 
             resetInputs();
-            //startProcess(request);
+            startProcess(request);
             setModalVisibility(false);           
             return;
         }
