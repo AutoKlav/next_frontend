@@ -369,7 +369,6 @@ const DashboardPage = () => {
 
     return (
         <div className="grid p-2">
-            <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
             <div className="m-0">
             <div className="grid p-2">
                 <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
@@ -410,8 +409,7 @@ const DashboardPage = () => {
                     </div>
                 </Dialog>
             </div>
-        </div>
-        </Dialog>            
+        </div>            
         <div className="col-4">
             {/* Control Relays */}            
             <div className="card f-height border-green-600">
