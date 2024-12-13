@@ -112,7 +112,7 @@ const DashboardPage = () => {
                 return;
             }
 
-            showSuccess('Proces','Proces je uspješno zaustavljen');
+            showSuccess('Proces','Proces se zaustavlja');
         },
     });
 
