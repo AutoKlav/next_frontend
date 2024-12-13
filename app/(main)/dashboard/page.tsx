@@ -155,28 +155,22 @@ const DashboardPage = () => {
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
         },
         onSuccess: (data) => {
-            console.log('Filtered mode values:', data);
             if(checkForErrors(data)){
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
-
-            console.log('1Mode1', data.processlengthvaluesList[0]);
-
-            if(data.processlengthvaluesList[0] !== undefined){
-                targetF.current = Number(data.targetfvaluesList[0]);                
-            }
-
-            if(data.targetfvaluesList[0] !== undefined){
-                targetTime.current = Number(data.processlengthvaluesList[0]);            
-            }
             
+            if(data?.processlengthvaluesList?.length > 0)
+            {
+                targetTime.current = Number(data?.processlengthvaluesList[0].toString());
+            }
+
+            if(data?.targetfvaluesList?.length > 0){
+                targetF.current = Number(data?.targetfvaluesList[0]);
+            }
         },
     });
     
-    console.log('Target time:', targetTime);
-    console.log('Target F:', targetF);
-
     const { mutate: processTypes } = useMutation({
         mutationFn: getProcessTypesAction,
         onError: (error) => {
@@ -209,16 +203,6 @@ const DashboardPage = () => {
             setFinishTemp(typeDropdown?.finishtemp || 0);            
             setMaintainTemp(typeDropdown?.maintaintemp || 0);            
             setMaintainPressure(typeDropdown?.maintainpressure || 0);
-        }
-
-        if(typeDropdown?.id === ProcessConfigType.CUSTOM){
-            setCustomTemp(0);
-            setFinishTemp(0);
-            setMaintainTemp(0);
-            setMaintainPressure(0);
-
-            targetF.current = 0;
-            targetTime.current = 0;
         }
     }, [typeDropdown]);
     
@@ -386,7 +370,7 @@ const DashboardPage = () => {
                             {modeDropdown?.id === ProcessConfigMode.TARGETF ?
                                 <GeneralNumberInput headerName="Ciljni F" disabled={disabledInput} inputValue={targetF} />
                             :
-                                <GeneralNumberInput headerName="Ciljno vrijeme" disabled={disabledInput} inputValue={targetTime} />
+                                <GeneralNumberInput headerName="Ciljno vrijeme (s)" disabled={disabledInput} inputValue={targetTime} />
                             }
                         </div>
                         <div className="col-12">
