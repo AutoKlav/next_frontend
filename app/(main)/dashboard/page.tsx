@@ -369,49 +369,44 @@ const DashboardPage = () => {
 
     return (
         <div className="grid p-2">
-            <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
             <div className="m-0">
             <div className="grid p-2">
-                <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '50vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '60vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                     <div className="grid">
-                        <div className="col-6">                                    
+                        <div className="col-4">                                    
                             <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
                             <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={[bacteria, setBacteria]} suggestions={processSuggestions?.bacteria}/>                    
                         </div>                
-                        <div className="col-6">
+                        <div className="col-4">
                             <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
                             <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={[description, setDescription]} suggestions={processSuggestions?.description}/>                    
-                        </div>
-                        <div className='col-12'>
-                            <hr/>
-                        </div>
-                        <div className="col-6">                    
-                            <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
-                        </div>
-                        <div className="col-6">
-                            <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
-                            <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />                    
-                            <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
-                            <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={[maintainPressure, setMaintainPressure]} />
-                        </div>
-                        <div className='col-12'>
-                            <hr/>
-                        </div>
-                        <div className="col-6">
+                        </div>                        
+                        <div className="col-4">
                             <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
-                        </div>
-                        <div className="col-6">
                             {modeDropdown?.id === ProcessConfigMode.TARGETF ?
                                 <GeneralNumberInput headerName="Ciljni F" disabled={disabledInput} inputValue={targetF} />
                             :
                                 <GeneralNumberInput headerName="Ciljno vrijeme" disabled={disabledInput} inputValue={targetTime} />
                             }
                         </div>
+                        <div className="col-12">
+                            <hr />
+                        </div>
+                        <div className="col-4">
+                            <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
+                        </div>                        
+                        <div className="col-4">
+                            <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
+                            <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />                    
+                        </div>                        
+                        <div className="col-4">
+                            <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
+                            <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={[maintainPressure, setMaintainPressure]} />
+                        </div>               
                     </div>
                 </Dialog>
             </div>
-        </div>
-        </Dialog>            
+        </div>            
         <div className="col-4">
             {/* Control Relays */}            
             <div className="card f-height border-green-600">
