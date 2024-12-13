@@ -45,8 +45,6 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
         },
     });
     
-    
-
     useEffect(() => {
         getProcessLogMutation({ ids: [chartInfoProps.id], source: "graph" });
         setChartOptions(updateChartOptions("white", "white", chartInfoProps)); // Initial white theme
