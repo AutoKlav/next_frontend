@@ -91,7 +91,7 @@ const DashboardPage = () => {
         setFinishTemp(0);
         setMaintainPressure(0);        
         setMaintainTemp(0);
-        setTypeDropdown(modeDropdownValues[0]);
+        setTypeDropdown(fetchedTypes.current?.[0]);
         //#endregion
         
         //#region typeDropdown
