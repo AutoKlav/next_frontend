@@ -12,12 +12,18 @@ import { getChartInfo } from '@/utils/chartOptionsUtil';
 const ChartPage = () => {
     const { showError } = useToast();
     const { id } = useParams();
+    const refetchInterval = 60000;
 
     const { data: filteredProcessQuery, isLoading: loading, refetch } = useQuery({
         queryKey: ["processesDataQuery", id],
         queryFn: async () => {
             const response = await getProcessesAction();
-                        
+            
+            // If id is 0, return the first process because user wants to see latest
+            if(id === '0'){
+                return [response?.processesList[0]];
+            }
+
             return response?.processesList
             ?.filter((process) => process.id.toString() === id);
         },
@@ -28,6 +34,7 @@ const ChartPage = () => {
             );
             console.log(err);
         },
+        refetchInterval: refetchInterval,
         enabled: !!id, // Ensure the query runs only if id is available
     });      
 
