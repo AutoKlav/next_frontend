@@ -29,28 +29,7 @@ const ChartPage = () => {
             console.log(err);
         },
         enabled: !!id, // Ensure the query runs only if id is available
-    });
-
-    const { data: processesDataQuery, isLoading: processesLoading, refetch: processsRefetch } = useQuery({
-        queryKey: ["processesDataQuery"],
-        queryFn: async () => {
-            const response =  await getProcessesAction();
-            
-            console.log("Processes:", response?.processesList);
-            
-            return response?.processesList?.map((process) => ({
-                ...process,
-                processstart: new Date(process.processstart), // Ensure it's a Date object
-            }));
-        },
-        onError(err) {
-            showError(
-                "Greška",
-                "Nije moguće dohvatiti podatke sa senzora. Provjerite konekciju i pokušajte ponovno."
-            );
-            console.log(err);
-        },
-    });    
+    });      
 
     useEffect(() => {
         if (id) {
