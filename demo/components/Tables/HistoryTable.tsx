@@ -30,8 +30,6 @@ const HistoryTable = () => {
         queryFn: async () => {
             const response =  await getProcessesAction();
             
-            console.log("Processes:", response?.processesList);
-            
             return response?.processesList?.map((process) => ({
                 ...process,
                 processstart: new Date(process.processstart), // Ensure it's a Date object

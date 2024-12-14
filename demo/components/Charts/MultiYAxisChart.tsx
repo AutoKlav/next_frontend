@@ -26,7 +26,6 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
         onSuccess: ({ data }) => {    
             // Get the first process start timestamp
             const initialTimestamp = new Date(data?.processlogsList[0]?.timestamp).getTime();
-            console.log("Initial Timestamp:", initialTimestamp);
             
             const parsedData = data?.processlogsList.map((process, index) => {
                 const currentTimestamp = new Date(process.timestamp).getTime();
@@ -39,8 +38,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
                     timestamp: adjustedTimestamp, // Set timestamp as "0" for first, "+1" for second, etc.
                 };
             });
-            
-            console.log("Parsed Data:", parsedData);
+            console.log("Parsed data:", parsedData);      
             updateChartData(transformData({ processlogsList: parsedData }), setChartData);
         },
     });
