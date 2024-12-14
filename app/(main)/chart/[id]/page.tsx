@@ -12,12 +12,18 @@ import { getChartInfo } from '@/utils/chartOptionsUtil';
 const ChartPage = () => {
     const { showError } = useToast();
     const { id } = useParams();
+    const refetchInterval = 60000; // 10 seconds
 
     const { data: filteredProcessQuery, isLoading: loading, refetch } = useQuery({
         queryKey: ["processesDataQuery", id],
         queryFn: async () => {
             const response = await getProcessesAction();
-                        
+            
+            // If id is 0, return the first process because user wants to see latest
+            if(id === '0'){
+                return [response?.processesList[0]];
+            }
+
             return response?.processesList
             ?.filter((process) => process.id.toString() === id);
         },
@@ -28,8 +34,9 @@ const ChartPage = () => {
             );
             console.log(err);
         },
+        
         enabled: !!id, // Ensure the query runs only if id is available
-    });
+    });      
 
     useEffect(() => {
         if (id) {
@@ -48,7 +55,7 @@ const ChartPage = () => {
                     <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
                 </div>
             ) : 
-                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} />
+                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval}/>
             }
             </div>
         </div>
