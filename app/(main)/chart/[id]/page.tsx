@@ -12,7 +12,7 @@ import { getChartInfo } from '@/utils/chartOptionsUtil';
 const ChartPage = () => {
     const { showError } = useToast();
     const { id } = useParams();
-    const refetchInterval = 60000;
+    const refetchInterval = 10000; // 10 seconds
 
     const { data: filteredProcessQuery, isLoading: loading, refetch } = useQuery({
         queryKey: ["processesDataQuery", id],
@@ -34,7 +34,7 @@ const ChartPage = () => {
             );
             console.log(err);
         },
-        refetchInterval: refetchInterval,
+        
         enabled: !!id, // Ensure the query runs only if id is available
     });      
 
@@ -55,7 +55,7 @@ const ChartPage = () => {
                     <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
                 </div>
             ) : 
-                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} />
+                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval}/>
             }
             </div>
         </div>
