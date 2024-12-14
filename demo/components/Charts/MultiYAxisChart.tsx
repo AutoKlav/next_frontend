@@ -35,6 +35,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
             });
             console.log("Parsed data:", parsedData);
             updateChartData(transformData({ processlogsList: parsedData }), setChartData);
+            return parsedData; // Ensure the query function returns the parsed data
         },
         refetchInterval: chartInfoProps.refetchInterval ? chartInfoProps.refetchInterval : false,
     });
@@ -42,7 +43,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
     useEffect(() => {
         refetch();
         setChartOptions(updateChartOptions("white", "white", chartInfoProps)); // Initial white theme
-    }, []);
+    }, [chartInfoProps.id, refetch]);
     
     return (
         <div className="card">

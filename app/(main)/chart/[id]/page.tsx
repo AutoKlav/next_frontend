@@ -12,7 +12,7 @@ import { getChartInfo } from '@/utils/chartOptionsUtil';
 const ChartPage = () => {
     const { showError } = useToast();
     const { id } = useParams();
-    const refetchInterval = 10000; // 10 seconds
+    const refetchInterval = 60000; // 10 seconds
 
     const { data: filteredProcessQuery, isLoading: loading, refetch } = useQuery({
         queryKey: ["processesDataQuery", id],
