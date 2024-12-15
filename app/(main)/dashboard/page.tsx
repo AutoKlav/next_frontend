@@ -77,6 +77,7 @@ const DashboardPage = () => {
     const targetTime = React.useRef<number>(0);
 
     const fetchedTypes = useRef<ProcessType[]>();
+
     //#endregion
     
     const resetInputs = () => {
@@ -292,9 +293,14 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {               
-        if(state === 0){
-            
+    const handleStartProcess = () => {
+
+        if(productName === '' || productQuantity === '' || bacteria === '' || description === '') {
+            showWarn('Proces','Molimo unesite sve podatke');
+            return;
+        }
+
+        if(state === 0){            
             if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
                 typeDropdown?.id === ProcessConfigType.PASTERIZATION)
             {                
