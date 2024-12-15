@@ -166,7 +166,7 @@ const DashboardPage = () => {
             {
                 targetTime.current = Number(data?.processlengthvaluesList[0].toString());
             }
-            else{
+            else {
                 targetTime.current = 0;
             }
 
@@ -325,13 +325,13 @@ const DashboardPage = () => {
                     maintainPressure: maintainPressure,
                     maintainTemp: maintainTemp,
                     mode: parsedMode,
-                    targetTime: targetTime.current,
+                    targetTime: isNaN(targetTime.current) ? 0 : targetTime.current,
                     type: parsedType,
                 },
                 processInfo: {
                     productName: productName,
                     bacteria: bacteria,
-                    targetF: targetF.current.toString(),
+                    targetF: isNaN(targetF.current) ? '0' : targetF.current.toString(),
                     description: description,
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
