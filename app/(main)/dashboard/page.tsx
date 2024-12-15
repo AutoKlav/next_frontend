@@ -161,11 +161,16 @@ const DashboardPage = () => {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
-            
+            console.log('Filtered values:', data.processlengthvaluesList);
             if(data?.processlengthvaluesList?.length > 0)
             {
-                const value = Number(data?.processlengthvaluesList[0].toString());
-                targetTime.current = isNaN(value) ? 0 : value;
+                // Array can contain strings, convert to numbers and filter out NaN values
+                const latestValidNumber = data?.processlengthvaluesList 
+                    .map(val => Number(val))
+                    .filter(val => !isNaN(val))
+                    [0]; // Pick first most updated element from list
+                
+                targetTime.current = latestValidNumber;
             }
             else {
                 targetTime.current = 0;
