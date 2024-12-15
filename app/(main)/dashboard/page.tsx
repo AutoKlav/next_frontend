@@ -164,14 +164,16 @@ const DashboardPage = () => {
             
             if(data?.processlengthvaluesList?.length > 0)
             {
-                targetTime.current = Number(data?.processlengthvaluesList[0].toString());
+                const value = Number(data?.processlengthvaluesList[0].toString());
+                targetTime.current = isNaN(value) ? 0 : value;
             }
             else {
                 targetTime.current = 0;
             }
 
             if(data?.targetfvaluesList?.length > 0){
-                targetF.current = Number(data?.targetfvaluesList[0]);
+                const value = Number(data?.targetfvaluesList[0]);
+                targetF.current = isNaN(value) ? 0 : value;
             }
             else{
                 targetF.current = 0;
@@ -338,7 +340,7 @@ const DashboardPage = () => {
                     processLength: 'Proces nije završen',
                 },
             };
-            console.log('Proces request', request);
+            console.log('Proces request', request);        
 
             resetInputs();
             startProcess(request);
@@ -349,7 +351,7 @@ const DashboardPage = () => {
         setModalVisibility(false);            
         showWarn('Proces','Proces je već pokrenut');
     };
-
+    
     const handleOpenDialog = () => {
         getSuggestions();
         setModalVisibility(true);
