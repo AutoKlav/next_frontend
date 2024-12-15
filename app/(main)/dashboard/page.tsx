@@ -170,7 +170,7 @@ const DashboardPage = () => {
                     .filter(val => !isNaN(val))
                     [0]; // Pick first most updated element from list
                 
-                targetTime.current = latestValidNumber;
+                targetTime.current = latestValidNumber || 0;
             }
             else {
                 targetTime.current = 0;
