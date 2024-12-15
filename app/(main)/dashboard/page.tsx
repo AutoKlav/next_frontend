@@ -88,10 +88,10 @@ const DashboardPage = () => {
         setDescription('');
         
         //#region modeDropdown        
-        setCustomTemp(0);        
-        setFinishTemp(0);
-        setMaintainPressure(0);        
-        setMaintainTemp(0);
+        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 0);        
+        setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
+        setMaintainPressure(fetchedTypes.current?.[0]?.maintainpressure || 0);        
+        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         //#endregion
         
@@ -100,6 +100,8 @@ const DashboardPage = () => {
         targetTime.current = 0;
         //#endregion
     }
+
+    console.log(fetchedTypes.current);
 
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
@@ -166,9 +168,15 @@ const DashboardPage = () => {
             {
                 targetTime.current = Number(data?.processlengthvaluesList[0].toString());
             }
+            else{
+                targetTime.current = 0;
+            }
 
             if(data?.targetfvaluesList?.length > 0){
                 targetF.current = Number(data?.targetfvaluesList[0]);
+            }
+            else{
+                targetF.current = 0;
             }
         },
     });
