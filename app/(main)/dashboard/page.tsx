@@ -77,6 +77,7 @@ const DashboardPage = () => {
     const targetTime = React.useRef<number>(0);
 
     const fetchedTypes = useRef<ProcessType[]>();
+
     //#endregion
     
     const resetInputs = () => {
@@ -87,10 +88,10 @@ const DashboardPage = () => {
         setDescription('');
         
         //#region modeDropdown        
-        setCustomTemp(0);        
-        setFinishTemp(0);
-        setMaintainPressure(0);        
-        setMaintainTemp(0);
+        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 0);        
+        setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
+        setMaintainPressure(fetchedTypes.current?.[0]?.maintainpressure || 0);        
+        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         //#endregion
         
@@ -163,11 +164,24 @@ const DashboardPage = () => {
             
             if(data?.processlengthvaluesList?.length > 0)
             {
-                targetTime.current = Number(data?.processlengthvaluesList[0].toString());
+                // Array can contain strings, convert to numbers and filter out NaN values
+                const latestValidNumber = data?.processlengthvaluesList 
+                    .map(val => Number(val))
+                    .filter(val => !isNaN(val))
+                    [0]; // Pick first most updated element from list
+                
+                targetTime.current = latestValidNumber || 0;
+            }
+            else {
+                targetTime.current = 0;
             }
 
             if(data?.targetfvaluesList?.length > 0){
-                targetF.current = Number(data?.targetfvaluesList[0]);
+                const value = Number(data?.targetfvaluesList[0]);
+                targetF.current = isNaN(value) ? 0 : value;
+            }
+            else{
+                targetF.current = 0;
             }
         },
     });
@@ -292,9 +306,14 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {               
-        if(state === 0){
-            
+    const handleStartProcess = () => {
+
+        if(productName === '' || productQuantity === '' || bacteria === '' || description === '') {
+            showWarn('Proces','Molimo unesite sve podatke');
+            return;
+        }
+
+        if(state === 0){            
             if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
                 typeDropdown?.id === ProcessConfigType.PASTERIZATION)
             {                
@@ -313,20 +332,20 @@ const DashboardPage = () => {
                     maintainPressure: maintainPressure,
                     maintainTemp: maintainTemp,
                     mode: parsedMode,
-                    targetTime: targetTime.current,
+                    targetTime: isNaN(targetTime.current) ? 0 : targetTime.current,
                     type: parsedType,
                 },
                 processInfo: {
                     productName: productName,
                     bacteria: bacteria,
-                    targetF: targetF.current.toString(),
+                    targetF: isNaN(targetF.current) ? '0' : targetF.current.toString(),
                     description: description,
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
                 },
             };
-            console.log('Proces request', request);
+            console.log('Proces request', request);        
 
             resetInputs();
             startProcess(request);
@@ -337,7 +356,7 @@ const DashboardPage = () => {
         setModalVisibility(false);            
         showWarn('Proces','Proces je već pokrenut');
     };
-
+    
     const handleOpenDialog = () => {
         getSuggestions();
         setModalVisibility(true);

@@ -3587,7 +3587,7 @@ proto.autoklav.ProcessConfig.deserializeBinaryFromReader = function(msg, reader)
       msg.setMode(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readUint32());
+      var value = /** @type {number} */ (reader.readUint64());
       msg.setTargettime(value);
       break;
     case 5:
@@ -3654,7 +3654,7 @@ proto.autoklav.ProcessConfig.serializeBinaryToWriter = function(message, writer)
   }
   f = message.getTargettime();
   if (f !== 0) {
-    writer.writeUint32(
+    writer.writeUint64(
       4,
       f
     );
@@ -3738,7 +3738,7 @@ proto.autoklav.ProcessConfig.prototype.setMode = function(value) {
 
 
 /**
- * optional uint32 targetTime = 4;
+ * optional uint64 targetTime = 4;
  * @return {number}
  */
 proto.autoklav.ProcessConfig.prototype.getTargettime = function() {
