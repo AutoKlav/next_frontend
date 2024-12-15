@@ -161,7 +161,7 @@ const DashboardPage = () => {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }
-            console.log('Filtered values:', data.processlengthvaluesList);
+            
             if(data?.processlengthvaluesList?.length > 0)
             {
                 // Array can contain strings, convert to numbers and filter out NaN values
