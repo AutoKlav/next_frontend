@@ -101,8 +101,6 @@ const DashboardPage = () => {
         //#endregion
     }
 
-    console.log(fetchedTypes.current);
-
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
         onError: (error) => {
