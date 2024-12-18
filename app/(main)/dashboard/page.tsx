@@ -129,6 +129,7 @@ const DashboardPage = () => {
             onSuccess: (data) => {                
                 if(checkForErrors(data)){
                     showError('Proces','Greška prilikom pokretanja procesa', 500);
+                    fetchedTypes.current = [];
                     return;
                 }
             },
@@ -359,9 +360,14 @@ const DashboardPage = () => {
     };
     
     const handleOpenDialog = () => {
-        console.log('Fetched types:', fetchedTypes.current);
-        if(fetchedTypes.current?.length === undefined){
-            showWarn('Proces','Nema dostupnih tipova procesa');
+        if(state !== 0){
+            showWarn('Proces','Proces je već pokrenut');
+            return;
+        }
+
+        if(fetchedTypes.current === undefined || fetchedTypes.current.length === 0){
+            processTypes();
+            showWarn('Proces','Nema dostupnih tipova procesa, molimo pokušajte ponovno');
             return;
         }
 
