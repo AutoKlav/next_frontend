@@ -228,6 +228,7 @@ const DashboardPage = () => {
                 productName: productName,
                 productQuantity: productQuantity
             });
+            processTypes();
         }, debounceInterval); // 3 seconds debounce
 
         // Cleanup the timeout if productName or productQuantity changes before the timeout completes
