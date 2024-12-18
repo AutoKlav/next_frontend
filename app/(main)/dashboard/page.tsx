@@ -307,7 +307,7 @@ const DashboardPage = () => {
     relayMapper[4].value = relaySensorValues?.inpressure || 0;
     relayMapper[5].value = relaySensorValues?.waterfill || 0;
 
-    const handleStartProcess = () => {
+    const handleStartProcess = () => {        
 
         if(productName === '' || productQuantity === '' || bacteria === '' || description === '') {
             showWarn('Proces','Molimo unesite sve podatke');
@@ -359,6 +359,12 @@ const DashboardPage = () => {
     };
     
     const handleOpenDialog = () => {
+        console.log('Fetched types:', fetchedTypes.current);
+        if(fetchedTypes.current?.length === undefined){
+            showWarn('Proces','Nema dostupnih tipova procesa');
+            return;
+        }
+
         getSuggestions();
         setModalVisibility(true);
     }
