@@ -10,6 +10,7 @@ import { getProcessLogsAction } from "@/app/(main)/api/actions";
 import { updateChartOptions } from "@/utils/chartOptionsUtil";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { transformData, updateChartData } from "@/utils/transformData";
+import { formatTime } from "@/utils/dateUtil";
 
 interface ChartInfo {    
     id: number;
@@ -30,7 +31,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
             const parsedData = data?.processlogsList?.map((process, index) => {
                 return {
                     ...process,
-                    timestamp: index === 0 ? "0" : `+${index}min`,
+                    timestamp: index === 0 ? formatTime(process.timestamp) : `+${index}min`,
                 };
             });
             console.log("Parsed data:", parsedData);

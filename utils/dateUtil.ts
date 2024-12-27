@@ -34,6 +34,24 @@ export const formatDateTime = (dateString: string) => {
     return `${date.toLocaleTimeString('en-GB', timeOptions)}, ${date.toLocaleDateString('en-GB', dateOptions)}`;
 };
 
+/**
+ * Formats a given date string into a 24-hour time format.
+ * @param dateString - The date string to be formatted.
+ * @returns The formatted time string in the format "HH:mm".
+ */
+export const formatTime = (dateString: string) => {
+    const date = new Date(dateString);
+
+    const timeOptions: Intl.DateTimeFormatOptions = {
+        hour: '2-digit',
+        minute: '2-digit', 
+        second: '2-digit',       
+        hour12: false, // Ensure 24-hour format
+    };
+
+    return date.toLocaleTimeString('en-GB', timeOptions);
+};
+
 // create method that will convert seconds to hh:mm format
 export const secondsToHms = (input: number) => {
     if(isNaN(input)) return '0h:0m';
