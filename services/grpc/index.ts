@@ -1,4 +1,5 @@
 import {
+  BacteriaList,
   FilteredModeProcessList,
   FilteredProcessList,
   ProcessFilterRequest,
@@ -123,6 +124,12 @@ export const getAllProcessTypes = () => {
   const data = new Messages.Empty();
 
   return gRpcCall<ProcessTypesResponse>("getAllProcessTypes", data);
+}
+
+export const getBacteria = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<BacteriaList>("getBacteria", data);
 }
 
 export const getFilteredModeValues = (filterModeRequest: ProcessFilterRequest) => {

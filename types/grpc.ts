@@ -35,15 +35,26 @@ export interface SensorValues {
   temp: number;
   tempk: number;
   pressure: number;
+  steampressure: number;
+  waterlevel: number;
+  doorclosed: number;
+  burnerfault: number;
+  watershortage: number;
 }
 
 export interface SensorRelayValues {
-  waterfill: number;
-  heating: number;
-  bypass: number;
-  pump: number;
-  inpressure: number;
+  fillTankWithWater: number;
   cooling: number;
+  tankHeating: number;
+  coolingHelper: number;
+  autoklavFill: number;
+  waterDrain: number;
+  heating: number;
+  pump: number;
+  electricHeating: number;
+  increasePressure: number;
+  extensionCooling: number;
+  alarmSignal: number;
 }
 
 // StateMachineValues message
@@ -97,6 +108,18 @@ export interface ProcessTypesResponse {
   processtypesList: ProcessType[];
 }
 
+export interface Bacteria {
+  id: number;
+  name: string;
+  description: string;
+  d0: number;
+  z: number;
+}
+
+export interface BacteriaList {
+  bacterialist: Bacteria;
+}
+
 // Enum ProcessConfigType
 export enum ProcessConfigType {
   UNKNOWN = -1,
@@ -138,7 +161,8 @@ export interface ProcessConfig {
 export interface ProcessInfo {
   productName: string;
   productQuantity: string;
-  bacteria: string;
+  batchLTO: string;
+  bacteria: Bacteria;
   description: string;
   processStart: string;
   targetF: string;

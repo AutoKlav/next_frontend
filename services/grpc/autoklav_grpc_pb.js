@@ -4,6 +4,17 @@
 var grpc = require('@grpc/grpc-js');
 var services_grpc_autoklav_pb = require('../../services/grpc/autoklav_pb.js');
 
+function serialize_autoklav_BacteriaList(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.BacteriaList)) {
+    throw new Error('Expected argument of type autoklav.BacteriaList');
+  }
+  return Buffer.from(arg.serializeBinary());
+}
+
+function deserialize_autoklav_BacteriaList(buffer_arg) {
+  return services_grpc_autoklav_pb.BacteriaList.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_autoklav_Empty(arg) {
   if (!(arg instanceof services_grpc_autoklav_pb.Empty)) {
     throw new Error('Expected argument of type autoklav.Empty');
@@ -394,6 +405,18 @@ getSensorValues: {
     requestDeserialize: deserialize_autoklav_UpdateSensorRequest,
     responseSerialize: serialize_autoklav_Status,
     responseDeserialize: deserialize_autoklav_Status,
+  },
+  // Bacteria
+getBacteria: {
+    path: '/autoklav.Autoklav/getBacteria',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.Empty,
+    responseType: services_grpc_autoklav_pb.BacteriaList,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_BacteriaList,
+    responseDeserialize: deserialize_autoklav_BacteriaList,
   },
   // StateMachine
 getStateMachineValues: {
