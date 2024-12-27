@@ -169,6 +169,16 @@ export interface ProcessInfo {
   processLength: string;
 }
 
+export interface ProcessInfoGraphView {
+  id: number;
+  batchlto: string;
+  bacteria: Bacteria;
+  productname?: string;
+  productquantity?: string;
+  processstart?: string;
+  processlength?: string;
+};
+
 export interface ProcessSuggestions {
   productName?: string[];
   productQuantity?: string[];
