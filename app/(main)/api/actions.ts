@@ -1,6 +1,6 @@
 "use server"
 
-import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
 import { ProcessFilterRequest, ProcessTypeRequest, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
 
@@ -59,6 +59,11 @@ export const getProcessLogsAction = async ({ids, source} : {ids: number[], sourc
 export const getProcessTypesAction = async () => {
     const processTypes = await getAllProcessTypes();    
     return processTypes;
+}
+
+export const getBacteriaAction = async () => {
+    const bacteria = await getBacteria();
+    return bacteria;
 }
 
 // TODO not tested

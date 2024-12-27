@@ -1,5 +1,6 @@
 import { ChartOptions } from "chart.js";
 import { formatDateTime, secondsToHms } from "./dateUtil";
+import { Bacteria, ProcessInfoGraphView } from "@/types/grpc";
 
 export interface TitleInfo {
   id: number;
@@ -91,7 +92,7 @@ export const updateChartOptions = (
       grid: { color: gridColor },
     },
     y: {
-      ticks: { color: textColor, stepSize: 10 },
+      ticks: { color: textColor, stepSize: 5 },
       grid: { color: gridColor },
       min: 0,
     },
@@ -104,16 +105,6 @@ export const updateChartOptions = (
   },
 });
 
-type Process = {
-  id: number;
-  productname?: string;
-  productquantity?: string;
-  processstart?: string;
-  processlength?: string;
-  bacteria?: string;
-  description?: string;
-};
-
 type ChartInfo = {
   id: number;
   title: string;
@@ -125,7 +116,7 @@ type ChartInfo = {
  * @param process - The process object.
  * @returns The chart information object.
  */
-export const getChartInfo = (process: Process | null | undefined): ChartInfo => {
+export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): ChartInfo => {
   if (!process) {
       return { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
   }
@@ -142,8 +133,9 @@ export const getChartInfo = (process: Process | null | undefined): ChartInfo => 
           `Trajanje: ${formattedLength ?? "[]"}`,
       ].join(" | "),
       subtitle: [
-          `Bakterija: ${process.bacteria ?? "[Ime bakterije]"}`,
-          `Opis: ${process.description ?? "[Opis]"}`,
+          `Bakterija: ${process.bacteria.name ?? "[Ime bakterije]"}`,
+          `Opis: ${process.bacteria.description ?? "[Opis]"}`,
+          `Broj sarže: ${process.batchlto ?? "[LTO01]"}`,
       ].join(" | "),
   };
 };

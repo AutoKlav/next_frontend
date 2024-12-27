@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { Bacteria, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -207,7 +207,7 @@ const DashboardPage = () => {
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
-    }, []);
+    }, [processTypes]);
 
     // Set default values for custom process types
     useEffect(() => {
@@ -303,10 +303,7 @@ const DashboardPage = () => {
     
     relayMapper[0].value = relaySensorValues?.cooling || 0;
     relayMapper[1].value = relaySensorValues?.heating || 0;
-    relayMapper[2].value = relaySensorValues?.pump || 0;
-    relayMapper[3].value = relaySensorValues?.bypass || 0;
-    relayMapper[4].value = relaySensorValues?.inpressure || 0;
-    relayMapper[5].value = relaySensorValues?.waterfill || 0;
+    relayMapper[2].value = relaySensorValues?.pump || 0;        
 
     const handleStartProcess = () => {        
 
@@ -327,6 +324,14 @@ const DashboardPage = () => {
             const parsedType = getProcessConfigTypeById(typeDropdown?.id);
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
+            const bacteria: Bacteria = {
+                id: 0,
+                name: '',
+                description: '',
+                d0: 0,
+                z: 0,
+            };
+
             const request: StartProcessRequest = {                
                 processConfig: {                                    
                     customTemp: customTemp,
@@ -339,6 +344,7 @@ const DashboardPage = () => {
                 },
                 processInfo: {
                     productName: productName,
+                    batchLTO: '',
                     bacteria: bacteria,
                     targetF: isNaN(targetF.current) ? '0' : targetF.current.toString(),
                     description: description,

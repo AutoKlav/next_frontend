@@ -32,7 +32,7 @@ const HistoryTable = () => {
             
             return response?.processesList?.map((process) => ({
                 ...process,
-                processstart: new Date(process.processstart), // Ensure it's a Date object
+                processstart: new Date(process.processstart!), // Ensure it's a Date object
             }));
         },
         onError(err) {
