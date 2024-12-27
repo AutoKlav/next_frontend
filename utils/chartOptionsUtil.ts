@@ -92,7 +92,7 @@ export const updateChartOptions = (
       grid: { color: gridColor },
     },
     y: {
-      ticks: { color: textColor, stepSize: 10 },
+      ticks: { color: textColor, stepSize: 5 },
       grid: { color: gridColor },
       min: 0,
     },
