@@ -135,6 +135,7 @@ export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): 
       subtitle: [
           `Bakterija: ${process.bacteria.name ?? "[Ime bakterije]"}`,
           `Opis: ${process.bacteria.description ?? "[Opis]"}`,
+          `Broj sarže: ${process.batchlto ?? "[LTO01]"}`,
       ].join(" | "),
   };
 };

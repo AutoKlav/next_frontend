@@ -202,7 +202,7 @@ export interface ProcessInfoRow {
 
 // ProcessInfoList message
 export interface ProcessInfoList {
-  processesList: ProcessInfoRow[];
+  processesList: ProcessInfoGraphView[];
 }
 
 export interface ProcessTypeRequest {
