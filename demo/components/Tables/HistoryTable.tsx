@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { getChartInfo, updateChartOptions } from "@/utils/chartOptionsUtil";
 import { transformData, updateChartData } from "@/utils/transformData";
 import { handleExportToPDF } from "@/utils/exportUtil";
-import { formatDateTime } from "@/utils/dateUtil";
+import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
 
 const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
@@ -218,7 +218,11 @@ const HistoryTable = () => {
                     header="Datum početka" 
                     body={(rowData) => formatDate(rowData.processstart)} // Format date before displaying
                 />
-                <Column field="processlength" header="Duljina procesa (s)" />
+                <Column 
+                    field="processlength" 
+                    header="Duljina procesa (s)"  
+                    body={(rowData) => secondsToHms(rowData.processlength)} 
+                />
             </DataTable>
 
             {/* Date Filter Dialog */}
