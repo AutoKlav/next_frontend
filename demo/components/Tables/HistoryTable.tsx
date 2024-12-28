@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { getChartInfo, updateChartOptions } from "@/utils/chartOptionsUtil";
 import { transformData, updateChartData } from "@/utils/transformData";
 import { handleExportToPDF } from "@/utils/exportUtil";
+import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
 
 const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
@@ -171,12 +172,8 @@ const HistoryTable = () => {
         setShowDateFilterDialog(false);
     };
 
-    const formatDate = (date: Date) => {
-        return date.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        });
+    const formatDate = (date: Date) => {        
+        return formatDateTime(date.toString());
     };
 
     useEffect(() => {
@@ -221,7 +218,11 @@ const HistoryTable = () => {
                     header="Datum početka" 
                     body={(rowData) => formatDate(rowData.processstart)} // Format date before displaying
                 />
-                <Column field="processlength" header="Duljina procesa (s)" />
+                <Column 
+                    field="processlength" 
+                    header="Duljina procesa (s)"  
+                    body={(rowData) => secondsToHms(rowData.processlength)} 
+                />
             </DataTable>
 
             {/* Date Filter Dialog */}

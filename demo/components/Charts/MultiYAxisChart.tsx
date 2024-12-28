@@ -45,6 +45,11 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
         refetch();
         setChartOptions(updateChartOptions("white", "white", chartInfoProps)); // Initial white theme
     }, [chartInfoProps.id, refetch]);
+
+    const handleExportToPdf = () => {
+        //setChartOptions(updateChartOptions("black", "black", chartInfoProps));
+        handleExportToPDF(chartRef, chartOptions, chartInfoProps);
+    }
     
     return (
         <div className="card">
@@ -55,7 +60,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
             ) : (
                 <>
                     <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-                    <Button label="Export to PDF" onClick={() => handleExportToPDF(chartRef, chartOptions, chartInfoProps)} className="p-button-info mt-5" />
+                    <Button label="Export to PDF" onClick={handleExportToPdf} className="p-button-info mt-5" />
                 </>
             )}            
         </div>
