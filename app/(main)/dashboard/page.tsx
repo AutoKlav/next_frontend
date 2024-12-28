@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getDistinctProcessValuesAction, getFilteredModeValuesAction, getProcessTypesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getBacteriaAction, getDistinctProcessValuesAction, getFilteredModeValuesAction, getProcessTypesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -77,6 +77,7 @@ const DashboardPage = () => {
     const targetTime = React.useRef<number>(0);
 
     const fetchedTypes = useRef<ProcessType[]>();
+    const fetchedBacteria = useRef<Bacteria[]>();
 
     //#endregion
     
@@ -203,11 +204,28 @@ const DashboardPage = () => {
             setTypeDropdown(data?.processtypesList?.[0]);            
         },
     });
+
+    const { mutate: getBacteria } = useMutation({
+        mutationFn: getBacteriaAction,
+        onError: (error) => {
+            console.error('Error stopping process:', error);
+            showError('Proces', 'Greška prilikom dohvaćanja podataka');
+        },
+        onSuccess: (data) => {
+            if(checkForErrors(data)){
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
+                return;                
+            }            
+          
+            fetchedBacteria.current = data.bacteriaList;            
+        },
+    });
     
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
-    }, [processTypes]);
+        getBacteria();
+    }, [processTypes, getBacteria]);
 
     // Set default values for custom process types
     useEffect(() => {

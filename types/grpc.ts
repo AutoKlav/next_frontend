@@ -117,7 +117,7 @@ export interface Bacteria {
 }
 
 export interface BacteriaList {
-  bacterialist: Bacteria;
+  bacteriaList: Bacteria[];
 }
 
 // Enum ProcessConfigType
