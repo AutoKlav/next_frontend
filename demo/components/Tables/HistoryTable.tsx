@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { getChartInfo, updateChartOptions } from "@/utils/chartOptionsUtil";
 import { transformData, updateChartData } from "@/utils/transformData";
 import { handleExportToPDF } from "@/utils/exportUtil";
+import { formatDateTime } from "@/utils/dateUtil";
 
 const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
@@ -171,12 +172,8 @@ const HistoryTable = () => {
         setShowDateFilterDialog(false);
     };
 
-    const formatDate = (date: Date) => {
-        return date.toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-        });
+    const formatDate = (date: Date) => {        
+        return formatDateTime(date.toString());
     };
 
     useEffect(() => {
