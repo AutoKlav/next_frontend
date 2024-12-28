@@ -39,9 +39,14 @@ const relayMapper = [
     { name: 'cooling', label: 'Hlađenje', value: 0 },
     { name: 'heating', label: 'Grijači', value: 0 },
     { name: 'pump', label: 'Pumpa', value: 0 },
-    { name: 'bypass', label: 'Bypass', value: 0 },
-    { name: 'inpressure', label: 'Ulazni tlak', value: 0 },
-    { name: 'waterfill', label: 'Pumpa vode', value: 0 },
+    { name: 'filltankwithwater', label: 'Punjenje spremnika', value: 0 },
+    { name: 'waterdrain', label: 'Ispust vode', value: 0 },
+    { name: 'electricheating', label: 'Električno grijanje', value: 0 },
+    { name: 'extensioncooling', label: 'Proširenje hlađenja', value: 0 },
+    { name: 'alarmsignal', label: 'Alarm', value: 0 },
+    { name: 'tankheating', label: 'Grijanje spremnika', value: 0 },
+    { name: 'coolinghelper', label: 'Pomoćno hlađenje', value: 0 },
+    { name: 'autoklavfill', label: 'Punjenje autoklava', value: 0 },    
 ];
 
 const DashboardPage = () => {
@@ -302,7 +307,7 @@ const DashboardPage = () => {
                 if(checkForErrors(data)){
                     showError('Relej','Greška prilikom dohvaćanja releja', 500);
                     return;                    
-                }                
+                }
             },
         },
     );
@@ -318,10 +323,18 @@ const DashboardPage = () => {
     //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
-    
+
     relayMapper[0].value = relaySensorValues?.cooling || 0;
     relayMapper[1].value = relaySensorValues?.heating || 0;
     relayMapper[2].value = relaySensorValues?.pump || 0;        
+    relayMapper[3].value = relaySensorValues?.filltankwithwater || 0;
+    relayMapper[4].value = relaySensorValues?.waterdrain || 0;
+    relayMapper[5].value = relaySensorValues?.electricheating || 0;
+    relayMapper[6].value = relaySensorValues?.extensioncooling || 0;
+    relayMapper[7].value = relaySensorValues?.alarmsignal || 0;
+    relayMapper[8].value = relaySensorValues?.tankheating || 0;
+    relayMapper[9].value = relaySensorValues?.coolinghelper || 0;
+    relayMapper[10].value = relaySensorValues?.autoklavfill || 0;    
 
     const handleStartProcess = () => {        
 
@@ -469,14 +482,14 @@ const DashboardPage = () => {
             
             <div className="col-6">
                     <div className='flex flex-column gap-3 ml-2 mr-2'>
-                        {relayMapper.slice(0,4) .map((chip, index) => (
+                        {relayMapper.slice(0,6) .map((chip, index) => (
                                 <ChipStates key={chip.name} {...chip} />
                         ))}
                     </div>                    
             </div>
             <div className="col-5">
             <div className='flex flex-column gap-3 -ml-2 -mr-2 '>
-                        {relayMapper.slice(4,6) .map((chip, index) => (
+                        {relayMapper.slice(6,relayMapper.length) .map((chip, index) => (
                                 <ChipStates key={chip.name} {...chip} />
                         ))}
             </div>

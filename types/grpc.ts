@@ -43,18 +43,18 @@ export interface SensorValues {
 }
 
 export interface SensorRelayValues {
-  fillTankWithWater: number;
+  filltankwithwater: number;
   cooling: number;
-  tankHeating: number;
-  coolingHelper: number;
-  autoklavFill: number;
-  waterDrain: number;
+  tankheating: number;
+  coolinghelper: number;
+  autoklavfill: number;
+  waterdrain: number;
   heating: number;
   pump: number;
-  electricHeating: number;
-  increasePressure: number;
-  extensionCooling: number;
-  alarmSignal: number;
+  electricheating: number;
+  increasepressure: number;
+  extensioncooling: number;
+  alarmsignal: number;
 }
 
 // StateMachineValues message
