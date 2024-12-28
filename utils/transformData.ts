@@ -54,12 +54,12 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
                 fill: false,
                 borderColor: "rgba(255, 99, 132, 1)",  // Light red
                 backgroundColor: "rgba(255, 99, 132, 0.3)",  // Light red with transparency
-                borderDash: [10,10],
-                borderWidth: 4,
+                //borderDash: [10,10],
+                borderWidth: 5,
                 pointStyle: "circle",
                 pointBorderColor: "rgba(255, 99, 132, 1)", // Matching red for points
                 pointBackgroundColor: "rgba(255, 99, 132, 0.5)", // Light red with transparency for point
-                pointRadius: 1, 
+                pointRadius: 0, 
                 tension: 1,  // Smooth curve
                 yAxisID: "y",
             },
@@ -69,12 +69,12 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
                 fill: false,
                 borderColor: "rgba(204, 71, 71, 1)",  // Slightly lighter red than before
                 backgroundColor: "rgba(204, 71, 71, 0.25)", // Less intense red with transparency
-                borderDash: [10, 10],
-                pointStyle: "circle",
+                //borderDash: [10, 10],
+                //pointStyle: "circle",
                 borderWidth: 4,
                 pointBorderColor: "rgba(204, 71, 71, 1)", // Slightly lighter red for points
                 pointBackgroundColor: "rgba(204, 71, 71, 0.3)", // Softer, more transparent red for points
-                pointRadius: 1,
+                pointRadius: 0,
                 tension: 1,
                 yAxisID: "y",
             },
@@ -84,12 +84,12 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
                 fill: false,
                 borderColor: "rgba(153, 102, 255, 1)",
                 backgroundColor: "rgba(153, 102, 255, 0.23)",
-                borderDash: [10,10],
+                //borderDash: [10,10],
                 borderWidth: 4,
                 pointStyle: "circle",
                 pointBorderColor: "rgba(153, 102, 255, 1)",
                 pointBackgroundColor: "#9966ff2a",
-                pointRadius: 1, 
+                pointRadius: 0, 
                 tension: 1,
                 yAxisID: "y2",
             },
@@ -99,13 +99,13 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
                 fill: false,
                 borderColor: "rgba(54, 162, 235, 1)",  // Lighter blue (Fr)
                 backgroundColor: "rgba(54, 162, 235, 0.3)",  // Light blue with transparency
-                borderDash: [10,10],
-                borderWidth: 2,
+                //borderDash: [10,10],
+                borderWidth: 4,
                 pointStyle: "circle",
                 pointBorderColor: "rgba(54, 162, 235, 1)",  // Lighter blue for points
                 pointBackgroundColor: "rgba(54, 162, 235, 0.4)", // Lighter blue for point background
-                pointRadius: 1,
-                tension: 0.3,
+                pointRadius: 0,
+                tension: 1,
                 yAxisID: "y2",
             },
             {
@@ -114,13 +114,13 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
                 fill: false,
                 borderColor: "rgba(30, 144, 255, 1)",  // Darker blue (sumFr)
                 backgroundColor: "rgba(30, 144, 255, 0.4)",  // Darker blue with transparency
-                borderDash: [10,10],
+                //borderDash: [10,10],
                 borderWidth: 2,
                 pointStyle: "circle",
                 pointBorderColor: "rgba(30, 144, 255, 1)",  // Darker blue for points
                 pointBackgroundColor: "rgba(30, 144, 255, 0.5)", // Darker blue for point background
-                pointRadius: 1,  // Larger star points
-                tension: 0.3,
+                pointRadius: 0,
+                tension: 1,
                 yAxisID: "y2",
             }
         ],        
