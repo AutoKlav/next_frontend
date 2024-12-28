@@ -43,7 +43,6 @@ export const transformData = (data: { processlogsList: Log[] }): TransformedData
  * @param setChartData - The function to set the chart data.
  */
 
-// balck white circles
 export const updateChartData = (data: TransformedData, setChartData: (data: any) => void) => {    
     setChartData({
         labels: data.timestamp,
@@ -127,75 +126,85 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
     });
 };
 
-// datasets: [
-//     {
-//         label: "Temperatura vode (0-120°C)",
-//         data: data.temp,
-//         fill: false,
-//         borderColor: "#000000",  // Black
-//         backgroundColor: "#000000",  // Black
-//         borderDash: [10, 10],
-//         borderWidth: 2,
-//         pointBorderColor: "#000000", // Black
-//         pointBackgroundColor: "#666666", // Dark gray for point
-//         pointRadius: 8, 
-//         tension: 1,  // Smooth curve
-//         yAxisID: "y",
-//     },
-//     {
-//         label: "Temperatura konzerve (0-120°C)",
-//         data: data.tempk,
-//         fill: false,
-//         borderColor: "#333333",  // Dark gray
-//         backgroundColor: "#333333", // Dark gray
-//         borderDash: [10, 10],
-//         borderWidth: 3,
-//         pointBorderColor: "#333333", // Dark gray
-//         pointBackgroundColor: "#999999", // Lighter gray for points
-//         pointRadius: 8,
-//         tension: 0.3,
-//         yAxisID: "y",
-//     },
-//     {
-//         label: "Tlak (0-7)",
-//         data: data.pressure,
-//         fill: false,
-//         borderColor: "#666666", // Medium gray
-//         backgroundColor: "#666666", // Medium gray
-//         borderDash: [10, 10],
-//         borderWidth: 4,
-//         pointBorderColor: "#666666", // Medium gray
-//         pointBackgroundColor: "#cccccc", // Light gray for points
-//         pointRadius: 10, // Adjusted for better contrast
-//         tension: 0,
-//         yAxisID: "y2",
-//     },
-//     {
-//         label: "Fr (0-7)",
-//         data: data.fr,
-//         fill: false,
-//         borderColor: "#999999",  // Light gray
-//         backgroundColor: "#999999",  // Light gray
-//         borderDash: [2, 2],
-//         borderWidth: 3,
-//         pointBorderColor: "#999999",  // Light gray
-//         pointBackgroundColor: "#e0e0e0", // Very light gray for point background
-//         pointRadius: 8,
-//         tension: 0.2,
-//         yAxisID: "y2",
-//     },
-//     {
-//         label: "sumFr (0-7)",
-//         data: data.sumfr,
-//         fill: false,
-//         borderColor: "#cccccc",  // Lighter gray
-//         backgroundColor: "#cccccc",  // Lighter gray
-//         borderDash: [],
-//         borderWidth: 2,
-//         pointBorderColor: "#cccccc",  // Lighter gray for points
-//         pointBackgroundColor: "#f0f0f0", // Very light gray for point background
-//         pointRadius: 9,  // Larger star points
-//         tension: 0.5,
-//         yAxisID: "y2",
-//     }
-// ],
+/**
+ * Updates the chart data for export.
+ * 
+ * @param data - The transformed data.
+ * @param setChartData - The function to set the chart data adjusted for export (everything black/white).
+ */
+export const updateChartDataForExport = (data: TransformedData, setChartData: (data: any) => void) => {    
+    setChartData({
+        labels: data.timestamp,
+        datasets: [
+            {
+                label: "Temperatura vode",
+                data: data.temp,
+                fill: false,
+                borderColor: "#000000",  // Black
+                backgroundColor: "#000000",  // Black
+                borderWidth: 5,
+                pointStyle: "circle",
+                pointBorderColor: "#000000", // Black
+                pointBackgroundColor: "#666666", // Dark gray for point
+                pointRadius: 0, 
+                tension: 1,  // Smooth curve
+                yAxisID: "y",
+            },
+            {
+                label: "Temperatura konzerve  ",
+                data: data.tempk,
+                fill: false,
+                borderColor: "#333333",  // Dark gray
+                backgroundColor: "#333333", // Dark gray
+                borderWidth: 4,
+                pointBorderColor: "#333333", // Dark gray
+                pointBackgroundColor: "#999999", // Lighter gray for points
+                pointRadius: 0,
+                tension: 1,
+                yAxisID: "y",
+            },
+            {
+                label: "Tlak  ",
+                data: data.pressure,
+                fill: false,
+                borderColor: "#666666", // Medium gray
+                backgroundColor: "#666666", // Medium gray
+                borderWidth: 4,
+                pointStyle: "circle",
+                pointBorderColor: "#666666", // Medium gray
+                pointBackgroundColor: "#cccccc", // Light gray for points
+                pointRadius: 0, 
+                tension: 1,
+                yAxisID: "y2",
+            },
+            {
+                label: "Fr  ",
+                data: data.fr,
+                fill: false,
+                borderColor: "#999999",  // Light gray
+                backgroundColor: "#999999",  // Light gray
+                borderWidth: 4,
+                pointStyle: "circle",
+                pointBorderColor: "#999999",  // Light gray
+                pointBackgroundColor: "#e0e0e0", // Very light gray for point background
+                pointRadius: 0,
+                tension: 1,
+                yAxisID: "y2",
+            },
+            {
+                label: "sumFr",
+                data: data.sumfr,
+                fill: false,
+                borderColor: "#cccccc",  // Lighter gray
+                backgroundColor: "#cccccc",  // Lighter gray
+                borderWidth: 2,
+                pointStyle: "circle",
+                pointBorderColor: "#cccccc",  // Lighter gray for points
+                pointBackgroundColor: "#f0f0f0", // Very light gray for point background
+                pointRadius: 0,
+                tension: 1,
+                yAxisID: "y2",
+            }
+        ],        
+    });
+};
