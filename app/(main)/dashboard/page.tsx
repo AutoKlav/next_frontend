@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { Bacteria, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { Bacteria, HeatingType, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -22,6 +22,9 @@ import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/type
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
     { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'Temperatura proširenja', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'Temperatura grijača', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'Temperatura spremnika', value: '', unit: '°C', color: 'red' },    
 ];
 
 const stateValues = [
@@ -75,11 +78,13 @@ const DashboardPage = () => {
     const [customTemp, setCustomTemp] = useState<number>(0);    
     const [finishTemp, setFinishTemp] = useState<number>(0);
     
-    const [maintainPressure, setMaintainPressure] = useState<number>(0);  
     const [maintainTemp, setMaintainTemp] = useState<number>(0);
     
     const targetF = React.useRef<number>(0);
     const targetTime = React.useRef<number>(0);
+
+    const targetHeatingTime = React.useRef<string>('0');
+    const targetCoolingTime = React.useRef<string>('0');
 
     const fetchedTypes = useRef<ProcessType[]>();
     const fetchedBacteria = useRef<Bacteria[]>();
@@ -96,7 +101,6 @@ const DashboardPage = () => {
         //#region modeDropdown        
         setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 0);        
         setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
-        setMaintainPressure(fetchedTypes.current?.[0]?.maintainpressure || 0);        
         setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         //#endregion
@@ -241,7 +245,6 @@ const DashboardPage = () => {
             setCustomTemp(typeDropdown?.customtemp || 0);            
             setFinishTemp(typeDropdown?.finishtemp || 0);            
             setMaintainTemp(typeDropdown?.maintaintemp || 0);            
-            setMaintainPressure(typeDropdown?.maintainpressure || 0);
         }
     }, [typeDropdown]);
     
@@ -312,15 +315,18 @@ const DashboardPage = () => {
         },
     );
     
-    temperatures[0].value = stateMachineValues?.temp?.toString() || 'N/A';
-    temperatures[1].value = stateMachineValues?.tempk?.toString() || 'N/A';
+    temperatures[0].value = stateMachineValues?.sensorvalues.temp?.toString() || 'N/A';
+    temperatures[1].value = stateMachineValues?.sensorvalues.tempk?.toString() || 'N/A';
+    temperatures[2].value = stateMachineValues?.sensorvalues.expansiontemp?.toString() || 'N/A';
+    temperatures[3].value = stateMachineValues?.sensorvalues.heatertemp ?.toString() || 'N/A';
+    temperatures[4].value = stateMachineValues?.sensorvalues.tanktemp?.toString() || 'N/A';
     
     stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
 
-    pressures[0].value = stateMachineValues?.pressure?.toString() || 'N/A';
-    //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
+    pressures[0].value = stateMachineValues?.sensorvalues.pressure?.toString() || 'N/A';
+    pressures[1].value = stateMachineValues?.sensorvalues.steampressure?.toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
 
@@ -350,7 +356,6 @@ const DashboardPage = () => {
                 setCustomTemp(typeDropdown?.customtemp || 0);                
                 setFinishTemp(typeDropdown?.finishtemp || 0);                
                 setMaintainTemp(typeDropdown?.maintaintemp || 0);
-                setMaintainPressure(typeDropdown?.maintainpressure || 0);
             }
             const parsedType = getProcessConfigTypeById(typeDropdown?.id);
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
@@ -367,7 +372,7 @@ const DashboardPage = () => {
                 processConfig: {                                    
                     customTemp: customTemp,
                     finishTemp: finishTemp,
-                    maintainPressure: maintainPressure,
+                    heatingType: HeatingType.STEAM,
                     maintainTemp: maintainTemp,
                     mode: parsedMode,
                     targetTime: isNaN(targetTime.current) ? 0 : targetTime.current,
@@ -382,6 +387,8 @@ const DashboardPage = () => {
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
+                    targetCoolingTime: targetCoolingTime.current,
+                    targetHeatingTime: targetHeatingTime.current,
                 },
             };
             console.log('Proces request', request);        
@@ -455,7 +462,6 @@ const DashboardPage = () => {
                         </div>                        
                         <div className="col-4">
                             <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
-                            <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={[maintainPressure, setMaintainPressure]} />
                         </div>               
                     </div>
                 </Dialog>

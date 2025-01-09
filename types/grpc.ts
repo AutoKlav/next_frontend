@@ -33,13 +33,16 @@ export interface SetVariable {
 // SensorValues message
 export interface SensorValues {
   temp: number;
+  expansiontemp: number;
+  heatertemp: number;
+  tanktemp: number;
   tempk: number;
+  tankWaterLevel: number;
   pressure: number;
   steampressure: number;
-  waterlevel: number;
-  doorclosed: number;
-  burnerfault: number;
-  watershortage: number;
+  doorClosed: number;
+  burnerFault: number;
+  waterShortage: number;
 }
 
 export interface SensorRelayValues {
@@ -60,11 +63,9 @@ export interface SensorRelayValues {
 // StateMachineValues message
 export interface StateMachineValues {
   id: number;
-  time: number;
-  temp: number;
-  tempk: number;
-  dtemp: number;
-  pressure: number;
+  elapsedtime: number;
+  sensorvalues: SensorValues;
+  dTemp: number;
   state: number;
   dr: number;
   fr: number;
@@ -99,8 +100,7 @@ export interface ProcessType {
   name: string;
   type?: string;
   customtemp?: number;
-  finishtemp?: number;
-  maintainpressure?: number;
+  finishtemp?: number;  
   maintaintemp?: number;
 }
 
@@ -146,14 +146,19 @@ export enum ProcessConfigMode {
   TIME = 1,
 }
 
+export enum HeatingType {
+  STEAM  = 0,
+  ELECTRIC = 1,
+}
+
 // ProcessConfig message
 export interface ProcessConfig {
   type: ProcessConfigType;
+  heatingType: HeatingType;
   customTemp: number;
   mode: ProcessConfigMode;  
   targetTime: number;
   maintainTemp: number;
-  maintainPressure: number;
   finishTemp: number;
 }
 
@@ -167,6 +172,8 @@ export interface ProcessInfo {
   processStart: string;
   targetF: string;
   processLength: string;
+  targetHeatingTime: string;
+  targetCoolingTime: string;   
 }
 
 export interface ProcessInfoGraphView {
@@ -207,8 +214,7 @@ export interface ProcessInfoList {
 
 export interface ProcessTypeRequest {
   customTemp: number;
-  finishTemp: number;
-  maintainPressure: number;
+  finishTemp: number;  
   name: string;
   pressure: number;
   type: string;

@@ -26,6 +26,7 @@ goog.exportSymbol('proto.autoklav.BacteriaList', null, global);
 goog.exportSymbol('proto.autoklav.Empty', null, global);
 goog.exportSymbol('proto.autoklav.FilteredModeProcessList', null, global);
 goog.exportSymbol('proto.autoklav.FilteredProcessList', null, global);
+goog.exportSymbol('proto.autoklav.HeatingType', null, global);
 goog.exportSymbol('proto.autoklav.ProcessConfig', null, global);
 goog.exportSymbol('proto.autoklav.ProcessConfigMode', null, global);
 goog.exportSymbol('proto.autoklav.ProcessConfigState', null, global);
@@ -1009,8 +1010,7 @@ proto.autoklav.ProcessTypeRequest.toObject = function(includeInstance, msg) {
     type: jspb.Message.getFieldWithDefault(msg, 2, ""),
     customtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
     finishtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    maintainpressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    maintaintemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
+    maintaintemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0)
   };
 
   if (includeInstance) {
@@ -1064,10 +1064,6 @@ proto.autoklav.ProcessTypeRequest.deserializeBinaryFromReader = function(msg, re
       msg.setFinishtemp(value);
       break;
     case 5:
-      var value = /** @type {number} */ (reader.readDouble());
-      msg.setMaintainpressure(value);
-      break;
-    case 6:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setMaintaintemp(value);
       break;
@@ -1128,17 +1124,10 @@ proto.autoklav.ProcessTypeRequest.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getMaintainpressure();
-  if (f !== 0.0) {
-    writer.writeDouble(
-      5,
-      f
-    );
-  }
   f = message.getMaintaintemp();
   if (f !== 0.0) {
     writer.writeDouble(
-      6,
+      5,
       f
     );
   }
@@ -1218,10 +1207,10 @@ proto.autoklav.ProcessTypeRequest.prototype.setFinishtemp = function(value) {
 
 
 /**
- * optional double maintainPressure = 5;
+ * optional double maintainTemp = 5;
  * @return {number}
  */
-proto.autoklav.ProcessTypeRequest.prototype.getMaintainpressure = function() {
+proto.autoklav.ProcessTypeRequest.prototype.getMaintaintemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 5, 0.0));
 };
 
@@ -1230,26 +1219,8 @@ proto.autoklav.ProcessTypeRequest.prototype.getMaintainpressure = function() {
  * @param {number} value
  * @return {!proto.autoklav.ProcessTypeRequest} returns this
  */
-proto.autoklav.ProcessTypeRequest.prototype.setMaintainpressure = function(value) {
-  return jspb.Message.setProto3FloatField(this, 5, value);
-};
-
-
-/**
- * optional double maintainTemp = 6;
- * @return {number}
- */
-proto.autoklav.ProcessTypeRequest.prototype.getMaintaintemp = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 6, 0.0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.autoklav.ProcessTypeRequest} returns this
- */
 proto.autoklav.ProcessTypeRequest.prototype.setMaintaintemp = function(value) {
-  return jspb.Message.setProto3FloatField(this, 6, value);
+  return jspb.Message.setProto3FloatField(this, 5, value);
 };
 
 
@@ -1290,8 +1261,7 @@ proto.autoklav.ProcessType.toObject = function(includeInstance, msg) {
     type: jspb.Message.getFieldWithDefault(msg, 3, ""),
     customtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
     finishtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    maintainpressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    maintaintemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
+    maintaintemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
   };
 
   if (includeInstance) {
@@ -1349,10 +1319,6 @@ proto.autoklav.ProcessType.deserializeBinaryFromReader = function(msg, reader) {
       msg.setFinishtemp(value);
       break;
     case 6:
-      var value = /** @type {number} */ (reader.readDouble());
-      msg.setMaintainpressure(value);
-      break;
-    case 7:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setMaintaintemp(value);
       break;
@@ -1420,17 +1386,10 @@ proto.autoklav.ProcessType.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getMaintainpressure();
-  if (f !== 0.0) {
-    writer.writeDouble(
-      6,
-      f
-    );
-  }
   f = message.getMaintaintemp();
   if (f !== 0.0) {
     writer.writeDouble(
-      7,
+      6,
       f
     );
   }
@@ -1528,10 +1487,10 @@ proto.autoklav.ProcessType.prototype.setFinishtemp = function(value) {
 
 
 /**
- * optional double maintainPressure = 6;
+ * optional double maintainTemp = 6;
  * @return {number}
  */
-proto.autoklav.ProcessType.prototype.getMaintainpressure = function() {
+proto.autoklav.ProcessType.prototype.getMaintaintemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 6, 0.0));
 };
 
@@ -1540,26 +1499,8 @@ proto.autoklav.ProcessType.prototype.getMaintainpressure = function() {
  * @param {number} value
  * @return {!proto.autoklav.ProcessType} returns this
  */
-proto.autoklav.ProcessType.prototype.setMaintainpressure = function(value) {
-  return jspb.Message.setProto3FloatField(this, 6, value);
-};
-
-
-/**
- * optional double maintainTemp = 7;
- * @return {number}
- */
-proto.autoklav.ProcessType.prototype.getMaintaintemp = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 7, 0.0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.autoklav.ProcessType} returns this
- */
 proto.autoklav.ProcessType.prototype.setMaintaintemp = function(value) {
-  return jspb.Message.setProto3FloatField(this, 7, value);
+  return jspb.Message.setProto3FloatField(this, 6, value);
 };
 
 
@@ -2556,13 +2497,16 @@ proto.autoklav.SensorValues.prototype.toObject = function(opt_includeInstance) {
 proto.autoklav.SensorValues.toObject = function(includeInstance, msg) {
   var f, obj = {
     temp: jspb.Message.getFloatingPointFieldWithDefault(msg, 1, 0.0),
-    tempk: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    pressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    steampressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    waterlevel: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    doorclosed: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    burnerfault: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
-    watershortage: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0)
+    expansiontemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
+    heatertemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+    tanktemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+    tempk: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
+    tankwaterlevel: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
+    pressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
+    steampressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
+    doorclosed: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    burnerfault: jspb.Message.getFieldWithDefault(msg, 10, 0),
+    watershortage: jspb.Message.getFieldWithDefault(msg, 11, 0)
   };
 
   if (includeInstance) {
@@ -2605,30 +2549,42 @@ proto.autoklav.SensorValues.deserializeBinaryFromReader = function(msg, reader) 
       break;
     case 2:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setTempk(value);
+      msg.setExpansiontemp(value);
       break;
     case 3:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setPressure(value);
+      msg.setHeatertemp(value);
       break;
     case 4:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setSteampressure(value);
+      msg.setTanktemp(value);
       break;
     case 5:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setWaterlevel(value);
+      msg.setTempk(value);
       break;
     case 6:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setDoorclosed(value);
+      msg.setTankwaterlevel(value);
       break;
     case 7:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setBurnerfault(value);
+      msg.setPressure(value);
       break;
     case 8:
       var value = /** @type {number} */ (reader.readDouble());
+      msg.setSteampressure(value);
+      break;
+    case 9:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setDoorclosed(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readUint32());
+      msg.setBurnerfault(value);
+      break;
+    case 11:
+      var value = /** @type {number} */ (reader.readUint32());
       msg.setWatershortage(value);
       break;
     default:
@@ -2667,52 +2623,73 @@ proto.autoklav.SensorValues.serializeBinaryToWriter = function(message, writer) 
       f
     );
   }
-  f = message.getTempk();
+  f = message.getExpansiontemp();
   if (f !== 0.0) {
     writer.writeDouble(
       2,
       f
     );
   }
-  f = message.getPressure();
+  f = message.getHeatertemp();
   if (f !== 0.0) {
     writer.writeDouble(
       3,
       f
     );
   }
-  f = message.getSteampressure();
+  f = message.getTanktemp();
   if (f !== 0.0) {
     writer.writeDouble(
       4,
       f
     );
   }
-  f = message.getWaterlevel();
+  f = message.getTempk();
   if (f !== 0.0) {
     writer.writeDouble(
       5,
       f
     );
   }
-  f = message.getDoorclosed();
+  f = message.getTankwaterlevel();
   if (f !== 0.0) {
     writer.writeDouble(
       6,
       f
     );
   }
-  f = message.getBurnerfault();
+  f = message.getPressure();
   if (f !== 0.0) {
     writer.writeDouble(
       7,
       f
     );
   }
-  f = message.getWatershortage();
+  f = message.getSteampressure();
   if (f !== 0.0) {
     writer.writeDouble(
       8,
+      f
+    );
+  }
+  f = message.getDoorclosed();
+  if (f !== 0) {
+    writer.writeUint32(
+      9,
+      f
+    );
+  }
+  f = message.getBurnerfault();
+  if (f !== 0) {
+    writer.writeUint32(
+      10,
+      f
+    );
+  }
+  f = message.getWatershortage();
+  if (f !== 0) {
+    writer.writeUint32(
+      11,
       f
     );
   }
@@ -2738,10 +2715,10 @@ proto.autoklav.SensorValues.prototype.setTemp = function(value) {
 
 
 /**
- * optional double tempK = 2;
+ * optional double expansionTemp = 2;
  * @return {number}
  */
-proto.autoklav.SensorValues.prototype.getTempk = function() {
+proto.autoklav.SensorValues.prototype.getExpansiontemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
 };
 
@@ -2750,16 +2727,16 @@ proto.autoklav.SensorValues.prototype.getTempk = function() {
  * @param {number} value
  * @return {!proto.autoklav.SensorValues} returns this
  */
-proto.autoklav.SensorValues.prototype.setTempk = function(value) {
+proto.autoklav.SensorValues.prototype.setExpansiontemp = function(value) {
   return jspb.Message.setProto3FloatField(this, 2, value);
 };
 
 
 /**
- * optional double pressure = 3;
+ * optional double heaterTemp = 3;
  * @return {number}
  */
-proto.autoklav.SensorValues.prototype.getPressure = function() {
+proto.autoklav.SensorValues.prototype.getHeatertemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 3, 0.0));
 };
 
@@ -2768,16 +2745,16 @@ proto.autoklav.SensorValues.prototype.getPressure = function() {
  * @param {number} value
  * @return {!proto.autoklav.SensorValues} returns this
  */
-proto.autoklav.SensorValues.prototype.setPressure = function(value) {
+proto.autoklav.SensorValues.prototype.setHeatertemp = function(value) {
   return jspb.Message.setProto3FloatField(this, 3, value);
 };
 
 
 /**
- * optional double steamPressure = 4;
+ * optional double tankTemp = 4;
  * @return {number}
  */
-proto.autoklav.SensorValues.prototype.getSteampressure = function() {
+proto.autoklav.SensorValues.prototype.getTanktemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 4, 0.0));
 };
 
@@ -2786,16 +2763,16 @@ proto.autoklav.SensorValues.prototype.getSteampressure = function() {
  * @param {number} value
  * @return {!proto.autoklav.SensorValues} returns this
  */
-proto.autoklav.SensorValues.prototype.setSteampressure = function(value) {
+proto.autoklav.SensorValues.prototype.setTanktemp = function(value) {
   return jspb.Message.setProto3FloatField(this, 4, value);
 };
 
 
 /**
- * optional double waterLevel = 5;
+ * optional double tempK = 5;
  * @return {number}
  */
-proto.autoklav.SensorValues.prototype.getWaterlevel = function() {
+proto.autoklav.SensorValues.prototype.getTempk = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 5, 0.0));
 };
 
@@ -2804,16 +2781,16 @@ proto.autoklav.SensorValues.prototype.getWaterlevel = function() {
  * @param {number} value
  * @return {!proto.autoklav.SensorValues} returns this
  */
-proto.autoklav.SensorValues.prototype.setWaterlevel = function(value) {
+proto.autoklav.SensorValues.prototype.setTempk = function(value) {
   return jspb.Message.setProto3FloatField(this, 5, value);
 };
 
 
 /**
- * optional double doorClosed = 6;
+ * optional double tankWaterLevel = 6;
  * @return {number}
  */
-proto.autoklav.SensorValues.prototype.getDoorclosed = function() {
+proto.autoklav.SensorValues.prototype.getTankwaterlevel = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 6, 0.0));
 };
 
@@ -2822,16 +2799,16 @@ proto.autoklav.SensorValues.prototype.getDoorclosed = function() {
  * @param {number} value
  * @return {!proto.autoklav.SensorValues} returns this
  */
-proto.autoklav.SensorValues.prototype.setDoorclosed = function(value) {
+proto.autoklav.SensorValues.prototype.setTankwaterlevel = function(value) {
   return jspb.Message.setProto3FloatField(this, 6, value);
 };
 
 
 /**
- * optional double burnerFault = 7;
+ * optional double pressure = 7;
  * @return {number}
  */
-proto.autoklav.SensorValues.prototype.getBurnerfault = function() {
+proto.autoklav.SensorValues.prototype.getPressure = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 7, 0.0));
 };
 
@@ -2840,16 +2817,16 @@ proto.autoklav.SensorValues.prototype.getBurnerfault = function() {
  * @param {number} value
  * @return {!proto.autoklav.SensorValues} returns this
  */
-proto.autoklav.SensorValues.prototype.setBurnerfault = function(value) {
+proto.autoklav.SensorValues.prototype.setPressure = function(value) {
   return jspb.Message.setProto3FloatField(this, 7, value);
 };
 
 
 /**
- * optional double waterShortage = 8;
+ * optional double steamPressure = 8;
  * @return {number}
  */
-proto.autoklav.SensorValues.prototype.getWatershortage = function() {
+proto.autoklav.SensorValues.prototype.getSteampressure = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 8, 0.0));
 };
 
@@ -2858,8 +2835,62 @@ proto.autoklav.SensorValues.prototype.getWatershortage = function() {
  * @param {number} value
  * @return {!proto.autoklav.SensorValues} returns this
  */
-proto.autoklav.SensorValues.prototype.setWatershortage = function(value) {
+proto.autoklav.SensorValues.prototype.setSteampressure = function(value) {
   return jspb.Message.setProto3FloatField(this, 8, value);
+};
+
+
+/**
+ * optional uint32 doorClosed = 9;
+ * @return {number}
+ */
+proto.autoklav.SensorValues.prototype.getDoorclosed = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.autoklav.SensorValues} returns this
+ */
+proto.autoklav.SensorValues.prototype.setDoorclosed = function(value) {
+  return jspb.Message.setProto3IntField(this, 9, value);
+};
+
+
+/**
+ * optional uint32 burnerFault = 10;
+ * @return {number}
+ */
+proto.autoklav.SensorValues.prototype.getBurnerfault = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.autoklav.SensorValues} returns this
+ */
+proto.autoklav.SensorValues.prototype.setBurnerfault = function(value) {
+  return jspb.Message.setProto3IntField(this, 10, value);
+};
+
+
+/**
+ * optional uint32 waterShortage = 11;
+ * @return {number}
+ */
+proto.autoklav.SensorValues.prototype.getWatershortage = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.autoklav.SensorValues} returns this
+ */
+proto.autoklav.SensorValues.prototype.setWatershortage = function(value) {
+  return jspb.Message.setProto3IntField(this, 11, value);
 };
 
 
@@ -3357,17 +3388,15 @@ proto.autoklav.StateMachineValues.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0),
     elapsedtime: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    temp: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
-    tempk: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
-    dtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    pressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    state: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    dr: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
-    fr: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
-    r: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
-    sumfr: jspb.Message.getFloatingPointFieldWithDefault(msg, 11, 0.0),
-    sumr: jspb.Message.getFloatingPointFieldWithDefault(msg, 12, 0.0),
-    timestamp: jspb.Message.getFieldWithDefault(msg, 13, "")
+    sensorvalues: (f = msg.getSensorvalues()) && proto.autoklav.SensorValues.toObject(includeInstance, f),
+    dtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 4, 0.0),
+    state: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    dr: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
+    fr: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0),
+    r: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
+    sumfr: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
+    sumr: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
+    timestamp: jspb.Message.getFieldWithDefault(msg, 11, "")
   };
 
   if (includeInstance) {
@@ -3413,46 +3442,39 @@ proto.autoklav.StateMachineValues.deserializeBinaryFromReader = function(msg, re
       msg.setElapsedtime(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readDouble());
-      msg.setTemp(value);
+      var value = new proto.autoklav.SensorValues;
+      reader.readMessage(value,proto.autoklav.SensorValues.deserializeBinaryFromReader);
+      msg.setSensorvalues(value);
       break;
     case 4:
       var value = /** @type {number} */ (reader.readDouble());
-      msg.setTempk(value);
-      break;
-    case 5:
-      var value = /** @type {number} */ (reader.readDouble());
       msg.setDtemp(value);
       break;
-    case 6:
-      var value = /** @type {number} */ (reader.readDouble());
-      msg.setPressure(value);
-      break;
-    case 7:
+    case 5:
       var value = /** @type {number} */ (reader.readUint32());
       msg.setState(value);
       break;
-    case 8:
+    case 6:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setDr(value);
       break;
-    case 9:
+    case 7:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setFr(value);
       break;
-    case 10:
+    case 8:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setR(value);
       break;
-    case 11:
+    case 9:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setSumfr(value);
       break;
-    case 12:
+    case 10:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setSumr(value);
       break;
-    case 13:
+    case 11:
       var value = /** @type {string} */ (reader.readString());
       msg.setTimestamp(value);
       break;
@@ -3499,80 +3521,67 @@ proto.autoklav.StateMachineValues.serializeBinaryToWriter = function(message, wr
       f
     );
   }
-  f = message.getTemp();
-  if (f !== 0.0) {
-    writer.writeDouble(
+  f = message.getSensorvalues();
+  if (f != null) {
+    writer.writeMessage(
       3,
-      f
+      f,
+      proto.autoklav.SensorValues.serializeBinaryToWriter
     );
   }
-  f = message.getTempk();
+  f = message.getDtemp();
   if (f !== 0.0) {
     writer.writeDouble(
       4,
       f
     );
   }
-  f = message.getDtemp();
-  if (f !== 0.0) {
-    writer.writeDouble(
-      5,
-      f
-    );
-  }
-  f = message.getPressure();
-  if (f !== 0.0) {
-    writer.writeDouble(
-      6,
-      f
-    );
-  }
   f = message.getState();
   if (f !== 0) {
     writer.writeUint32(
-      7,
+      5,
       f
     );
   }
   f = message.getDr();
   if (f !== 0.0) {
     writer.writeDouble(
-      8,
+      6,
       f
     );
   }
   f = message.getFr();
   if (f !== 0.0) {
     writer.writeDouble(
-      9,
+      7,
       f
     );
   }
   f = message.getR();
   if (f !== 0.0) {
     writer.writeDouble(
-      10,
+      8,
       f
     );
   }
   f = message.getSumfr();
   if (f !== 0.0) {
     writer.writeDouble(
-      11,
+      9,
       f
     );
   }
   f = message.getSumr();
   if (f !== 0.0) {
     writer.writeDouble(
-      12,
+      10,
       f
     );
   }
   f = message.getTimestamp();
   if (f.length > 0) {
     writer.writeString(
-      13,
+      11,
       f
     );
   }
@@ -3616,28 +3625,47 @@ proto.autoklav.StateMachineValues.prototype.setElapsedtime = function(value) {
 
 
 /**
- * optional double temp = 3;
- * @return {number}
+ * optional SensorValues sensorValues = 3;
+ * @return {?proto.autoklav.SensorValues}
  */
-proto.autoklav.StateMachineValues.prototype.getTemp = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 3, 0.0));
+proto.autoklav.StateMachineValues.prototype.getSensorvalues = function() {
+  return /** @type{?proto.autoklav.SensorValues} */ (
+    jspb.Message.getWrapperField(this, proto.autoklav.SensorValues, 3));
 };
 
 
 /**
- * @param {number} value
+ * @param {?proto.autoklav.SensorValues|undefined} value
+ * @return {!proto.autoklav.StateMachineValues} returns this
+*/
+proto.autoklav.StateMachineValues.prototype.setSensorvalues = function(value) {
+  return jspb.Message.setWrapperField(this, 3, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
-proto.autoklav.StateMachineValues.prototype.setTemp = function(value) {
-  return jspb.Message.setProto3FloatField(this, 3, value);
+proto.autoklav.StateMachineValues.prototype.clearSensorvalues = function() {
+  return this.setSensorvalues(undefined);
 };
 
 
 /**
- * optional double tempK = 4;
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.autoklav.StateMachineValues.prototype.hasSensorvalues = function() {
+  return jspb.Message.getField(this, 3) != null;
+};
+
+
+/**
+ * optional double dTemp = 4;
  * @return {number}
  */
-proto.autoklav.StateMachineValues.prototype.getTempk = function() {
+proto.autoklav.StateMachineValues.prototype.getDtemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 4, 0.0));
 };
 
@@ -3646,53 +3674,17 @@ proto.autoklav.StateMachineValues.prototype.getTempk = function() {
  * @param {number} value
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
-proto.autoklav.StateMachineValues.prototype.setTempk = function(value) {
+proto.autoklav.StateMachineValues.prototype.setDtemp = function(value) {
   return jspb.Message.setProto3FloatField(this, 4, value);
 };
 
 
 /**
- * optional double dTemp = 5;
- * @return {number}
- */
-proto.autoklav.StateMachineValues.prototype.getDtemp = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 5, 0.0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.autoklav.StateMachineValues} returns this
- */
-proto.autoklav.StateMachineValues.prototype.setDtemp = function(value) {
-  return jspb.Message.setProto3FloatField(this, 5, value);
-};
-
-
-/**
- * optional double pressure = 6;
- * @return {number}
- */
-proto.autoklav.StateMachineValues.prototype.getPressure = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 6, 0.0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.autoklav.StateMachineValues} returns this
- */
-proto.autoklav.StateMachineValues.prototype.setPressure = function(value) {
-  return jspb.Message.setProto3FloatField(this, 6, value);
-};
-
-
-/**
- * optional uint32 state = 7;
+ * optional uint32 state = 5;
  * @return {number}
  */
 proto.autoklav.StateMachineValues.prototype.getState = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
@@ -3701,16 +3693,16 @@ proto.autoklav.StateMachineValues.prototype.getState = function() {
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
 proto.autoklav.StateMachineValues.prototype.setState = function(value) {
-  return jspb.Message.setProto3IntField(this, 7, value);
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
 /**
- * optional double Dr = 8;
+ * optional double Dr = 6;
  * @return {number}
  */
 proto.autoklav.StateMachineValues.prototype.getDr = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 8, 0.0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 6, 0.0));
 };
 
 
@@ -3719,16 +3711,16 @@ proto.autoklav.StateMachineValues.prototype.getDr = function() {
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
 proto.autoklav.StateMachineValues.prototype.setDr = function(value) {
-  return jspb.Message.setProto3FloatField(this, 8, value);
+  return jspb.Message.setProto3FloatField(this, 6, value);
 };
 
 
 /**
- * optional double Fr = 9;
+ * optional double Fr = 7;
  * @return {number}
  */
 proto.autoklav.StateMachineValues.prototype.getFr = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 9, 0.0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 7, 0.0));
 };
 
 
@@ -3737,16 +3729,16 @@ proto.autoklav.StateMachineValues.prototype.getFr = function() {
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
 proto.autoklav.StateMachineValues.prototype.setFr = function(value) {
-  return jspb.Message.setProto3FloatField(this, 9, value);
+  return jspb.Message.setProto3FloatField(this, 7, value);
 };
 
 
 /**
- * optional double r = 10;
+ * optional double r = 8;
  * @return {number}
  */
 proto.autoklav.StateMachineValues.prototype.getR = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 10, 0.0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 8, 0.0));
 };
 
 
@@ -3755,16 +3747,16 @@ proto.autoklav.StateMachineValues.prototype.getR = function() {
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
 proto.autoklav.StateMachineValues.prototype.setR = function(value) {
-  return jspb.Message.setProto3FloatField(this, 10, value);
+  return jspb.Message.setProto3FloatField(this, 8, value);
 };
 
 
 /**
- * optional double sumFr = 11;
+ * optional double sumFr = 9;
  * @return {number}
  */
 proto.autoklav.StateMachineValues.prototype.getSumfr = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 11, 0.0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 9, 0.0));
 };
 
 
@@ -3773,16 +3765,16 @@ proto.autoklav.StateMachineValues.prototype.getSumfr = function() {
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
 proto.autoklav.StateMachineValues.prototype.setSumfr = function(value) {
-  return jspb.Message.setProto3FloatField(this, 11, value);
+  return jspb.Message.setProto3FloatField(this, 9, value);
 };
 
 
 /**
- * optional double sumR = 12;
+ * optional double sumR = 10;
  * @return {number}
  */
 proto.autoklav.StateMachineValues.prototype.getSumr = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 12, 0.0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 10, 0.0));
 };
 
 
@@ -3791,16 +3783,16 @@ proto.autoklav.StateMachineValues.prototype.getSumr = function() {
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
 proto.autoklav.StateMachineValues.prototype.setSumr = function(value) {
-  return jspb.Message.setProto3FloatField(this, 12, value);
+  return jspb.Message.setProto3FloatField(this, 10, value);
 };
 
 
 /**
- * optional string timestamp = 13;
+ * optional string timestamp = 11;
  * @return {string}
  */
 proto.autoklav.StateMachineValues.prototype.getTimestamp = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 11, ""));
 };
 
 
@@ -3809,7 +3801,7 @@ proto.autoklav.StateMachineValues.prototype.getTimestamp = function() {
  * @return {!proto.autoklav.StateMachineValues} returns this
  */
 proto.autoklav.StateMachineValues.prototype.setTimestamp = function(value) {
-  return jspb.Message.setProto3StringField(this, 13, value);
+  return jspb.Message.setProto3StringField(this, 11, value);
 };
 
 
@@ -3846,12 +3838,11 @@ proto.autoklav.ProcessConfig.prototype.toObject = function(opt_includeInstance) 
 proto.autoklav.ProcessConfig.toObject = function(includeInstance, msg) {
   var f, obj = {
     type: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    customtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 2, 0.0),
-    mode: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    targettime: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    heatingtype: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    customtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0),
+    mode: jspb.Message.getFieldWithDefault(msg, 4, 0),
     maintaintemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 5, 0.0),
-    maintainpressure: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0),
-    finishtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 7, 0.0)
+    finishtemp: jspb.Message.getFloatingPointFieldWithDefault(msg, 6, 0.0)
   };
 
   if (includeInstance) {
@@ -3893,26 +3884,22 @@ proto.autoklav.ProcessConfig.deserializeBinaryFromReader = function(msg, reader)
       msg.setType(value);
       break;
     case 2:
+      var value = /** @type {!proto.autoklav.HeatingType} */ (reader.readEnum());
+      msg.setHeatingtype(value);
+      break;
+    case 3:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setCustomtemp(value);
       break;
-    case 3:
+    case 4:
       var value = /** @type {!proto.autoklav.ProcessConfigMode} */ (reader.readEnum());
       msg.setMode(value);
-      break;
-    case 4:
-      var value = /** @type {number} */ (reader.readUint64());
-      msg.setTargettime(value);
       break;
     case 5:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setMaintaintemp(value);
       break;
     case 6:
-      var value = /** @type {number} */ (reader.readDouble());
-      msg.setMaintainpressure(value);
-      break;
-    case 7:
       var value = /** @type {number} */ (reader.readDouble());
       msg.setFinishtemp(value);
       break;
@@ -3952,23 +3939,23 @@ proto.autoklav.ProcessConfig.serializeBinaryToWriter = function(message, writer)
       f
     );
   }
+  f = message.getHeatingtype();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      2,
+      f
+    );
+  }
   f = message.getCustomtemp();
   if (f !== 0.0) {
     writer.writeDouble(
-      2,
+      3,
       f
     );
   }
   f = message.getMode();
   if (f !== 0.0) {
     writer.writeEnum(
-      3,
-      f
-    );
-  }
-  f = message.getTargettime();
-  if (f !== 0) {
-    writer.writeUint64(
       4,
       f
     );
@@ -3980,17 +3967,10 @@ proto.autoklav.ProcessConfig.serializeBinaryToWriter = function(message, writer)
       f
     );
   }
-  f = message.getMaintainpressure();
-  if (f !== 0.0) {
-    writer.writeDouble(
-      6,
-      f
-    );
-  }
   f = message.getFinishtemp();
   if (f !== 0.0) {
     writer.writeDouble(
-      7,
+      6,
       f
     );
   }
@@ -4016,11 +3996,29 @@ proto.autoklav.ProcessConfig.prototype.setType = function(value) {
 
 
 /**
- * optional double customTemp = 2;
+ * optional HeatingType heatingType = 2;
+ * @return {!proto.autoklav.HeatingType}
+ */
+proto.autoklav.ProcessConfig.prototype.getHeatingtype = function() {
+  return /** @type {!proto.autoklav.HeatingType} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {!proto.autoklav.HeatingType} value
+ * @return {!proto.autoklav.ProcessConfig} returns this
+ */
+proto.autoklav.ProcessConfig.prototype.setHeatingtype = function(value) {
+  return jspb.Message.setProto3EnumField(this, 2, value);
+};
+
+
+/**
+ * optional double customTemp = 3;
  * @return {number}
  */
 proto.autoklav.ProcessConfig.prototype.getCustomtemp = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 2, 0.0));
+  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 3, 0.0));
 };
 
 
@@ -4029,16 +4027,16 @@ proto.autoklav.ProcessConfig.prototype.getCustomtemp = function() {
  * @return {!proto.autoklav.ProcessConfig} returns this
  */
 proto.autoklav.ProcessConfig.prototype.setCustomtemp = function(value) {
-  return jspb.Message.setProto3FloatField(this, 2, value);
+  return jspb.Message.setProto3FloatField(this, 3, value);
 };
 
 
 /**
- * optional ProcessConfigMode mode = 3;
+ * optional ProcessConfigMode mode = 4;
  * @return {!proto.autoklav.ProcessConfigMode}
  */
 proto.autoklav.ProcessConfig.prototype.getMode = function() {
-  return /** @type {!proto.autoklav.ProcessConfigMode} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {!proto.autoklav.ProcessConfigMode} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
@@ -4047,25 +4045,7 @@ proto.autoklav.ProcessConfig.prototype.getMode = function() {
  * @return {!proto.autoklav.ProcessConfig} returns this
  */
 proto.autoklav.ProcessConfig.prototype.setMode = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
-};
-
-
-/**
- * optional uint64 targetTime = 4;
- * @return {number}
- */
-proto.autoklav.ProcessConfig.prototype.getTargettime = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.autoklav.ProcessConfig} returns this
- */
-proto.autoklav.ProcessConfig.prototype.setTargettime = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3EnumField(this, 4, value);
 };
 
 
@@ -4088,10 +4068,10 @@ proto.autoklav.ProcessConfig.prototype.setMaintaintemp = function(value) {
 
 
 /**
- * optional double maintainPressure = 6;
+ * optional double finishTemp = 6;
  * @return {number}
  */
-proto.autoklav.ProcessConfig.prototype.getMaintainpressure = function() {
+proto.autoklav.ProcessConfig.prototype.getFinishtemp = function() {
   return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 6, 0.0));
 };
 
@@ -4100,26 +4080,8 @@ proto.autoklav.ProcessConfig.prototype.getMaintainpressure = function() {
  * @param {number} value
  * @return {!proto.autoklav.ProcessConfig} returns this
  */
-proto.autoklav.ProcessConfig.prototype.setMaintainpressure = function(value) {
-  return jspb.Message.setProto3FloatField(this, 6, value);
-};
-
-
-/**
- * optional double finishTemp = 7;
- * @return {number}
- */
-proto.autoklav.ProcessConfig.prototype.getFinishtemp = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 7, 0.0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.autoklav.ProcessConfig} returns this
- */
 proto.autoklav.ProcessConfig.prototype.setFinishtemp = function(value) {
-  return jspb.Message.setProto3FloatField(this, 7, value);
+  return jspb.Message.setProto3FloatField(this, 6, value);
 };
 
 
@@ -4162,7 +4124,9 @@ proto.autoklav.ProcessInfo.toObject = function(includeInstance, msg) {
     productquantity: jspb.Message.getFieldWithDefault(msg, 5, ""),
     processstart: jspb.Message.getFieldWithDefault(msg, 6, ""),
     targetf: jspb.Message.getFieldWithDefault(msg, 7, ""),
-    processlength: jspb.Message.getFieldWithDefault(msg, 8, "")
+    targetheatingtime: jspb.Message.getFieldWithDefault(msg, 8, ""),
+    targetcoolingtime: jspb.Message.getFieldWithDefault(msg, 9, ""),
+    processlength: jspb.Message.getFieldWithDefault(msg, 10, "")
   };
 
   if (includeInstance) {
@@ -4229,6 +4193,14 @@ proto.autoklav.ProcessInfo.deserializeBinaryFromReader = function(msg, reader) {
       msg.setTargetf(value);
       break;
     case 8:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTargetheatingtime(value);
+      break;
+    case 9:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTargetcoolingtime(value);
+      break;
+    case 10:
       var value = /** @type {string} */ (reader.readString());
       msg.setProcesslength(value);
       break;
@@ -4311,10 +4283,24 @@ proto.autoklav.ProcessInfo.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getProcesslength();
+  f = message.getTargetheatingtime();
   if (f.length > 0) {
     writer.writeString(
       8,
+      f
+    );
+  }
+  f = message.getTargetcoolingtime();
+  if (f.length > 0) {
+    writer.writeString(
+      9,
+      f
+    );
+  }
+  f = message.getProcesslength();
+  if (f.length > 0) {
+    writer.writeString(
+      10,
       f
     );
   }
@@ -4467,10 +4453,10 @@ proto.autoklav.ProcessInfo.prototype.setTargetf = function(value) {
 
 
 /**
- * optional string processLength = 8;
+ * optional string targetHeatingTime = 8;
  * @return {string}
  */
-proto.autoklav.ProcessInfo.prototype.getProcesslength = function() {
+proto.autoklav.ProcessInfo.prototype.getTargetheatingtime = function() {
   return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, ""));
 };
 
@@ -4479,8 +4465,44 @@ proto.autoklav.ProcessInfo.prototype.getProcesslength = function() {
  * @param {string} value
  * @return {!proto.autoklav.ProcessInfo} returns this
  */
-proto.autoklav.ProcessInfo.prototype.setProcesslength = function(value) {
+proto.autoklav.ProcessInfo.prototype.setTargetheatingtime = function(value) {
   return jspb.Message.setProto3StringField(this, 8, value);
+};
+
+
+/**
+ * optional string targetCoolingTime = 9;
+ * @return {string}
+ */
+proto.autoklav.ProcessInfo.prototype.getTargetcoolingtime = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 9, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.autoklav.ProcessInfo} returns this
+ */
+proto.autoklav.ProcessInfo.prototype.setTargetcoolingtime = function(value) {
+  return jspb.Message.setProto3StringField(this, 9, value);
+};
+
+
+/**
+ * optional string processLength = 10;
+ * @return {string}
+ */
+proto.autoklav.ProcessInfo.prototype.getProcesslength = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.autoklav.ProcessInfo} returns this
+ */
+proto.autoklav.ProcessInfo.prototype.setProcesslength = function(value) {
+  return jspb.Message.setProto3StringField(this, 10, value);
 };
 
 
@@ -5942,6 +5964,14 @@ proto.autoklav.ProcessConfigType = {
   STERILIZATION: 0,
   PASTERIZATION: 1,
   CUSTOM: 2
+};
+
+/**
+ * @enum {number}
+ */
+proto.autoklav.HeatingType = {
+  STEAM: 0,
+  ELECTRIC: 1
 };
 
 /**
