@@ -110,8 +110,8 @@ const FullStepper = () => {
 
     const items = [
         { label: "Odabir senzora" },
-        { label: "Upis najmanje vrijednosti" },
-        { label: "Upis najveće vrijednosti" },
+        { label: "Upis prve vrijednosti" },
+        { label: "Upis druge vrijednosti" },
         { label: "Rezultati kalibracije" },
     ];
 

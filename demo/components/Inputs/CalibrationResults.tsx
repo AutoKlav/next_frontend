@@ -25,21 +25,21 @@ const CalibrationResults: React.FC<CalibrationResultsProps> = (props) => {
         <h3>{sensorName}</h3>
         <div className="flex flex-row gap-2">
         <div className="flex flex-column gap-2">
-            <label>Unesena minimalna vrijednost</label>
+            <label>Unesena prva vrijednost</label>
             <InputNumber 
                 value={y1y2[0]}
                 readOnly
                 className="p-inputtext-md p-1"
                 style={{ borderRadius: '13px' }} 
             />
-            <label>Očitana minimalna vrijednost</label>
+            <label>Očitana prva vrijednost</label>
             <InputNumber 
                 value={x1x2[0]}
                 readOnly
                 className="p-inputtext-md p-1"
                 style={{ borderRadius: '13px' }} 
             />
-            <label>Minimalna kalibrirana vrijednost</label>
+            <label>Prva kalibrirana vrijednost</label>
             <InputNumber 
                 value={calibratedMinimum}
                 readOnly
@@ -48,21 +48,21 @@ const CalibrationResults: React.FC<CalibrationResultsProps> = (props) => {
             />
         </div>
         <div className="flex flex-column gap-2">
-            <label>Unesena maksimalna vrijednost</label>
+            <label>Unesena druga vrijednost</label>
             <InputNumber 
                 value={y1y2[1]}
                 readOnly
                 className="p-inputtext-md p-1"
                 style={{ borderRadius: '13px' }} 
             />
-            <label>Očitana maksimalna vrijednost</label>
+            <label>Očitana druga vrijednost</label>
             <InputNumber 
                 value={x1x2[1]}
                 readOnly
                 className="p-inputtext-md p-1"
                 style={{ borderRadius: '13px' }} 
             />
-            <label>Maksimalna kalibrirana vrijednost</label>
+            <label>Druga kalibrirana vrijednost</label>
             <InputNumber 
                 value={calibratedMaximum}
                 readOnly
