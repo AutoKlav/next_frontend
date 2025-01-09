@@ -18,7 +18,12 @@ const SensorDropdown: React.FC<SensorDropdownProps> = (props) => {
     const sensors: SensorDropdown[] = [
         { id: 'temp', name: 'Temperatura' },
         { id: 'tempK', name: 'Temperatura konzerve' },
-        { id: 'pressure', name: 'Tlak' }
+        { id: 'pressure', name: 'Tlak' },
+        { id: 'expansionTemp', name: 'Temperatura ekspanzije' },
+        { id: 'heaterTemp', name: 'Temperatura grijača' },
+        { id: 'tankTemp', name: 'Temperatura spremnika' },
+        { id: 'tankWaterLevel', name: 'Razina vode u spremniku' },
+        { id: 'steamPressure', name: 'Tlak pare' },        
     ];
 
     const handleChange = (e: { value: string }) => {

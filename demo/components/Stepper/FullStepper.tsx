@@ -67,14 +67,24 @@ const FullStepper = () => {
             const position = stepRef.current === CalibrationSteps.InputMinValue ? 0 : stepRef.current === CalibrationSteps.InputMaxValue ? 1 : -1;
             if (position >= 0) {
                 const sensorId = selectedSensorRef.current?.id;
-                const sensorValue =
-                    sensorId === "pressure"
-                        ? data.pressure
-                        : sensorId === "temp"
-                        ? data.temp
-                        : sensorId === "tempK"
-                        ? data.tempk
-                        : 0;
+                const sensorValue = 
+                sensorId === "pressure"
+                    ? data.pressure
+                    : sensorId === "temp"
+                    ? data.temp
+                    : sensorId === "tempK"
+                    ? data.tempk
+                    : sensorId === "expansionTemp"
+                    ? data.expansiontemp
+                    : sensorId === "heaterTemp"
+                    ? data.heatertemp
+                    : sensorId === "tankTemp"
+                    ? data.tanktemp
+                    : sensorId === "tankWaterLevel"
+                    ? data.tankwaterlevel
+                    : sensorId === "steamPressure"
+                    ? data.steampressure
+                    : 0;
                 updateIndex(position, sensorValue);
             }
         },
