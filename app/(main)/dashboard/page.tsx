@@ -35,8 +35,12 @@ const stateValues = [
 
 const pressures = [
     { icon: 'pi-gauge', headerName: 'Pritisak komore', value: '', unit: 'bar', color: 'blue' },
-    { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },    
+    { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },        
 ];
+
+const general = [
+    { icon: 'pi-cloud', headerName: 'Postotak vode u spremniku', value: '', unit: '%', color: 'black' },    
+]
 
 const relayMapper = [
     { name: 'cooling', label: 'Hlađenje', value: 0 },
@@ -327,6 +331,8 @@ const DashboardPage = () => {
 
     pressures[0].value = stateMachineValues?.sensorvalues?.pressure?.toString() || 'N/A';
     pressures[1].value = stateMachineValues?.sensorvalues?.steampressure?.toString() || 'N/A';
+
+    general[0].value = stateMachineValues?.sensorvalues?.tankwaterlevel?.toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
 
@@ -540,6 +546,11 @@ const DashboardPage = () => {
                     </ul>                    
                     <ul className="list-none p-0 m-0">
                         {pressures.map((item, index) => (
+                            <DataCard key={item.headerName} {...item} />
+                        ))}
+                    </ul>
+                    <ul className="list-none p-0 m-0">
+                        {general.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>

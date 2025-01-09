@@ -37,7 +37,7 @@ export interface SensorValues {
   heatertemp: number;
   tanktemp: number;
   tempk: number;
-  tankWaterLevel: number;
+  tankwaterlevel: number;
   pressure: number;
   steampressure: number;
   doorClosed: number;
