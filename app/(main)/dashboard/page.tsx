@@ -315,18 +315,18 @@ const DashboardPage = () => {
         },
     );
     
-    temperatures[0].value = stateMachineValues?.sensorvalues.temp?.toString() || 'N/A';
-    temperatures[1].value = stateMachineValues?.sensorvalues.tempk?.toString() || 'N/A';
-    temperatures[2].value = stateMachineValues?.sensorvalues.expansiontemp?.toString() || 'N/A';
-    temperatures[3].value = stateMachineValues?.sensorvalues.heatertemp ?.toString() || 'N/A';
-    temperatures[4].value = stateMachineValues?.sensorvalues.tanktemp?.toString() || 'N/A';
+    temperatures[0].value = stateMachineValues?.sensorvalues?.temp?.toString() || 'N/A';
+    temperatures[1].value = stateMachineValues?.sensorvalues?.tempk?.toString() || 'N/A';
+    temperatures[2].value = stateMachineValues?.sensorvalues?.expansiontemp?.toString() || 'N/A';
+    temperatures[3].value = stateMachineValues?.sensorvalues?.heatertemp ?.toString() || 'N/A';
+    temperatures[4].value = stateMachineValues?.sensorvalues?.tanktemp?.toString() || 'N/A';
     
     stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
 
-    pressures[0].value = stateMachineValues?.sensorvalues.pressure?.toString() || 'N/A';
-    pressures[1].value = stateMachineValues?.sensorvalues.steampressure?.toString() || 'N/A';
+    pressures[0].value = stateMachineValues?.sensorvalues?.pressure?.toString() || 'N/A';
+    pressures[1].value = stateMachineValues?.sensorvalues?.steampressure?.toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
 
