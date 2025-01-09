@@ -82,6 +82,19 @@ export const RenderState = (state: number) => {
                 </div>
             );
 
+        case 1:
+            return (
+                <div
+                    className={`bg-blue-300 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Proces se pokreće</span>
+                    <div className="flex items-center">
+                        <i className={`pi pi-spin pi-spinner ${iconClassMultipleRows}`}></i>
+                    </div>
+                </div>
+            );
+
         case 2:
             return (
                 <div
@@ -111,29 +124,28 @@ export const RenderState = (state: number) => {
         case 4:
             return (
                 <div
-                    className={`bg-yellow-800 text-900 ${baseClass}`}
+                    className={`bg-blue-500 text-900 ${baseClass}`}
                     style={{ borderRadius: "12px" }}
                 >
-                    <span className={spanClass}>Proces je u izvođenju (Hlađenje)</span>
+                    <span className={spanClass}>Proces je u izvođenju (Sterilizacija)</span>
                     <div className="flex items-center flex-col">
-                        <i className={`pi pi-exclamation-triangle ${iconClassMultipleRows}`}></i>
+                        <i className={`pi pi-cog ${iconClassMultipleRows}`}></i>
                     </div>
                 </div>
             );
 
-            case 5:
-                return (
-                    <div
-                        className={`bg-green-700 text-900 ${baseClass}`}
-                        style={{ borderRadius: "12px" }}
-                    >
-                        <div className="flex items-center justify-between w-full">
-                            <span className={spanClass}>Proces je pri kraju</span>
-                            <i className={`pi pi-check ml-7 ${iconClassOneRow}`}></i>
-                        </div>
+        case 5:
+            return (
+                <div
+                    className={`bg-blue-500 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Proces je u izvođenju (Hlađenje)</span>
+                    <div className="flex items-center flex-col">
+                        <i className={`pi pi-refresh ${iconClassMultipleRows}`}></i>
                     </div>
-                );
-            
+                </div>
+            );
 
         case 6:
             return (
@@ -141,9 +153,22 @@ export const RenderState = (state: number) => {
                     className={`bg-green-700 text-900 ${baseClass}`}
                     style={{ borderRadius: "12px" }}
                 >
+                    <div className="flex items-center justify-between w-full">
+                        <span className={spanClass}>Proces je pri kraju</span>
+                        <i className={`pi pi-check ml-7 ${iconClassOneRow}`}></i>
+                    </div>
+                </div>
+            );
+
+        case 7:
+            return (
+                <div
+                    className={`bg-green-800 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
                     <span className={spanClass}>Proces je završio</span>
                     <div className="flex items-center flex-col">
-                        <i className={`pi pi-check ml-8 ${iconClassOneRow}`}></i>
+                        <i className={`pi pi-check-circle ml-8 ${iconClassOneRow}`}></i>
                     </div>
                 </div>
             );
@@ -162,9 +187,20 @@ export const RenderState = (state: number) => {
             );
 
         default:
-            return null;
+            return (
+                <div
+                    className={`bg-gray-500 text-900 ${baseClass}`}
+                    style={{ borderRadius: "12px" }}
+                >
+                    <span className={spanClass}>Nepoznat status</span>
+                    <div className="flex items-center flex-col">
+                        <i className={`pi pi-question-circle ml-7 ${iconClassOneRow}`}></i>
+                    </div>
+                </div>
+            );
     }
 };
+
 
 const StatusHeader = () => {
 
