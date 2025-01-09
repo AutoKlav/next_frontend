@@ -543,27 +543,27 @@ const DashboardPage = () => {
                         {temperatures.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>                    
-                    <ul className="list-none p-0 m-0">
-                        {pressures.map((item, index) => (
-                            <DataCard key={item.headerName} {...item} />
-                        ))}
                     </ul>
                     <ul className="list-none p-0 m-0">
                         {general.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>
+                    </ul>                                        
                 </div>
             </div>
             
             <div className="col-4">
                 <div className="card border-cyan-700">
-                <ul className="list-none p-0 m-0">
+                    <ul className="list-none p-0 m-0">
                         {stateValues.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>
+                    </ul>                    
+                    <ul className="list-none p-0 m-0">
+                        {pressures.map((item, index) => (
+                            <DataCard key={item.headerName} {...item} />
+                        ))}
+                    </ul>                    
                 </div>
             </div>    
     </div>
