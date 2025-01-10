@@ -1,21 +1,12 @@
 import { TransformedData } from "@/types/app";
-
-type Log = {
-    timestamp: string;
-    temp: number;
-    tempk: number;
-    sumfr: number;
-    fr: number;
-    pressure: number;
-};
-
+import { StateMachineValues } from "@/types/grpc";
 
 /**
  * Transforms the data by extracting specific properties from each log object.
  * @param data - The data object containing an array of log objects.
  * @returns The transformed data object with extracted properties.
  */
-export const transformData = (data: { processlogsList: Log[] }): TransformedData => {
+export const transformData = (data: { processlogsList: StateMachineValues[] }): TransformedData => {
     const transformedData: TransformedData = {
         timestamp: [],
         temp: [],
@@ -27,11 +18,11 @@ export const transformData = (data: { processlogsList: Log[] }): TransformedData
 
     data.processlogsList.forEach((log) => {
         transformedData.timestamp.push(log.timestamp);
-        transformedData.temp.push(log.temp);
-        transformedData.tempk.push(log.tempk);
+        transformedData.temp.push(log.sensorvalues.temp);
+        transformedData.tempk.push(log.sensorvalues.tempk);
         transformedData.sumfr.push(log.sumfr);
         transformedData.fr.push(log.fr);
-        transformedData.pressure.push(log.pressure);
+        transformedData.pressure.push(log.sensorvalues.pressure);
     });
 
     return transformedData;

@@ -1,6 +1,6 @@
 "use server"
 
-import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getSensorValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
 import { ProcessFilterRequest, ProcessTypeRequest, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
 
@@ -14,11 +14,6 @@ export const getStatusAction = async () => {
 export const getStateMachineValuesAction = async () => {
     const states = await getStateMachineValues();
     return states;
-}
-
-export const getSensorValuesAction = async () => {
-    const sensors = await getSensorValues();
-    return sensors;
 }
 
 export const getSensorPinValuesAction = async () => {

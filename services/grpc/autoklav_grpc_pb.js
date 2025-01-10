@@ -361,19 +361,41 @@ getAllProcesses: {
     responseSerialize: serialize_autoklav_Status,
     responseDeserialize: deserialize_autoklav_Status,
   },
-  // Sensor
-getSensorValues: {
-    path: '/autoklav.Autoklav/getSensorValues',
+  startManualProcess: {
+    path: '/autoklav.Autoklav/startManualProcess',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.StartProcessRequest,
+    responseType: services_grpc_autoklav_pb.Status,
+    requestSerialize: serialize_autoklav_StartProcessRequest,
+    requestDeserialize: deserialize_autoklav_StartProcessRequest,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
+  },
+  stopManualProcess: {
+    path: '/autoklav.Autoklav/stopManualProcess',
     requestStream: false,
     responseStream: false,
     requestType: services_grpc_autoklav_pb.Empty,
-    responseType: services_grpc_autoklav_pb.SensorValues,
+    responseType: services_grpc_autoklav_pb.Status,
     requestSerialize: serialize_autoklav_Empty,
     requestDeserialize: deserialize_autoklav_Empty,
-    responseSerialize: serialize_autoklav_SensorValues,
-    responseDeserialize: deserialize_autoklav_SensorValues,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
   },
-  getSensorPinValues: {
+  relayTest: {
+    path: '/autoklav.Autoklav/relayTest',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.Empty,
+    responseType: services_grpc_autoklav_pb.Status,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
+  },
+  // Sensor
+getSensorPinValues: {
     path: '/autoklav.Autoklav/getSensorPinValues',
     requestStream: false,
     responseStream: false,

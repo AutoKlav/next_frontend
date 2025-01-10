@@ -56,17 +56,18 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   processInfo.setProcessstart(startProcessRequest.processInfo.processStart);
   processInfo.setTargetf(startProcessRequest.processInfo.targetF);
   processInfo.setProcesslength(startProcessRequest.processInfo.processLength);
+  processInfo.setTargetheatingtime(startProcessRequest.processInfo.targetHeatingTime);
+  processInfo.setTargetcoolingtime(startProcessRequest.processInfo.targetCoolingTime);
   data.setProcessinfo(processInfo);
 
   const processConfig = new Messages.ProcessConfig();
   processConfig.setType(startProcessRequest.processConfig.type);
+  processConfig.setHeatingtype(startProcessRequest.processConfig.heatingType);
   processConfig.setCustomtemp(startProcessRequest.processConfig.customTemp);
   processConfig.setMode(startProcessRequest.processConfig.mode);
   processConfig.setTargettime(startProcessRequest.processConfig.targetTime);
   processConfig.setMaintaintemp(startProcessRequest.processConfig.maintainTemp);
-  processConfig.setMaintainpressure(
-    startProcessRequest.processConfig.maintainPressure
-  );
+ 
   processConfig.setFinishtemp(startProcessRequest.processConfig.finishTemp);
   data.setProcessconfig(processConfig);
 
@@ -77,6 +78,24 @@ export const stopProcess = () => {
   const data = new Messages.Empty();
 
   return gRpcCall<Status>("stopProcess", data);
+};
+
+export const startManualProcess = () => {
+  const data = new Messages.StartProcessRequest();
+
+  return gRpcCall<Status>("startManualProcess", data);
+};
+
+export const stopManualProcess = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<Status>("stopManualProcess", data);
+};
+
+export const relayTest = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<Status>("relayTest", data);
 };
 
 export const updateSensor = (updateSensorRequest: UpdateSensorRequest) => {
@@ -93,8 +112,7 @@ export const createProcessType = (processRequest: ProcessTypeRequest) => {
   data.setName(processRequest.name);
   data.setType(processRequest.type);
   data.setCustomtemp(processRequest.customTemp);
-  data.setFinishtemp(processRequest.finishTemp);
-  data.setMaintainpressure(processRequest.maintainPressure);
+  data.setFinishtemp(processRequest.finishTemp);  
   data.setPressure(processRequest.pressure);
 
   return gRpcCall<Status>("createProcessType", data);
@@ -146,13 +164,6 @@ export const getAllProcessLogs = (ids: number[]) => {
   data.setIdsList(ids);
 
   return gRpcCall<ProcessLogList>("getProcessLogs", data);
-};
-
-// Sensor
-export const getSensorValues = () => {
-  const data = new Messages.Empty();
-
-  return gRpcCall<SensorValues>("getSensorValues", data);
 };
 
 export const getSensorPinValues = () => {

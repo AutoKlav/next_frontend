@@ -12,7 +12,7 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { Bacteria, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { Bacteria, HeatingType, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
@@ -22,6 +22,9 @@ import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/type
 const temperatures = [
     { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
     { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'Temperatura proširenja', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'Temperatura grijača', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'Temperatura spremnika', value: '', unit: '°C', color: 'red' },    
 ];
 
 const stateValues = [
@@ -32,27 +35,31 @@ const stateValues = [
 
 const pressures = [
     { icon: 'pi-gauge', headerName: 'Pritisak komore', value: '', unit: 'bar', color: 'blue' },
-    { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },    
+    { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },        
 ];
+
+const general = [
+    { icon: 'pi-cloud', headerName: 'Postotak vode u spremniku', value: '', unit: '%', color: 'black' },    
+]
 
 const relayMapper = [
     { name: 'cooling', label: 'Hlađenje', value: 0 },
     { name: 'heating', label: 'Grijači', value: 0 },
     { name: 'pump', label: 'Pumpa', value: 0 },
-    { name: 'filltankwithwater', label: 'Punjenje spremnika', value: 0 },
-    { name: 'waterdrain', label: 'Ispust vode', value: 0 },
-    { name: 'electricheating', label: 'Električno grijanje', value: 0 },
-    { name: 'extensioncooling', label: 'Proširenje hlađenja', value: 0 },
-    { name: 'alarmsignal', label: 'Alarm', value: 0 },
-    { name: 'tankheating', label: 'Grijanje spremnika', value: 0 },
-    { name: 'coolinghelper', label: 'Pomoćno hlađenje', value: 0 },
-    { name: 'autoklavfill', label: 'Punjenje autoklava', value: 0 },    
+    { name: 'fillTankWithWater', label: 'Punjenje spremnika', value: 0 },
+    { name: 'waterDrain', label: 'Ispust vode', value: 0 },
+    { name: 'electricHeating', label: 'Električno grijanje', value: 0 },
+    { name: 'extensionCooling', label: 'Proširenje hlađenja', value: 0 },
+    { name: 'alarmSignal', label: 'Alarm', value: 0 },
+    { name: 'tankHeating', label: 'Grijanje spremnika', value: 0 },
+    { name: 'coolingHelper', label: 'Pomoćno hlađenje', value: 0 },
+    { name: 'autoklavFill', label: 'Punjenje autoklava', value: 0 },
 ];
 
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchInterval = 1000;    
+    const refetchInterval = 5000;    
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
@@ -75,11 +82,13 @@ const DashboardPage = () => {
     const [customTemp, setCustomTemp] = useState<number>(0);    
     const [finishTemp, setFinishTemp] = useState<number>(0);
     
-    const [maintainPressure, setMaintainPressure] = useState<number>(0);  
     const [maintainTemp, setMaintainTemp] = useState<number>(0);
     
     const targetF = React.useRef<number>(0);
     const targetTime = React.useRef<number>(0);
+
+    const targetHeatingTime = React.useRef<string>('0');
+    const targetCoolingTime = React.useRef<string>('0');
 
     const fetchedTypes = useRef<ProcessType[]>();
     const fetchedBacteria = useRef<Bacteria[]>();
@@ -96,7 +105,6 @@ const DashboardPage = () => {
         //#region modeDropdown        
         setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 0);        
         setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
-        setMaintainPressure(fetchedTypes.current?.[0]?.maintainpressure || 0);        
         setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         //#endregion
@@ -241,7 +249,6 @@ const DashboardPage = () => {
             setCustomTemp(typeDropdown?.customtemp || 0);            
             setFinishTemp(typeDropdown?.finishtemp || 0);            
             setMaintainTemp(typeDropdown?.maintaintemp || 0);            
-            setMaintainPressure(typeDropdown?.maintainpressure || 0);
         }
     }, [typeDropdown]);
     
@@ -312,21 +319,54 @@ const DashboardPage = () => {
         },
     );
     
-    temperatures[0].value = stateMachineValues?.temp?.toString() || 'N/A';
-    temperatures[1].value = stateMachineValues?.tempk?.toString() || 'N/A';
+    temperatures[0].value = stateMachineValues?.sensorvalues?.temp?.toString() || 'N/A';
+    temperatures[1].value = stateMachineValues?.sensorvalues?.tempk?.toString() || 'N/A';
+    temperatures[2].value = stateMachineValues?.sensorvalues?.expansiontemp?.toString() || 'N/A';
+    temperatures[3].value = stateMachineValues?.sensorvalues?.heatertemp ?.toString() || 'N/A';
+    temperatures[4].value = stateMachineValues?.sensorvalues?.tanktemp?.toString() || 'N/A';
     
     stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
 
-    pressures[0].value = stateMachineValues?.pressure?.toString() || 'N/A';
-    //pressures[1].value = stateMachineValues?. .toString() || 'N/A';
+    pressures[0].value = stateMachineValues?.sensorvalues?.pressure?.toString() || 'N/A';
+    pressures[1].value = stateMachineValues?.sensorvalues?.steampressure?.toString() || 'N/A';
+
+    general[0].value = stateMachineValues?.sensorvalues?.tankwaterlevel?.toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
 
+    // const relayMapper = [
+    //     { name: 'cooling', label: 'Hlađenje', value: 0 },
+    //     { name: 'heating', label: 'Grijači', value: 0 },
+    //     { name: 'pump', label: 'Pumpa', value: 0 },
+    //     { name: 'filltankwithwater', label: 'Punjenje spremnika', value: 0 },
+    //     { name: 'waterdrain', label: 'Ispust vode', value: 0 },
+    //     { name: 'electricheating', label: 'Električno grijanje', value: 0 },
+    //     { name: 'extensioncooling', label: 'Proširenje hlađenja', value: 0 },
+    //     { name: 'alarmsignal', label: 'Alarm', value: 0 },
+    //     { name: 'tankheating', label: 'Grijanje spremnika', value: 0 },
+    //     { name: 'coolinghelper', label: 'Pomoćno hlađenje', value: 0 },
+    //     { name: 'autoklavfill', label: 'Punjenje autoklava', value: 0 },    
+    // ];
+    // {
+    //     "fillTankWithWater": 0,
+    //     "cooling": 0,
+    //     "tankHeating": 0,
+    //     "coolingHelper": 0,
+    //     "autoklavFill": 0,
+    //     "waterDrain": 0,
+    //     "heating": 0,
+    //     "pump": 0,
+    //     "electricHeating": 0,
+    //     "increasePressure": 0,
+    //     "extensionCooling": 0,
+    //     "alarmSignal": 0
+    // }
+    
     relayMapper[0].value = relaySensorValues?.cooling || 0;
     relayMapper[1].value = relaySensorValues?.heating || 0;
-    relayMapper[2].value = relaySensorValues?.pump || 0;        
+    relayMapper[2].value = relaySensorValues?.pump || 0;
     relayMapper[3].value = relaySensorValues?.filltankwithwater || 0;
     relayMapper[4].value = relaySensorValues?.waterdrain || 0;
     relayMapper[5].value = relaySensorValues?.electricheating || 0;
@@ -334,7 +374,7 @@ const DashboardPage = () => {
     relayMapper[7].value = relaySensorValues?.alarmsignal || 0;
     relayMapper[8].value = relaySensorValues?.tankheating || 0;
     relayMapper[9].value = relaySensorValues?.coolinghelper || 0;
-    relayMapper[10].value = relaySensorValues?.autoklavfill || 0;    
+    relayMapper[10].value = relaySensorValues?.autoklavfill || 0;
 
     const handleStartProcess = () => {        
 
@@ -350,7 +390,6 @@ const DashboardPage = () => {
                 setCustomTemp(typeDropdown?.customtemp || 0);                
                 setFinishTemp(typeDropdown?.finishtemp || 0);                
                 setMaintainTemp(typeDropdown?.maintaintemp || 0);
-                setMaintainPressure(typeDropdown?.maintainpressure || 0);
             }
             const parsedType = getProcessConfigTypeById(typeDropdown?.id);
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
@@ -367,7 +406,7 @@ const DashboardPage = () => {
                 processConfig: {                                    
                     customTemp: customTemp,
                     finishTemp: finishTemp,
-                    maintainPressure: maintainPressure,
+                    heatingType: HeatingType.STEAM,
                     maintainTemp: maintainTemp,
                     mode: parsedMode,
                     targetTime: isNaN(targetTime.current) ? 0 : targetTime.current,
@@ -382,6 +421,8 @@ const DashboardPage = () => {
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
+                    targetCoolingTime: targetCoolingTime.current,
+                    targetHeatingTime: targetHeatingTime.current,
                 },
             };
             console.log('Proces request', request);        
@@ -455,7 +496,6 @@ const DashboardPage = () => {
                         </div>                        
                         <div className="col-4">
                             <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
-                            <GeneralNumberInput headerName="Održavanje tlaka" disabled={disabledInput} inputValue={[maintainPressure, setMaintainPressure]} />
                         </div>               
                     </div>
                 </Dialog>
@@ -503,22 +543,27 @@ const DashboardPage = () => {
                         {temperatures.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>                    
+                    </ul>
                     <ul className="list-none p-0 m-0">
-                        {pressures.map((item, index) => (
+                        {general.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>
+                    </ul>                                        
                 </div>
             </div>
             
             <div className="col-4">
                 <div className="card border-cyan-700">
-                <ul className="list-none p-0 m-0">
+                    <ul className="list-none p-0 m-0">
                         {stateValues.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>
+                    </ul>                    
+                    <ul className="list-none p-0 m-0">
+                        {pressures.map((item, index) => (
+                            <DataCard key={item.headerName} {...item} />
+                        ))}
+                    </ul>                    
                 </div>
             </div>    
     </div>

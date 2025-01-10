@@ -6,6 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const response = await gRPC.getSensorValues();
+  const response = await gRPC.stopManualProcess();
   res.status(200).json(response);
 }
