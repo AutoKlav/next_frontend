@@ -54,6 +54,7 @@ const relayMapper = [
     { name: 'tankHeating', label: 'Grijanje spremnika', value: 0 },
     { name: 'coolingHelper', label: 'Pomoćno hlađenje', value: 0 },
     { name: 'autoklavFill', label: 'Punjenje autoklava', value: 0 },
+    { name: 'autoklavFill', label: 'Dizanje tlaka', value: 0 },
 ];
 
 const DashboardPage = () => {
@@ -335,34 +336,6 @@ const DashboardPage = () => {
     general[0].value = stateMachineValues?.sensorvalues?.tankwaterlevel?.toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
-
-    // const relayMapper = [
-    //     { name: 'cooling', label: 'Hlađenje', value: 0 },
-    //     { name: 'heating', label: 'Grijači', value: 0 },
-    //     { name: 'pump', label: 'Pumpa', value: 0 },
-    //     { name: 'filltankwithwater', label: 'Punjenje spremnika', value: 0 },
-    //     { name: 'waterdrain', label: 'Ispust vode', value: 0 },
-    //     { name: 'electricheating', label: 'Električno grijanje', value: 0 },
-    //     { name: 'extensioncooling', label: 'Proširenje hlađenja', value: 0 },
-    //     { name: 'alarmsignal', label: 'Alarm', value: 0 },
-    //     { name: 'tankheating', label: 'Grijanje spremnika', value: 0 },
-    //     { name: 'coolinghelper', label: 'Pomoćno hlađenje', value: 0 },
-    //     { name: 'autoklavfill', label: 'Punjenje autoklava', value: 0 },    
-    // ];
-    // {
-    //     "fillTankWithWater": 0,
-    //     "cooling": 0,
-    //     "tankHeating": 0,
-    //     "coolingHelper": 0,
-    //     "autoklavFill": 0,
-    //     "waterDrain": 0,
-    //     "heating": 0,
-    //     "pump": 0,
-    //     "electricHeating": 0,
-    //     "increasePressure": 0,
-    //     "extensionCooling": 0,
-    //     "alarmSignal": 0
-    // }
     
     relayMapper[0].value = relaySensorValues?.cooling || 0;
     relayMapper[1].value = relaySensorValues?.heating || 0;
@@ -375,6 +348,7 @@ const DashboardPage = () => {
     relayMapper[8].value = relaySensorValues?.tankheating || 0;
     relayMapper[9].value = relaySensorValues?.coolinghelper || 0;
     relayMapper[10].value = relaySensorValues?.autoklavfill || 0;
+    relayMapper[11].value = relaySensorValues?.increasepressure || 0;
 
     const handleStartProcess = () => {        
 
