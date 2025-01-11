@@ -28,9 +28,9 @@ const temperatures = [
 ];
 
 const stateValues = [
-    { icon: 'pi-chart-line', headerName: 'D5', value: '', unit: '', color: 'cyan' },
-    { icon: 'pi-chart-bar', headerName: 'F5', value: '', unit: '', color: 'cyan', decimal: 5 },
-    { icon: 'pi-chart-pie', headerName: 'r5', value: '', unit: '', color: 'cyan', decimal: 5 },
+    { icon: 'pi-chart-line', headerName: 'D₅', value: '', unit: '', color: 'cyan' },
+    { icon: 'pi-chart-bar', headerName: 'F₅', value: '', unit: '', color: 'cyan', decimal: 5 },
+    { icon: 'pi-chart-pie', headerName: 'r₅', value: '', unit: '', color: 'cyan', decimal: 5 },
 ];
 
 const pressures = [
