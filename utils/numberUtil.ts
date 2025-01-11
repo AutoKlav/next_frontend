@@ -8,7 +8,7 @@
  * @param value - The string value to parse and format.
  * @returns The formatted display value as a string.
  */
-export const parseAndFormatValue = (value: string): string => {
+export const parseAndFormatValue = (value: string, decimal: number = 2): string => {
     const parsedValue = parseFloat(value);
     let displayValue;
 
@@ -20,8 +20,8 @@ export const parseAndFormatValue = (value: string): string => {
         displayValue = '0';
     } else {
         const exponent = Math.floor(Math.log10(Math.abs(parsedValue)));
-        if (exponent >= 0 && exponent <= 4) {
-            displayValue = parsedValue.toFixed(2); // Display in normal notation with 2 decimal places
+        if (exponent <= 4) {
+            displayValue = parsedValue.toFixed(decimal); // Display in normal notation with 2 decimal places
         } else {
             displayValue = parsedValue.toExponential(2); // Display in exponential notation with 2 decimal places
         }

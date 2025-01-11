@@ -29,8 +29,8 @@ const temperatures = [
 
 const stateValues = [
     { icon: 'pi-chart-line', headerName: 'Dr', value: '', unit: '', color: 'cyan' },
-    { icon: 'pi-chart-bar', headerName: 'Fr', value: '', unit: '', color: 'cyan' },
-    { icon: 'pi-chart-pie', headerName: 'r', value: '', unit: '', color: 'cyan' },
+    { icon: 'pi-chart-bar', headerName: 'Fr', value: '', unit: '', color: 'cyan', decimal: 5 },
+    { icon: 'pi-chart-pie', headerName: 'r', value: '', unit: '', color: 'cyan', decimal: 5 },
 ];
 
 const pressures = [
@@ -59,7 +59,7 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchInterval = 5000;    
+    const refetchInterval = 1000;    
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
