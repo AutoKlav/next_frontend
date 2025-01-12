@@ -54,7 +54,7 @@ const relayMapper = [
     { name: 'tankHeating', label: 'Grijanje spremnika', value: 0 },
     { name: 'coolingHelper', label: 'Pomoćno hlađenje', value: 0 },
     { name: 'autoklavFill', label: 'Punjenje autoklava', value: 0 },
-    { name: 'autoklavFill', label: 'Dizanje tlaka', value: 0 },
+    { name: 'increasePressure', label: 'Dizanje tlaka', value: 0 },
 ];
 
 const DashboardPage = () => {
