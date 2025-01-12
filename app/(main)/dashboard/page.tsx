@@ -20,11 +20,14 @@ import { ProcessInfoFields } from '@/types/app';
 import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 
 const temperatures = [
-    { icon: 'pi-sun', headerName: 'Temperatura komore', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-box', headerName: 'Temperatura proizvoda', value: '', unit: '°C', color: 'red' },    
-    { icon: 'pi-box', headerName: 'Temperatura proširenja', value: '', unit: '°C', color: 'red' },    
-    { icon: 'pi-box', headerName: 'Temperatura grijača', value: '', unit: '°C', color: 'red' },    
-    { icon: 'pi-box', headerName: 'Temperatura spremnika', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-box', headerName: 'TEMP. GRIJACA', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'TEMP. SRED.', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-gauge', headerName: 'TLAK AK.', value: '', unit: 'bar', color: 'blue' },
+    { icon: 'pi-box', headerName: 'TEMP. SPREM.', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-cloud', headerName: 'NIVO. SPREM.', value: '', unit: '%', color: 'black' },    
+    { icon: 'pi-box', headerName: 'CIJEV PROS', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-cloud', headerName: 'TLAK PARE', value: '', unit: 'bar', color: 'blue' },        
 ];
 
 const stateValues = [
@@ -33,28 +36,19 @@ const stateValues = [
     { icon: 'pi-chart-pie', headerName: 'r₅', value: '', unit: '', color: 'cyan', decimal: 5 },
 ];
 
-const pressures = [
-    { icon: 'pi-gauge', headerName: 'Pritisak komore', value: '', unit: 'bar', color: 'blue' },
-    { icon: 'pi-cloud', headerName: 'Pritisak pare', value: '', unit: 'bar', color: 'blue' },        
-];
-
-const general = [
-    { icon: 'pi-cloud', headerName: 'Postotak vode u spremniku', value: '', unit: '%', color: 'black' },    
-]
-
 const relayMapper = [
-    { name: 'cooling', label: 'Hlađenje', value: 0 },
-    { name: 'heating', label: 'Grijači', value: 0 },
-    { name: 'pump', label: 'Pumpa', value: 0 },
-    { name: 'fillTankWithWater', label: 'Punjenje spremnika', value: 0 },
-    { name: 'waterDrain', label: 'Ispust vode', value: 0 },
-    { name: 'electricHeating', label: 'Električno grijanje', value: 0 },
-    { name: 'extensionCooling', label: 'Proširenje hlađenja', value: 0 },
-    { name: 'alarmSignal', label: 'Alarm', value: 0 },
-    { name: 'tankHeating', label: 'Grijanje spremnika', value: 0 },
-    { name: 'coolingHelper', label: 'Pomoćno hlađenje', value: 0 },
-    { name: 'autoklavFill', label: 'Punjenje autoklava', value: 0 },
-    { name: 'autoklavFill', label: 'Dizanje tlaka', value: 0 },
+    { name: 'fillTankWithWater', label: 'PUNJ. SPREM', value: 0 },
+    { name: 'tankHeating', label: 'GR. SPREM', value: 0 },
+    { name: 'autoklavFill', label: 'PUNJ. AK', value: 0 },
+    { name: 'heating', label: 'GRIJ. AK', value: 0 },
+    { name: 'electricHeating', label: 'EL. GRIJ', value: 0 },
+    { name: 'cooling', label: 'HLADENJE', value: 0 },
+    { name: 'coolingHelper', label: 'POM. HLADJ', value: 0 },
+    { name: 'extensionCooling', label: 'HLADJ PROSI', value: 0 },
+    { name: 'waterDrain', label: 'ISP. VODE', value: 0 },
+    { name: 'pump', label: 'PUMPA', value: 0 },
+    { name: 'increasePressure', label: 'DIZ. TL. AK', value: 0 },
+    { name: 'alarmSignal', label: 'ALARM', value: 0 },
 ];
 
 const DashboardPage = () => {
@@ -325,30 +319,28 @@ const DashboardPage = () => {
     temperatures[2].value = stateMachineValues?.sensorvalues?.expansiontemp?.toString() || 'N/A';
     temperatures[3].value = stateMachineValues?.sensorvalues?.heatertemp ?.toString() || 'N/A';
     temperatures[4].value = stateMachineValues?.sensorvalues?.tanktemp?.toString() || 'N/A';
+    temperatures[5].value = stateMachineValues?.sensorvalues?.pressure?.toString() || 'N/A';
+    temperatures[6].value = stateMachineValues?.sensorvalues?.steampressure?.toString() || 'N/A';
+    temperatures[7].value = stateMachineValues?.sensorvalues?.tankwaterlevel?.toString() || 'N/A';
     
     stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
-
-    pressures[0].value = stateMachineValues?.sensorvalues?.pressure?.toString() || 'N/A';
-    pressures[1].value = stateMachineValues?.sensorvalues?.steampressure?.toString() || 'N/A';
-
-    general[0].value = stateMachineValues?.sensorvalues?.tankwaterlevel?.toString() || 'N/A';
     
     const state = stateMachineValues?.state || 0;
     
-    relayMapper[0].value = relaySensorValues?.cooling || 0;
-    relayMapper[1].value = relaySensorValues?.heating || 0;
-    relayMapper[2].value = relaySensorValues?.pump || 0;
-    relayMapper[3].value = relaySensorValues?.filltankwithwater || 0;
-    relayMapper[4].value = relaySensorValues?.waterdrain || 0;
-    relayMapper[5].value = relaySensorValues?.electricheating || 0;
-    relayMapper[6].value = relaySensorValues?.extensioncooling || 0;
-    relayMapper[7].value = relaySensorValues?.alarmsignal || 0;
-    relayMapper[8].value = relaySensorValues?.tankheating || 0;
-    relayMapper[9].value = relaySensorValues?.coolinghelper || 0;
-    relayMapper[10].value = relaySensorValues?.autoklavfill || 0;
-    relayMapper[11].value = relaySensorValues?.increasepressure || 0;
+    relayMapper[0].value = relaySensorValues?.filltankwithwater || 0;
+    relayMapper[1].value = relaySensorValues?.tankheating || 0;
+    relayMapper[2].value = relaySensorValues?.autoklavfill || 0;
+    relayMapper[3].value = relaySensorValues?.heating || 0;
+    relayMapper[4].value = relaySensorValues?.electricheating || 0;
+    relayMapper[5].value = relaySensorValues?.cooling || 0;
+    relayMapper[6].value = relaySensorValues?.coolinghelper || 0;
+    relayMapper[7].value = relaySensorValues?.extensioncooling || 0;
+    relayMapper[8].value = relaySensorValues?.waterdrain || 0;
+    relayMapper[9].value = relaySensorValues?.pump || 0;
+    relayMapper[10].value = relaySensorValues?.increasepressure || 0;
+    relayMapper[11].value = relaySensorValues?.alarmsignal || 0;
 
     const handleStartProcess = () => {        
 
@@ -496,14 +488,14 @@ const DashboardPage = () => {
             
             <div className="col-6">
                     <div className='flex flex-column gap-3 ml-2 mr-2'>
-                        {relayMapper.slice(0,6) .map((chip, index) => (
+                        {relayMapper.slice(0,5) .map((chip, index) => (
                                 <ChipStates key={chip.name} {...chip} />
                         ))}
                     </div>                    
             </div>
             <div className="col-5">
             <div className='flex flex-column gap-3 -ml-2 -mr-2 '>
-                        {relayMapper.slice(6,relayMapper.length) .map((chip, index) => (
+                        {relayMapper.slice(5,relayMapper.length) .map((chip, index) => (
                                 <ChipStates key={chip.name} {...chip} />
                         ))}
             </div>
@@ -514,30 +506,27 @@ const DashboardPage = () => {
          <div className="col-4">            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
-                        {temperatures.map((item, index) => (
+                        {temperatures.slice(0,4).map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>
-                    <ul className="list-none p-0 m-0">
-                        {general.map((item, index) => (
-                            <DataCard key={item.headerName} {...item} />
-                        ))}
-                    </ul>                                        
+                    </ul>                    
                 </div>
             </div>
             
             <div className="col-4">
+            <div className="card border-red-700">                                                                
+                    <ul className="list-none p-0 m-0">
+                        {temperatures.slice(4,8).map((item, index) => (
+                            <DataCard key={item.headerName} {...item} />
+                        ))}
+                    </ul>                
+                </div>
                 <div className="card border-cyan-700">
                     <ul className="list-none p-0 m-0">
                         {stateValues.map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>                    
-                    <ul className="list-none p-0 m-0">
-                        {pressures.map((item, index) => (
-                            <DataCard key={item.headerName} {...item} />
-                        ))}
-                    </ul>                    
+                    </ul>                                        
                 </div>
             </div>    
     </div>
