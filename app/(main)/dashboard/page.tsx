@@ -18,6 +18,7 @@ import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNum
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 import { ProcessInfoFields } from '@/types/app';
 import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
+import { TabView, TabPanel } from 'primereact/tabview';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -84,6 +85,11 @@ const DashboardPage = () => {
 
     const targetHeatingTime = React.useRef<string>('0');
     const targetCoolingTime = React.useRef<string>('0');
+    const batchLTO = React.useRef<string>('');
+    
+    
+    const d0 = React.useRef<string>('');
+    const z = React.useRef<string>('');
 
     const fetchedTypes = useRef<ProcessType[]>();
     const fetchedBacteria = useRef<Bacteria[]>();
@@ -431,8 +437,41 @@ const DashboardPage = () => {
     return (
         <div className="grid p-2">
             <div className="m-0">
-            <div className="grid p-2">
-                <Dialog header="Unos podataka" visible={isModalVisible} style={{ width: '60vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+            <div className="grid p-2">                
+                <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '60vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                <TabView>
+                <TabPanel header="Jednostavni unos">
+                <div className="flex flex-col items-center">
+      <Button
+        className="p-button-rounded p-button-text p-0 flex flex-col items-center"
+        style={{
+          backgroundColor: 'transparent',
+          border: '2px solid var(--primary-color)', // Specify width, style, and color          
+        }}
+      >
+        <div
+          style={{
+            width: '100px',
+            height: '100px',
+            overflow: 'hidden',
+            borderRadius: '30%',
+          }}
+        >
+          <img
+            src={`/layout/images/hotdog.jpg`}
+            alt="Placeholder"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        <span className="text-center ml-3 mr-3">01-Hrenovka-100g</span>
+      </Button>
+    </div>
+                </TabPanel>
+                <TabPanel header="Napredni unos"> 
                     <div className="grid">
                         <div className="col-4">                                    
                             <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
@@ -464,7 +503,10 @@ const DashboardPage = () => {
                             <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
                         </div>               
                     </div>
+                    </TabPanel>                
+                </TabView>
                 </Dialog>
+                
             </div>
         </div>            
         <div className="col-4">
