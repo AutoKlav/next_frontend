@@ -313,15 +313,6 @@ const DashboardPage = () => {
             },
         },
     );
-
-    // { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
-    // { icon: 'pi-box', headerName: 'TEMP. GRIJACA', value: '', unit: '°C', color: 'red' },    
-    // { icon: 'pi-box', headerName: 'TEMP. SRED.', value: '', unit: '°C', color: 'red' },    
-    // { icon: 'pi-gauge', headerName: 'TLAK AK.', value: '', unit: 'bar', color: 'blue' },
-    // { icon: 'pi-box', headerName: 'TEMP. SPREM.', value: '', unit: '°C', color: 'red' },    
-    // { icon: 'pi-cloud', headerName: 'NIVO. SPREM.', value: '', unit: '%', color: 'black' },    
-    // { icon: 'pi-box', headerName: 'CIJEV PROS', value: '', unit: '°C', color: 'red' },    
-    // { icon: 'pi-cloud', headerName: 'TLAK PARE', value: '', unit: 'bar', color: 'blue' },        
     
     temperatures[0].value = stateMachineValues?.sensorvalues?.temp?.toString() || 'N/A';
     temperatures[1].value = stateMachineValues?.sensorvalues?.heatertemp?.toString() || 'N/A';
