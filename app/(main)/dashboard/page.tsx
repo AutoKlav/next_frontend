@@ -17,7 +17,7 @@ import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStr
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 import { ProcessInfoFields } from '@/types/app';
-import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
+import { getHeatingTypeById, getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 import { TabView, TabPanel } from 'primereact/tabview';
 
 const temperatures = [
@@ -63,17 +63,21 @@ const DashboardPage = () => {
         { id: 1, name: 'Target T' },
     ];
 
+    const heatingDropdownValues: ProcessType[] = [
+        { id: 0, name: 'Para' },
+        { id: 1, name: 'Struja' },
+    ];
+
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
+    // Para / Struja
+    const [heatingDropdown, setHeatingDropdown] = useState<ProcessType>(heatingDropdownValues[0]);
     
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
-        
-    const [bacteria, setBacteria] = useState('');
-    const [description, setDescription] = useState('');
         
     const [customTemp, setCustomTemp] = useState<number>(0);    
     const [finishTemp, setFinishTemp] = useState<number>(0);
@@ -83,14 +87,10 @@ const DashboardPage = () => {
     const targetF = React.useRef<number>(0);
     const targetTime = React.useRef<number>(0);
 
-    const targetHeatingTime = React.useRef<string>('0');
-    const targetCoolingTime = React.useRef<string>('0');
+    const targetHeatingTime = React.useRef<number>(0);
+    const targetCoolingTime = React.useRef<number>(0);
     const batchLTO = React.useRef<string>('');
-    
-    
-    const d0 = React.useRef<string>('');
-    const z = React.useRef<string>('');
-
+        
     const fetchedTypes = useRef<ProcessType[]>();
     const fetchedBacteria = useRef<Bacteria[]>();
 
@@ -99,21 +99,26 @@ const DashboardPage = () => {
     const resetInputs = () => {
         
         setProductQuantity('');
-        setProductName('');
-        setBacteria('');        
-        setDescription('');
+        setProductName('');        
         
         //#region modeDropdown        
         setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 0);        
         setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
         setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
+        setHeatingDropdown(heatingDropdownValues[0]);
         //#endregion
         
         //#region typeDropdown
         targetF.current = 0;
         targetTime.current = 0;
+
+        targetCoolingTime.current = 0;
+        targetHeatingTime.current = 0;
+        batchLTO.current = '';
+
         //#endregion
+        
     }
 
     const { mutate: stopProcess } = useMutation({
@@ -350,7 +355,7 @@ const DashboardPage = () => {
 
     const handleStartProcess = () => {        
 
-        if(productName === '' || productQuantity === '' || bacteria === '' || description === '') {
+        if(productName === '' || productQuantity === '') {
             showWarn('Proces','Molimo unesite sve podatke');
             return;
         }
@@ -365,6 +370,7 @@ const DashboardPage = () => {
             }
             const parsedType = getProcessConfigTypeById(typeDropdown?.id);
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
+            const parsedHeating = getHeatingTypeById(heatingDropdown?.id);
 
             const bacteria: Bacteria = {
                 id: 0,
@@ -378,7 +384,7 @@ const DashboardPage = () => {
                 processConfig: {                                    
                     customTemp: customTemp,
                     finishTemp: finishTemp,
-                    heatingType: HeatingType.STEAM,
+                    heatingType: parsedHeating,
                     maintainTemp: maintainTemp,
                     mode: parsedMode,
                     targetTime: isNaN(targetTime.current) ? 0 : targetTime.current,
@@ -386,15 +392,15 @@ const DashboardPage = () => {
                 },
                 processInfo: {
                     productName: productName,
-                    batchLTO: '',
+                    batchLTO: batchLTO.current,
                     bacteria: bacteria,
                     targetF: isNaN(targetF.current) ? '0' : targetF.current.toString(),
-                    description: description,
+                    description: '',
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
-                    targetCoolingTime: targetCoolingTime.current,
-                    targetHeatingTime: targetHeatingTime.current,
+                    targetCoolingTime: targetCoolingTime.current.toString(),
+                    targetHeatingTime: targetHeatingTime.current.toString(),
                 },
             };
             console.log('Proces request', request);        
@@ -474,12 +480,14 @@ const DashboardPage = () => {
                 <TabPanel header="Napredni unos"> 
                     <div className="grid">
                         <div className="col-4">                                    
-                            <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>
-                            <GeneralStringInput headerName="Naziv bakterije" placeholder='Salmonella' inputValue={[bacteria, setBacteria]} suggestions={processSuggestions?.bacteria}/>                    
+                            <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>                            
+                            <GeneralNumberInput headerName="Vrijeme zagrijavanja" inputValue={targetHeatingTime} />                            
+                            <GeneralStringInput headerName="Broj šarže" placeholder='LTO3242654234' inputValue={batchLTO} suggestions={[]} />
                         </div>                
                         <div className="col-4">
-                            <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                                    
-                            <GeneralStringInput headerName="Opis" placeholder='Sterilizacija mlijeka za eliminaciju patogenih organizama' inputValue={[description, setDescription]} suggestions={processSuggestions?.description}/>                    
+                            <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>
+                            <GeneralNumberInput headerName="Vrijeme hlađenja" inputValue={targetCoolingTime} />
+                            <StartProcessDropdown label='Grijanje' getter={heatingDropdown} setter={setHeatingDropdown} values={heatingDropdownValues} />
                         </div>                        
                         <div className="col-4">
                             <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
@@ -501,7 +509,17 @@ const DashboardPage = () => {
                         </div>                        
                         <div className="col-4">
                             <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
-                        </div>               
+                        </div>
+                        <div className="col-12">
+                            <hr />
+                        </div>  
+                        <div className="col-4">
+                            <StartProcessDropdown label='Bakterija' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
+                        </div>                        
+                        <div className="col-4">
+                            <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
+                            <GeneralNumberInput headerName="Z" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />                    
+                        </div>              
                     </div>
                     </TabPanel>                
                 </TabView>
