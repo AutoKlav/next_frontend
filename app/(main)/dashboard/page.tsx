@@ -55,7 +55,7 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchInterval = 1000;    
+    const refetchInterval = 5000;    
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
