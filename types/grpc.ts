@@ -147,6 +147,7 @@ export enum ProcessConfigMode {
 }
 
 export enum HeatingType {
+  UNKNOWN = -1,
   STEAM  = 0,
   ELECTRIC = 1,
 }

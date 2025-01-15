@@ -1,4 +1,4 @@
-import { ProcessConfigType } from "@/types/grpc";
+import { HeatingType, ProcessConfigType } from "@/types/grpc";
 import { ProcessConfigMode } from "@/types/grpc";
 
 /**
@@ -30,9 +30,26 @@ export const getProcessConfigModeById = (id: number | undefined): ProcessConfigM
     case ProcessConfigMode.TARGETF:
       return ProcessConfigMode.TARGETF;
     case ProcessConfigMode.TIME:
-      return ProcessConfigMode.TIME;
+      return ProcessConfigMode.TIME;    
     default:
       console.log('Invalid id:', id);
       return ProcessConfigMode.UNKNOWN;
+  }
+}
+
+/**
+ * Retrieves the HeatingType based on the provided id.
+ * @param id - The id of the HeatingType.
+ * @returns The corresponding HeatingType or UNKNOWN if the id is invalid.
+ */
+export const getHeatingTypeById = (id: number | undefined): HeatingType => {
+  switch (id) {
+    case HeatingType.STEAM:
+      return HeatingType.STEAM;
+    case HeatingType.ELECTRIC:
+      return HeatingType.ELECTRIC;
+    default:
+      console.log('Invalid id:', id);
+      return HeatingType.UNKNOWN;
   }
 }
