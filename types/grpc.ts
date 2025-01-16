@@ -102,6 +102,8 @@ export interface ProcessType {
   customtemp?: number;
   finishtemp?: number;  
   maintaintemp?: number;
+  d0?: number;
+  z?: number;
 }
 
 export interface ProcessTypesResponse {
@@ -168,8 +170,7 @@ export interface ProcessInfo {
   productName: string;
   productQuantity: string;
   batchLTO: string;
-  bacteria: Bacteria;
-  description: string;
+  bacteria: Bacteria;  
   processStart: string;
   targetF: string;
   processLength: string;

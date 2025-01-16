@@ -55,7 +55,7 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchInterval = 5000;    
+    const refetchInterval = 3000;    
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
@@ -68,12 +68,18 @@ const DashboardPage = () => {
         { id: 1, name: 'Struja' },
     ];
 
+    const bacteriaDropdownValues: ProcessType[] = [
+        { id: 0, name: 'constrilium botilium', d0: 0.2, z: 10 }
+    ];
+
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
     // Para / Struja
-    const [heatingDropdown, setHeatingDropdown] = useState<ProcessType>(heatingDropdownValues[0]);
+    const [heatingDropdown, setHeatingDropdown] = useState<ProcessType>(heatingDropdownValues[0]);    
+    // Bakterija TODO fetch from API
+    const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>(bacteriaDropdownValues[0]);
     
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
@@ -84,6 +90,9 @@ const DashboardPage = () => {
     
     const [maintainTemp, setMaintainTemp] = useState<number>(0);
     
+    const [d0, setD0] = useState<number>(0.2);
+    const [z, setZ] = useState<number>(10);
+
     const targetF = React.useRef<number>(0);
     const targetTime = React.useRef<number>(0);
 
@@ -107,11 +116,15 @@ const DashboardPage = () => {
         setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         setHeatingDropdown(heatingDropdownValues[0]);
+        setBacteriaDropdown(bacteriaDropdownValues[0]);
         //#endregion
         
         //#region typeDropdown
         targetF.current = 0;
         targetTime.current = 0;
+        
+        setD0(0.2);
+        setZ(10);        
 
         targetCoolingTime.current = 0;
         targetHeatingTime.current = 0;
@@ -243,8 +256,8 @@ const DashboardPage = () => {
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
-        getBacteria();
-    }, [processTypes, getBacteria]);
+        //getBacteria(); TODO 
+    }, [processTypes]);
 
     // Set default values for custom process types
     useEffect(() => {
@@ -373,11 +386,11 @@ const DashboardPage = () => {
             const parsedHeating = getHeatingTypeById(heatingDropdown?.id);
 
             const bacteria: Bacteria = {
-                id: 0,
-                name: '',
+                id: bacteriaDropdown?.id || 0,
+                name: bacteriaDropdown?.name || '',
                 description: '',
-                d0: 0,
-                z: 0,
+                d0: d0,
+                z: z,
             };
 
             const request: StartProcessRequest = {                
@@ -395,12 +408,11 @@ const DashboardPage = () => {
                     batchLTO: batchLTO.current,
                     bacteria: bacteria,
                     targetF: isNaN(targetF.current) ? '0' : targetF.current.toString(),
-                    description: '',
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
-                    targetCoolingTime: targetCoolingTime.current.toString(),
-                    targetHeatingTime: targetHeatingTime.current.toString(),
+                    targetCoolingTime: (targetCoolingTime.current*60*1000).toString(),
+                    targetHeatingTime: (targetHeatingTime.current*60*1000).toString(),
                 },
             };
             console.log('Proces request', request);        
@@ -481,12 +493,12 @@ const DashboardPage = () => {
                     <div className="grid">
                         <div className="col-4">                                    
                             <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>                            
-                            <GeneralNumberInput headerName="Vrijeme zagrijavanja" inputValue={targetHeatingTime} />                            
+                            <GeneralNumberInput headerName="Vrijeme zagrijavanja (min)" inputValue={targetHeatingTime} />                            
                             <GeneralStringInput headerName="Broj šarže" placeholder='LTO3242654234' inputValue={batchLTO} suggestions={[]} />
                         </div>                
                         <div className="col-4">
                             <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>
-                            <GeneralNumberInput headerName="Vrijeme hlađenja" inputValue={targetCoolingTime} />
+                            <GeneralNumberInput headerName="Vrijeme hlađenja (min)" inputValue={targetCoolingTime} />
                             <StartProcessDropdown label='Grijanje' getter={heatingDropdown} setter={setHeatingDropdown} values={heatingDropdownValues} />
                         </div>                        
                         <div className="col-4">
@@ -514,11 +526,11 @@ const DashboardPage = () => {
                             <hr />
                         </div>  
                         <div className="col-4">
-                            <StartProcessDropdown label='Bakterija' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
+                            <StartProcessDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={bacteriaDropdownValues} />
                         </div>                        
                         <div className="col-4">
-                            <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
-                            <GeneralNumberInput headerName="Z" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />                    
+                            <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[d0, setD0]} />
+                            <GeneralNumberInput headerName="Z" disabled={disabledInput} inputValue={[z, setZ]} />                    
                         </div>              
                     </div>
                     </TabPanel>                
