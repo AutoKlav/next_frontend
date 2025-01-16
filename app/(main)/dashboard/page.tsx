@@ -386,11 +386,11 @@ const DashboardPage = () => {
             const parsedHeating = getHeatingTypeById(heatingDropdown?.id);
 
             const bacteria: Bacteria = {
-                id: 0,
-                name: '',
+                id: bacteriaDropdown?.id || 0,
+                name: bacteriaDropdown?.name || '',
                 description: '',
-                d0: 0,
-                z: 0,
+                d0: d0,
+                z: z,
             };
 
             const request: StartProcessRequest = {                
@@ -411,8 +411,8 @@ const DashboardPage = () => {
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
-                    targetCoolingTime: targetCoolingTime.current.toString(),
-                    targetHeatingTime: targetHeatingTime.current.toString(),
+                    targetCoolingTime: (targetCoolingTime.current*60*1000).toString(),
+                    targetHeatingTime: (targetHeatingTime.current*60*1000).toString(),
                 },
             };
             console.log('Proces request', request);        
@@ -493,12 +493,12 @@ const DashboardPage = () => {
                     <div className="grid">
                         <div className="col-4">                                    
                             <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>                            
-                            <GeneralNumberInput headerName="Vrijeme zagrijavanja" inputValue={targetHeatingTime} />                            
+                            <GeneralNumberInput headerName="Vrijeme zagrijavanja (min)" inputValue={targetHeatingTime} />                            
                             <GeneralStringInput headerName="Broj šarže" placeholder='LTO3242654234' inputValue={batchLTO} suggestions={[]} />
                         </div>                
                         <div className="col-4">
                             <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>
-                            <GeneralNumberInput headerName="Vrijeme hlađenja" inputValue={targetCoolingTime} />
+                            <GeneralNumberInput headerName="Vrijeme hlađenja (min)" inputValue={targetCoolingTime} />
                             <StartProcessDropdown label='Grijanje' getter={heatingDropdown} setter={setHeatingDropdown} values={heatingDropdownValues} />
                         </div>                        
                         <div className="col-4">
