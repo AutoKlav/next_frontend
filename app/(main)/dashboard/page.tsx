@@ -59,8 +59,8 @@ const DashboardPage = () => {
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
-        { id: 0, name: 'Target F' },
-        { id: 1, name: 'Target T' },
+        { id: 0, name: 'Ciljni F' },
+        { id: 1, name: 'Na Vrijeme' },
     ];
 
     const heatingDropdownValues: ProcessType[] = [
@@ -94,8 +94,7 @@ const DashboardPage = () => {
     const [z, setZ] = useState<number>(10);
 
     const targetF = React.useRef<number>(0);
-    const targetTime = React.useRef<number>(0);
-
+    
     const targetHeatingTime = React.useRef<number>(0);
     const targetCoolingTime = React.useRef<number>(0);
     const batchLTO = React.useRef<string>('');
@@ -121,7 +120,6 @@ const DashboardPage = () => {
         
         //#region typeDropdown
         targetF.current = 0;
-        targetTime.current = 0;
         
         setD0(0.2);
         setZ(10);        
@@ -204,12 +202,8 @@ const DashboardPage = () => {
                     .filter(val => !isNaN(val))
                     [0]; // Pick first most updated element from list
                 
-                targetTime.current = latestValidNumber || 0;
             }
-            else {
-                targetTime.current = 0;
-            }
-
+            
             if(data?.targetfvaluesList?.length > 0){
                 const value = Number(data?.targetfvaluesList[0]);
                 targetF.current = isNaN(value) ? 0 : value;
@@ -233,6 +227,7 @@ const DashboardPage = () => {
             }
                         
             fetchedTypes.current = data.processtypesList;            
+            console.log(data?.processtypesList?.[0]);
             setTypeDropdown(data?.processtypesList?.[0]);            
         },
     });
@@ -400,7 +395,6 @@ const DashboardPage = () => {
                     heatingType: parsedHeating,
                     maintainTemp: maintainTemp,
                     mode: parsedMode,
-                    targetTime: isNaN(targetTime.current) ? 0 : targetTime.current,
                     type: parsedType,
                 },
                 processInfo: {
@@ -492,21 +486,25 @@ const DashboardPage = () => {
                 <TabPanel header="Napredni unos"> 
                     <div className="grid">
                         <div className="col-4">                                    
-                            <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>                            
-                            <GeneralNumberInput headerName="Vrijeme zagrijavanja (min)" inputValue={targetHeatingTime} />                            
-                            <GeneralStringInput headerName="Broj šarže" placeholder='LTO3242654234' inputValue={batchLTO} suggestions={[]} />
+                            <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>                                                        
+                            <GeneralStringInput headerName="Broj šarže" placeholder='LTO3242654234' inputValue={batchLTO} suggestions={[]} />                            
                         </div>                
                         <div className="col-4">
-                            <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>
-                            <GeneralNumberInput headerName="Vrijeme hlađenja (min)" inputValue={targetCoolingTime} />
+                            <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                            
                             <StartProcessDropdown label='Grijanje' getter={heatingDropdown} setter={setHeatingDropdown} values={heatingDropdownValues} />
                         </div>                        
                         <div className="col-4">
                             <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
                             {modeDropdown?.id === ProcessConfigMode.TARGETF ?
-                                <GeneralNumberInput headerName="Ciljni F" disabled={disabledInput} inputValue={targetF} />
+                            <>
+                                <GeneralNumberInput headerName="Ciljni F" inputValue={targetF} />
+                                <GeneralNumberInput headerName="Završna temperatura" inputValue={[finishTemp, setFinishTemp]} />
+                            </>
                             :
-                                <GeneralNumberInput headerName="Ciljno vrijeme (s)" disabled={disabledInput} inputValue={targetTime} />
+                            <>
+                            <GeneralNumberInput headerName="Vrijeme sterilizacije (min)" inputValue={targetHeatingTime} />                            
+                            <GeneralNumberInput headerName="Vrijeme hlađenja (min)" inputValue={targetCoolingTime} />
+                            </>
                             }
                         </div>
                         <div className="col-12">
@@ -518,10 +516,7 @@ const DashboardPage = () => {
                         <div className="col-4">
                             <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
                             <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />                    
-                        </div>                        
-                        <div className="col-4">
-                            <GeneralNumberInput headerName="Završna temperatura" disabled={disabledInput} inputValue={[finishTemp, setFinishTemp]} />
-                        </div>
+                        </div>                                                
                         <div className="col-12">
                             <hr />
                         </div>  

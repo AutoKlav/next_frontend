@@ -160,7 +160,6 @@ export interface ProcessConfig {
   heatingType: HeatingType;
   customTemp: number;
   mode: ProcessConfigMode;  
-  targetTime: number;
   maintainTemp: number;
   finishTemp: number;
 }
