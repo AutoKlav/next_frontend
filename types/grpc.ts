@@ -170,8 +170,7 @@ export interface ProcessInfo {
   productName: string;
   productQuantity: string;
   batchLTO: string;
-  bacteria: Bacteria;
-  description: string;
+  bacteria: Bacteria;  
   processStart: string;
   targetF: string;
   processLength: string;

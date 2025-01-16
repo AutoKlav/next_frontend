@@ -408,7 +408,6 @@ const DashboardPage = () => {
                     batchLTO: batchLTO.current,
                     bacteria: bacteria,
                     targetF: isNaN(targetF.current) ? '0' : targetF.current.toString(),
-                    description: '',
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
