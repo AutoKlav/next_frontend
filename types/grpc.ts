@@ -102,6 +102,8 @@ export interface ProcessType {
   customtemp?: number;
   finishtemp?: number;  
   maintaintemp?: number;
+  d0?: number;
+  z?: number;
 }
 
 export interface ProcessTypesResponse {

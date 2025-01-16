@@ -47,12 +47,20 @@ export const setVariable = (setVariable: SetVariable) => {
 export const startProcess = (startProcessRequest: StartProcessRequest) => {
   const data = new Messages.StartProcessRequest();
   const processInfo = new Messages.ProcessInfo();
+
+  // Create an instance of the Bacteria message
+const bacteria = new Messages.Bacteria();
+    bacteria.setId(startProcessRequest.processInfo.bacteria.id);
+    bacteria.setName(startProcessRequest.processInfo.bacteria.name);
+    bacteria.setDescription(startProcessRequest.processInfo.bacteria.description);
+    bacteria.setD0(startProcessRequest.processInfo.bacteria.d0);
+    bacteria.setZ(startProcessRequest.processInfo.bacteria.z);
+
   processInfo.setProductname(startProcessRequest.processInfo.productName);
   processInfo.setProductquantity(
     startProcessRequest.processInfo.productQuantity
   );
-  processInfo.setBacteria(startProcessRequest.processInfo.bacteria);
-  processInfo.setDescription(startProcessRequest.processInfo.description);
+  processInfo.setBacteria(bacteria);
   processInfo.setProcessstart(startProcessRequest.processInfo.processStart);
   processInfo.setTargetf(startProcessRequest.processInfo.targetF);
   processInfo.setProcesslength(startProcessRequest.processInfo.processLength);
@@ -65,7 +73,6 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   processConfig.setHeatingtype(startProcessRequest.processConfig.heatingType);
   processConfig.setCustomtemp(startProcessRequest.processConfig.customTemp);
   processConfig.setMode(startProcessRequest.processConfig.mode);
-  processConfig.setTargettime(startProcessRequest.processConfig.targetTime);
   processConfig.setMaintaintemp(startProcessRequest.processConfig.maintainTemp);
  
   processConfig.setFinishtemp(startProcessRequest.processConfig.finishTemp);
