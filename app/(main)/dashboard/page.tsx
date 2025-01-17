@@ -226,8 +226,7 @@ const DashboardPage = () => {
                 return;                
             }
                         
-            fetchedTypes.current = data.processtypesList;            
-            console.log(data?.processtypesList?.[0]);
+            fetchedTypes.current = data.processtypesList;                        
             setTypeDropdown(data?.processtypesList?.[0]);            
         },
     });
@@ -260,9 +259,9 @@ const DashboardPage = () => {
         if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
             typeDropdown?.id === ProcessConfigType.PASTERIZATION)
         {            
-            setCustomTemp(typeDropdown?.customtemp || 0);            
+            setCustomTemp(121.11);            
             setFinishTemp(typeDropdown?.finishtemp || 0);            
-            setMaintainTemp(typeDropdown?.maintaintemp || 0);            
+            setMaintainTemp(116);            
         }
     }, [typeDropdown]);
     
