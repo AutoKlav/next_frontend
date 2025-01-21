@@ -43,6 +43,21 @@ export const setVariable = (setVariable: SetVariable) => {
   return gRpcCall<Status>("setVariable", data);
 };
 
+export const setRelayStatus = (setVariable: SetVariable) => {
+  const data = new Messages.SetVariable();
+  data.setName(setVariable.name);
+  data.setValue(setVariable.value);
+
+  return gRpcCall<Status>("setRelayStatus", data);
+}
+
+export const setState = (state: string) => {
+  const data = new Messages.SetState();
+  data.setState(state);  
+
+  return gRpcCall<Status>("setStateMachineState", data);
+}
+
 // Process
 export const startProcess = (startProcessRequest: StartProcessRequest) => {
   const data = new Messages.StartProcessRequest();

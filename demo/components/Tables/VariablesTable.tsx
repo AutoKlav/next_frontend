@@ -15,10 +15,14 @@ interface VariableProps {
 
 const VariablesTable  = (variables: VariableProps) => {
     const [config, setConfig] = useState([
-        { id: 'serialDataTime', label: 'Serial Data Time', value: variables?.data?.serialdatatime || '0' },
-        { id: 'stateMachineTick', label: 'State Machine Tick', value: variables?.data?.statemachinetick || '0' },
-        { id: 'sterilizationTemp', label: 'Sterilization Temperature', value: variables?.data?.sterilizationtemp || '0' },
-        { id: 'pasterizationTemp', label: 'Pasterization Temperature', value: variables?.data?.pasterizationtemp || '0' }
+        { id: 'stateMachineTick', label: 'State Machine Tick', value: variables?.data?.stateMachineTick || '5000' },
+        { id: 'dbTick', label: 'DB Tick', value: variables?.data?.dbTick || '60000' },
+        { id: 'k', label: 'K', value: variables?.data?.k || '5' },
+        { id: 'coolingThreshold', label: 'Cooling Threshold', value: variables?.data?.coolingThreshold || '50' },
+        { id: 'expansionUpperTemp', label: 'Expansion Upper Temp', value: variables?.data?.expansionUpperTemp || '95' },
+        { id: 'expansionLowerTemp', label: 'Expansion Lower Temp', value: variables?.data?.expansionLowerTemp || '90' },
+        { id: 'heaterWaterLevel', label: 'Heater Water Level', value: variables?.data?.heaterWaterLevel || '40' },
+        { id: 'maintainWaterTankTemp', label: 'Maintain Water Tank Temp', value: variables?.data?.maintainWaterTankTemp || '95' },
     ]);
 
     const toast = useRef<Toast>(null);
