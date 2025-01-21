@@ -45,6 +45,7 @@ const ChartPage = () => {
     }, [id, refetch]);
 
     const process = filteredProcessQuery?.[0]; // Get the first matching process
+    console.log(process);
     const chartInfo = getChartInfo(process);
 
     return (

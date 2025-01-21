@@ -6,6 +6,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const response = await gRPC.stopManualProcess();
+  const { variable } = req.body;
+  const response = await gRPC.setState(variable);
   res.status(200).json(response);
 }

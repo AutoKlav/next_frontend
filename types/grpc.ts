@@ -17,11 +17,14 @@ export interface Status {
 
 // Variables message
 export interface Variables {
-  targetk: number;
-  serialdatatime: number;
-  statemachinetick: number;
-  sterilizationtemp: number;
-  pasterizationtemp: number;
+  stateMachineTick: number;
+  dbTick: number;
+  k: number;
+  coolingThreshold: number;
+  expansionUpperTemp: number;
+  expansionLowerTemp: number;
+  heaterWaterLevel: number;
+  maintainWaterTankTemp: number;
 }
 
 // SetVariable message

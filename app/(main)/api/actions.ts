@@ -1,8 +1,8 @@
 "use server"
 
-import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
-import { ProcessFilterRequest, ProcessTypeRequest, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
+import { ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
 
 //#region GET Actions
 
@@ -90,6 +90,16 @@ export const stopProcessAction = async () => {
 export const setVariableAction = async ({ newData, index, variable }: { newData: any; index: number; variable: any }) => {
     const response = await setVariable(variable);
     return {response, newData, index};
+}
+
+export const setStateAction = async (state: string) => {
+    const response = await setState(state);
+    return response;
+}
+
+export const setRelayStatusAction = async (variable: SetVariable) => {
+    const response = await setVariable(variable);
+    return response;
 }
 
 export const updateSensorAction = async (updateSensorRequest: UpdateSensorRequest) => {
