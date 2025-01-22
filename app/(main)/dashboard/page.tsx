@@ -69,7 +69,7 @@ const DashboardPage = () => {
     ];
 
     const bacteriaDropdownValues: ProcessType[] = [
-        { id: 0, name: 'constrilium botilium', d0: 0.2, z: 10 }
+        { id: 1, name: 'constrilium botilium', d0: 0.2, z: 10 }
     ];
 
     // Sterilizacija / Pasterizacija
@@ -380,7 +380,7 @@ const DashboardPage = () => {
             const parsedHeating = getHeatingTypeById(heatingDropdown?.id);
 
             const bacteria: Bacteria = {
-                id: bacteriaDropdown?.id || 0,
+                id: bacteriaDropdown?.id || 1,
                 name: bacteriaDropdown?.name || '',
                 description: '',
                 d0: d0,
