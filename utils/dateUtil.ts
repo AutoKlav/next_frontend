@@ -52,11 +52,11 @@ export const formatTime = (dateString: string) => {
     return date.toLocaleTimeString('en-GB', timeOptions);
 };
 
-// create method that will convert seconds to hh:mm format
+// create method that will convert mseconds to hh:mm format
 export const secondsToHms = (input: number) => {
     if(isNaN(input)) return '0h:0m';
 
-    input = Number(input);
+    input = Number(input) / 1000;
     const h = Math.floor(input / 3600);
     const m = Math.floor(input % 3600 / 60);
     const s = Math.floor(input % 3600 % 60);
