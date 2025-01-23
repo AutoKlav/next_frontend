@@ -9,10 +9,15 @@ export enum ProcessInfoFields {
 }
 
 export interface TransformedData {
-    timestamp: string[];
-    temp: number[];
-    tempk: number[];
-    sumfr: number[];
-    fr: number[];
-    pressure: number[];
+    timestamp?: string[];
+    temp?: number[];
+    tempk?: number[];
+    sumfr?: number[];
+    fr?: number[];
+    pressure?: number[];        
+    expansiontemp?: number[];
+    heatertemp?: number[];
+    steampressure?: number[];
+    tanktemp?: number[];
+    tankwaterlevel?: number[];    
 }
