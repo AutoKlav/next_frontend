@@ -9,7 +9,7 @@ import { handleExportToPDF } from "@/utils/exportUtil";
 import { getProcessLogsAction } from "@/app/(main)/api/actions";
 import { updateChartOptions } from "@/utils/chartOptionsUtil";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { transformData, updateChartData } from "@/utils/transformData";
+import { modularDataTransformation, updateModularChartData } from "@/utils/transformData";
 import { formatTime } from "@/utils/dateUtil";
 
 interface ChartInfo {    
@@ -34,8 +34,8 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                     timestamp: index === 0 ? formatTime(process.timestamp) : `+${index}min`,
                 };
             });
-            console.log("Parsed data:", parsedData);
-            updateChartData(transformData({ processlogsList: parsedData }), setChartData);
+
+            updateModularChartData(modularDataTransformation({ processlogsList: parsedData }), setChartData);
             return parsedData; // Ensure the query function returns the parsed data
         },
         refetchInterval: chartInfoProps.refetchInterval ? chartInfoProps.refetchInterval : false,
@@ -46,11 +46,10 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
         setChartOptions(updateChartOptions("white", "white", chartInfoProps)); // Initial white theme
     }, [chartInfoProps.id, refetch]);
 
-    const handleExportToPdf = () => {
-        //setChartOptions(updateChartOptions("black", "black", chartInfoProps));
+    const handleExportToPdf = () => {        
         handleExportToPDF(chartRef, chartOptions, chartInfoProps);
     }
-    
+    console.log(chartData);
     return (
         <div className="card">
             {isLogLoading ? (
