@@ -93,14 +93,12 @@ export const updateChartOptions = (
     },
     y: {
       ticks: { color: textColor, stepSize: 5 },
-      grid: { color: gridColor },
-      min: 0,
+      grid: { color: gridColor },      
     },
     y2: {
       position: "right",
       ticks: { color: textColor, stepSize: 0.5 },
-      grid: { drawOnChartArea: false },
-      min: 0,
+      grid: { drawOnChartArea: false },      
     },
   },
 });
