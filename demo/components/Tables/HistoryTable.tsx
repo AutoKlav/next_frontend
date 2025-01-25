@@ -56,6 +56,8 @@ const HistoryTable = () => {
                 handleExportToPDF(chartRef, chartOptions, chartInfo);
             } else if (source === "graph") {                
                 router.push(`/chart/${data?.processlogsList[0]?.id}`);
+            } else if (source === "modularGraph") {
+                router.push(`/values_chart/${data?.processlogsList[0]?.id}`);
             }
         },
     }); 
@@ -99,10 +101,18 @@ const HistoryTable = () => {
                 <div className="flex justify-content-between gap-3">
                     {selectedProcesses.length === 1 && (
                         <Button
-                        icon="pi pi-chart-line"
+                        icon="pi pi-star"
                         className="p-button-text p-button-plain"
                         size="large"
                         onClick={handleGraph}
+                    />
+                    )}
+                    {selectedProcesses.length === 1 && (
+                        <Button
+                        icon="pi pi-chart-bar"
+                        className="p-button-text p-button-plain"
+                        size="large"
+                        onClick={handleModularGraph} 
                     />
                     )}
                     {selectedProcesses.length > 0 && (                        
@@ -139,6 +149,11 @@ const HistoryTable = () => {
         const ids = selectedProcesses.map((process) => process.id);
         getProcessLogMutation({ ids: ids, source: "graph" });
     };
+
+    const handleModularGraph = () => {
+        const ids = selectedProcesses.map((process) => process.id);
+        getProcessLogMutation({ ids: ids, source: "modularGraph" });
+    }
 
     const handleDateFilterApply = () => {
         if (selectedDate) {

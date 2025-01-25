@@ -16,7 +16,7 @@ const AppMenu = () => {
             items: [                
                 { label: 'Početna', icon: 'pi pi-fw pi-home', to: '/' },
                 { label: 'Nadzorna ploca', icon: 'pi pi-fw pi-th-large', to: '/dashboard' },
-                { label: 'Graf', icon: 'pi pi-fw pi-chart-bar', to: '/chart/0' },              
+                { label: 'Graf za inspekciju', icon: 'pi pi-fw pi-star', to: '/chart/0' },              
                 { label: 'Graf ulaznih vrijednosti', icon: 'pi pi-fw pi-chart-bar', to: '/values_chart/0' },                  
                 { label: 'Povijest', icon: 'pi pi-fw pi-calendar', to: '/history' },                
                 {
