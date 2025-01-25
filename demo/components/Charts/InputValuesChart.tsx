@@ -112,40 +112,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                                 onChange={onValueChange}
                             />
                             <label htmlFor="temp" className="ml-2">
-                                Temperatura
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="tempk"
-                                name="tempk"
-                                checked={selectedValues.tempk}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="tempk" className="ml-2">
-                                Temperatura Konzerve
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="pressure"
-                                name="pressure"
-                                checked={selectedValues.pressure}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="pressure" className="ml-2">
-                                Tlak
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="expansiontemp"
-                                name="expansiontemp"
-                                checked={selectedValues.expansiontemp}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="expansiontemp" className="ml-2">
-                                Temperatura Ekspanzije
+                                Temperatura autoklava
                             </label>
                         </div>
                         <div className="flex align-items-center">
@@ -161,14 +128,36 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                         </div>
                         <div className="flex align-items-center">
                             <Checkbox
-                                inputId="steampressure"
-                                name="steampressure"
-                                checked={selectedValues.steampressure}
+                                inputId="pressure"
+                                name="pressure"
+                                checked={selectedValues.pressure}
                                 onChange={onValueChange}
                             />
-                            <label htmlFor="steampressure" className="ml-2">
-                                Tlak Pare
+                            <label htmlFor="pressure" className="ml-2">
+                                Tlak autoklava
                             </label>
+                        </div>
+                        <div className="flex align-items-center">
+                            <Checkbox
+                                inputId="expansiontemp"
+                                name="expansiontemp"
+                                checked={selectedValues.expansiontemp}
+                                onChange={onValueChange}
+                            />
+                            <label htmlFor="expansiontemp" className="ml-2">
+                                Temperatura Ekspanzije
+                            </label>
+                        </div>
+                        <div className="flex align-items-center">
+                            <Checkbox
+                                inputId="tempk"
+                                name="tempk"
+                                checked={selectedValues.tempk}
+                                onChange={onValueChange}
+                            />
+                            <label htmlFor="tempk" className="ml-2">
+                                Temperatura Konzerve
+                            </label>                            
                         </div>
                         <div className="flex align-items-center">
                             <Checkbox
@@ -179,6 +168,17 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             />
                             <label htmlFor="tanktemp" className="ml-2">
                                 Temperatura Spremnika
+                            </label>
+                        </div>
+                        <div className="flex align-items-center">                            
+                            <Checkbox
+                                inputId="steampressure"
+                                name="steampressure"
+                                checked={selectedValues.steampressure}
+                                onChange={onValueChange}
+                            />
+                            <label htmlFor="steampressure" className="ml-2">
+                                Tlak Pare
                             </label>
                         </div>
                         <div className="flex align-items-center">
