@@ -25,7 +25,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
     const chartRef = useRef<any>(null);
 
     const { isLoading: isLogLoading, refetch } = useQuery({
-        queryKey: ["processLogs"], // Unique key for the query
+        queryKey: ["processLogs2"], // Unique key for the query
         queryFn: async () => {
             const { data } = await getProcessLogsAction({ ids: [chartInfoProps.id], source: "graph" });
             const parsedData = data?.processlogsList?.map((process, index) => {
