@@ -60,7 +60,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
             ) : (
                 <>
                     <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-                    <Button label="Export to PDF" onClick={handleExportToPdf} className="p-button-info mt-5" />
+                    <Button label="Prebaci u PDF" onClick={handleExportToPdf} className="p-button-info mt-5" />
                 </>
             )}            
         </div>
