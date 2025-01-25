@@ -94,7 +94,16 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                 </div>
             ) : (
                 <>
-                    <div className="flex flex-wrap justify-content-center gap-3 mb-4">
+                    {/* Checkbox Section */}
+                    <div
+                        className="mb-4"
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(4, 1fr)",
+                            gap: "10px",
+                            alignItems: "center",
+                        }}
+                    >
                         <div className="flex align-items-center">
                             <Checkbox
                                 inputId="temp"
@@ -184,6 +193,8 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             </label>
                         </div>
                     </div>
+
+                    {/* Chart Section */}
                     <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
                     <Button
                         label="Prebaci u PDF"
