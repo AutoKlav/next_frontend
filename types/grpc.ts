@@ -48,6 +48,17 @@ export interface SensorValues {
   waterShortage: number;
 }
 
+export interface EnabledSensors {
+  temp: boolean;
+  tempk: boolean;
+  pressure: boolean;
+  expansiontemp: boolean;
+  heatertemp: boolean;
+  steampressure: boolean;
+  tanktemp: boolean;
+  tankwaterlevel: boolean;
+}
+
 export interface SensorRelayValues {
   filltankwithwater: number;
   cooling: number;
