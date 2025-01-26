@@ -1,5 +1,7 @@
 import { TransformedData } from "@/types/app";
-import { StateMachineValues } from "@/types/grpc";
+import { EnabledSensors, StateMachineValues } from "@/types/grpc";
+import { getFromLocalStorage } from "./localStorage";
+import { SELECTED_VALUES_CONSTANT } from "@/constants";
 
 /**
  * Transforms the data by extracting specific properties from each log object.
@@ -28,23 +30,15 @@ export const transformData = (data: { processlogsList: StateMachineValues[] }): 
     return transformedData;
 };
 
-/**
- * Updates the chart data with the provided transformed data.
- * @param data - The transformed data to update the chart with.
- * @param setChartData - The function to set the chart data.
- */
-// Define a constant to control which sensors to include
-const ENABLED_SENSORS = {
-    temp: true,
-    tempk: true, // TODO value not displayed, coolingextension not displayed
-    pressure: false,
-    expansiontemp: true,
-    heatertemp: false,
-    steampressure: false,
-    tanktemp: true,
-    tankwaterlevel: true,
-  };
-  
+// Function to load enabled sensors from localStorage
+const loadEnabledSensors = (): EnabledSensors => {
+  const storedValues = getFromLocalStorage(SELECTED_VALUES_CONSTANT);
+  return storedValues;
+};
+
+// Initialize ENABLED_SENSORS with values from localStorage
+const ENABLED_SENSORS = loadEnabledSensors();
+
   export const modularDataTransformation = (data: { processlogsList: StateMachineValues[] }): TransformedData => {
     const transformedData: TransformedData = {
       timestamp: [],
@@ -86,8 +80,7 @@ const ENABLED_SENSORS = {
         transformedData.tankwaterlevel?.push(log.sensorvalues.tankwaterlevel);
       }
     });
-  
-    console.log("Transformed data", transformedData);
+    
     return transformedData;
   };
   

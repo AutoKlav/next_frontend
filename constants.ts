@@ -1,0 +1,1 @@
+export const SELECTED_VALUES_CONSTANT = "selectedValues";

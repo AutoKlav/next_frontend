@@ -8,9 +8,10 @@ const constructStorageKey = (key: string): string => key;
  * Gets value from local storage in a safe way.
  * @param key identifier
  */
-export const getFromLocalStorage = (key: string): string | null => {
+export const getFromLocalStorage = (key: string): any | null => {
   const localStorageKey = constructStorageKey(key);
-  return localStorage.getItem(localStorageKey);
+  const value = localStorage.getItem(localStorageKey)  || "null";
+  return JSON.parse(value);
 };
 
 /**

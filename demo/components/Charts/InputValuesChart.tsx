@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Chart } from "primereact/chart";
@@ -12,6 +12,9 @@ import { updateChartOptions } from "@/utils/chartOptionsUtil";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { modularDataTransformation, updateModularChartData } from "@/utils/transformData";
 import { formatTime } from "@/utils/dateUtil";
+import { getFromLocalStorage, setToLocalStorage } from "@/utils/localStorage";
+import { SELECTED_VALUES_CONSTANT } from "@/constants";
+import { EnabledSensors } from "@/types/grpc";
 
 interface ChartInfo {
     id: number;
@@ -21,20 +24,18 @@ interface ChartInfo {
 }
 
 export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) => {
+  
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
-    const [selectedValues, setSelectedValues] = useState({
-        temp: false,
-        tempk: false,
-        pressure: false,
-        expansiontemp: false,
-        heatertemp: false,
-        steampressure: false,
-        tanktemp: false,
-        tankwaterlevel: false,
-    });
-    const chartRef = useRef<any>(null);
+    const [selectedValues, setSelectedValues] = useState<EnabledSensors>(getFromLocalStorage(SELECTED_VALUES_CONSTANT));
 
+    // Automatically save to localStorage whenever selectedValues changes
+    useEffect(() => {
+        setToLocalStorage(SELECTED_VALUES_CONSTANT, selectedValues);
+    }, [selectedValues]); // Dependency array listens for changes in selectedValues
+
+    
+    const chartRef = useRef<any>(null);
     const { isLoading: isLogLoading, refetch } = useQuery({
         queryKey: ["processLogs2"],
         queryFn: async () => {
@@ -64,12 +65,13 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
     }, [chartInfoProps.id, refetch]);
 
     const handleExportToPdf = () => {
-        handleExportToPDF(chartRef, chartOptions, chartInfoProps);
+        setToLocalStorage("selectedValues", JSON.stringify(selectedValues));
+        //handleExportToPDF(chartRef, chartOptions, chartInfoProps);
     };
 
     const onValueChange = (e: any) => {
         const { name, checked } = e.target;
-        setSelectedValues((prev) => ({
+        setSelectedValues((prev: any) => ({
             ...prev,
             [name]: checked,
         }));
