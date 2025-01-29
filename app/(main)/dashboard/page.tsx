@@ -66,6 +66,7 @@ const DashboardPage = () => {
     const heatingDropdownValues: ProcessType[] = [
         { id: 0, name: 'Para' },
         { id: 1, name: 'Struja' },
+        { id: 2, name: 'Para i Struja' },
     ];
 
     const bacteriaDropdownValues: ProcessType[] = [
