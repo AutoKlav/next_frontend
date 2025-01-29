@@ -166,6 +166,7 @@ export enum HeatingType {
   UNKNOWN = -1,
   STEAM  = 0,
   ELECTRIC = 1,
+  STEAM_ELECTRIC = 2,
 }
 
 // ProcessConfig message

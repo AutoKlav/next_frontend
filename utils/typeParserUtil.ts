@@ -48,6 +48,8 @@ export const getHeatingTypeById = (id: number | undefined): HeatingType => {
       return HeatingType.STEAM;
     case HeatingType.ELECTRIC:
       return HeatingType.ELECTRIC;
+    case HeatingType.STEAM_ELECTRIC:
+      return HeatingType.STEAM_ELECTRIC;
     default:
       console.log('Invalid id:', id);
       return HeatingType.UNKNOWN;
