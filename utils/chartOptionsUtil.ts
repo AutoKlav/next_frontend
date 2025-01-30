@@ -121,8 +121,15 @@ export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): 
 
   const formattedDate = formatDateTime(process.processstart ?? "");
   const formattedLength = secondsToHms(Number(process.processlength));
-  const processEndDate = new Date(process.processstart ? "" + process.processstart : "");
-  //const formattedEndDate = formatDateTime(processEndDate);
+  let processEndDate;
+  
+  if (process.processstart && !isNaN(Number(process.processlength))) {
+    const startDate = new Date(process.processstart);
+    const processEndTimestamp = startDate.getTime() + Number(process.processlength);
+    processEndDate = formatDateTime(new Date(processEndTimestamp).toISOString()); 
+  } else {
+    console.log("Invalid process start or length");
+  }
 
   return {
       id: process.id,
@@ -131,7 +138,7 @@ export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): 
           `Količina: ${process.productquantity ?? "[]"}`,
           `Početak: ${formattedDate ?? "[]"}`,
           `Trajanje: ${formattedLength ?? "[]"}`,
-          `Kraj: ${process.productname ?? "[]"}`,
+          `Kraj: ${processEndDate ?? "[]"}`,
       ].join(" | "),
       subtitle: [
           `Bakterija: ${process.bacteria.name ?? "[Ime bakterije]"}`,
