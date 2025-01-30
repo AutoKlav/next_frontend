@@ -110,7 +110,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="temp"
                                 name="temp"
-                                checked={selectedValues.temp}
+                                checked={selectedValues?.temp}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="temp" className="ml-2">
@@ -121,7 +121,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="heatertemp"
                                 name="heatertemp"
-                                checked={selectedValues.heatertemp}
+                                checked={selectedValues?.heatertemp}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="heatertemp" className="ml-2">
@@ -132,7 +132,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="pressure"
                                 name="pressure"
-                                checked={selectedValues.pressure}
+                                checked={selectedValues?.pressure}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="pressure" className="ml-2">
@@ -143,7 +143,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="expansiontemp"
                                 name="expansiontemp"
-                                checked={selectedValues.expansiontemp}
+                                checked={selectedValues?.expansiontemp}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="expansiontemp" className="ml-2">
@@ -154,7 +154,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="tempk"
                                 name="tempk"
-                                checked={selectedValues.tempk}
+                                checked={selectedValues?.tempk}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="tempk" className="ml-2">
@@ -165,7 +165,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="tanktemp"
                                 name="tanktemp"
-                                checked={selectedValues.tanktemp}
+                                checked={selectedValues?.tanktemp}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="tanktemp" className="ml-2">
@@ -176,7 +176,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="steampressure"
                                 name="steampressure"
-                                checked={selectedValues.steampressure}
+                                checked={selectedValues?.steampressure}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="steampressure" className="ml-2">
@@ -187,7 +187,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                             <Checkbox
                                 inputId="tankwaterlevel"
                                 name="tankwaterlevel"
-                                checked={selectedValues.tankwaterlevel}
+                                checked={selectedValues?.tankwaterlevel}
                                 onChange={onValueChange}
                             />
                             <label htmlFor="tankwaterlevel" className="ml-2">

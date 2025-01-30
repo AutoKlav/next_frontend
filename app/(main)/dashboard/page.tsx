@@ -12,12 +12,12 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { Bacteria, HeatingType, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { Bacteria, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 import { ProcessInfoFields } from '@/types/app';
-import { getHeatingTypeById, getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
+import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 import { TabView, TabPanel } from 'primereact/tabview';
 
 const temperatures = [
@@ -42,7 +42,6 @@ const relayMapper = [
     { name: 'tankHeating', label: 'GR. SPREM', value: 0 },
     { name: 'autoklavFill', label: 'PUNJ. AK', value: 0 },
     { name: 'heating', label: 'GRIJ. AK', value: 0 },
-    { name: 'electricHeating', label: 'EL. GRIJ', value: 0 },
     { name: 'cooling', label: 'HLADENJE', value: 0 },
     { name: 'coolingHelper', label: 'POM. HLADJ', value: 0 },
     { name: 'extensionCooling', label: 'HLADJ PROSI', value: 0 },
@@ -62,13 +61,7 @@ const DashboardPage = () => {
         { id: 0, name: 'Ciljni F' },
         { id: 1, name: 'Na Vrijeme' },
     ];
-
-    const heatingDropdownValues: ProcessType[] = [
-        { id: 0, name: 'Para' },
-        { id: 1, name: 'Struja' },
-        { id: 2, name: 'Para i Struja' },
-    ];
-
+    
     const bacteriaDropdownValues: ProcessType[] = [
         { id: 1, name: 'constrilium botilium', d0: 0.2, z: 10 }
     ];
@@ -77,8 +70,6 @@ const DashboardPage = () => {
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
-    // Para / Struja
-    const [heatingDropdown, setHeatingDropdown] = useState<ProcessType>(heatingDropdownValues[0]);    
     // Bakterija TODO fetch from API
     const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>(bacteriaDropdownValues[0]);
     
@@ -115,7 +106,6 @@ const DashboardPage = () => {
         setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
         setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
-        setHeatingDropdown(heatingDropdownValues[0]);
         setBacteriaDropdown(bacteriaDropdownValues[0]);
         //#endregion
         
@@ -352,14 +342,13 @@ const DashboardPage = () => {
     relayMapper[1].value = relaySensorValues?.tankheating || 0;
     relayMapper[2].value = relaySensorValues?.autoklavfill || 0;
     relayMapper[3].value = relaySensorValues?.heating || 0;
-    relayMapper[4].value = relaySensorValues?.electricheating || 0;
-    relayMapper[5].value = relaySensorValues?.cooling || 0;
-    relayMapper[6].value = relaySensorValues?.coolinghelper || 0;
-    relayMapper[7].value = relaySensorValues?.extensioncooling || 0;
-    relayMapper[8].value = relaySensorValues?.waterdrain || 0;
-    relayMapper[9].value = relaySensorValues?.pump || 0;
-    relayMapper[10].value = relaySensorValues?.increasepressure || 0;
-    relayMapper[11].value = relaySensorValues?.alarmsignal || 0;
+    relayMapper[4].value = relaySensorValues?.cooling || 0;
+    relayMapper[5].value = relaySensorValues?.coolinghelper || 0;
+    relayMapper[6].value = relaySensorValues?.extensioncooling || 0;
+    relayMapper[7].value = relaySensorValues?.waterdrain || 0;
+    relayMapper[8].value = relaySensorValues?.pump || 0;
+    relayMapper[9].value = relaySensorValues?.increasepressure || 0;
+    relayMapper[10].value = relaySensorValues?.alarmsignal || 0;
 
     const handleStartProcess = () => {        
 
@@ -378,7 +367,6 @@ const DashboardPage = () => {
             }
             const parsedType = getProcessConfigTypeById(typeDropdown?.id);
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
-            const parsedHeating = getHeatingTypeById(heatingDropdown?.id);
 
             const bacteria: Bacteria = {
                 id: bacteriaDropdown?.id || 1,
@@ -392,7 +380,7 @@ const DashboardPage = () => {
                 processConfig: {                                    
                     customTemp: customTemp,
                     finishTemp: finishTemp,
-                    heatingType: parsedHeating,
+                    heatingType: 0,
                     maintainTemp: maintainTemp,
                     mode: parsedMode,
                     type: parsedType,
@@ -491,7 +479,6 @@ const DashboardPage = () => {
                         </div>                
                         <div className="col-4">
                             <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                            
-                            <StartProcessDropdown label='Grijanje' getter={heatingDropdown} setter={setHeatingDropdown} values={heatingDropdownValues} />
                         </div>                        
                         <div className="col-4">
                             <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />

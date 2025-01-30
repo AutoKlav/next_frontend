@@ -121,6 +121,8 @@ export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): 
 
   const formattedDate = formatDateTime(process.processstart ?? "");
   const formattedLength = secondsToHms(Number(process.processlength));
+  const processEndDate = new Date(process.processstart ? "" + process.processstart : "");
+  //const formattedEndDate = formatDateTime(processEndDate);
 
   return {
       id: process.id,
@@ -129,6 +131,7 @@ export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): 
           `Količina: ${process.productquantity ?? "[]"}`,
           `Početak: ${formattedDate ?? "[]"}`,
           `Trajanje: ${formattedLength ?? "[]"}`,
+          `Kraj: ${process.productname ?? "[]"}`,
       ].join(" | "),
       subtitle: [
           `Bakterija: ${process.bacteria.name ?? "[Ime bakterije]"}`,
