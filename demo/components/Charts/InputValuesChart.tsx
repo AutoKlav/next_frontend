@@ -36,15 +36,15 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
         };
 
         data.processlogsList.forEach((log) => {
-            transformedData.timestamp.push(log.timestamp);
-            transformedData.temp.push(log.sensorvalues.temp);
-            transformedData.tempk.push(log.sensorvalues.tempk);
-            transformedData.pressure.push(log.sensorvalues.pressure);
-            transformedData.expansiontemp.push(log.sensorvalues.expansiontemp);
-            transformedData.heatertemp.push(log.sensorvalues.heatertemp);
-            transformedData.steampressure.push(log.sensorvalues.steampressure);
-            transformedData.tanktemp.push(log.sensorvalues.tanktemp);
-            transformedData.tankwaterlevel.push(log.sensorvalues.tankwaterlevel);
+            transformedData.timestamp?.push(log.timestamp);
+            transformedData.temp?.push(log.sensorvalues.temp);
+            transformedData.tempk?.push(log.sensorvalues.tempk);
+            transformedData.pressure?.push(log.sensorvalues.pressure);
+            transformedData.expansiontemp?.push(log.sensorvalues.expansiontemp);
+            transformedData.heatertemp?.push(log.sensorvalues.heatertemp);
+            transformedData.steampressure?.push(log.sensorvalues.steampressure);
+            transformedData.tanktemp?.push(log.sensorvalues.tanktemp);
+            transformedData.tankwaterlevel?.push(log.sensorvalues.tankwaterlevel);
         });
 
         return transformedData;
