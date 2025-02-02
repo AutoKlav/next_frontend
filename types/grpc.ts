@@ -68,7 +68,6 @@ export interface SensorRelayValues {
   waterdrain: number;
   heating: number;
   pump: number;
-  electricheating: number;
   increasepressure: number;
   extensioncooling: number;
   alarmsignal: number;
@@ -162,17 +161,10 @@ export enum ProcessConfigMode {
   TIME = 1,
 }
 
-export enum HeatingType {
-  UNKNOWN = -1,
-  STEAM  = 0,
-  ELECTRIC = 1,
-  STEAM_ELECTRIC = 2,
-}
-
 // ProcessConfig message
 export interface ProcessConfig {
   type: ProcessConfigType;
-  heatingType: HeatingType;
+  heatingType: number;
   customTemp: number;
   mode: ProcessConfigMode;  
   maintainTemp: number;
