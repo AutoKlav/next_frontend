@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "primereact/button";
 import { Chart } from "primereact/chart";
@@ -10,11 +10,9 @@ import { handleExportToPDF } from "@/utils/exportUtil";
 import { getProcessLogsAction } from "@/app/(main)/api/actions";
 import { updateChartOptions } from "@/utils/chartOptionsUtil";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { modularDataTransformation, updateModularChartData } from "@/utils/transformData";
 import { formatTime } from "@/utils/dateUtil";
-import { getFromLocalStorage, setToLocalStorage } from "@/utils/localStorage";
-import { SELECTED_VALUES_CONSTANT } from "@/constants";
-import { EnabledSensors } from "@/types/grpc";
+import { EnabledSensors, StateMachineValues } from "@/types/grpc";
+import { TransformedData } from "@/types/app";
 
 interface ChartInfo {
     id: number;
@@ -24,57 +22,174 @@ interface ChartInfo {
 }
 
 export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) => {
-  
+    const modularDataTransformation = (data: { processlogsList: StateMachineValues[] }): TransformedData => {
+        const transformedData: TransformedData = {
+            timestamp: [],
+            temp: [],
+            tempk: [],
+            pressure: [],
+            expansiontemp: [],
+            heatertemp: [],
+            steampressure: [],
+            tanktemp: [],
+            tankwaterlevel: [],
+        };
+
+        data.processlogsList.forEach((log) => {
+            transformedData.timestamp.push(log.timestamp);
+            transformedData.temp.push(log.sensorvalues.temp);
+            transformedData.tempk.push(log.sensorvalues.tempk);
+            transformedData.pressure.push(log.sensorvalues.pressure);
+            transformedData.expansiontemp.push(log.sensorvalues.expansiontemp);
+            transformedData.heatertemp.push(log.sensorvalues.heatertemp);
+            transformedData.steampressure.push(log.sensorvalues.steampressure);
+            transformedData.tanktemp.push(log.sensorvalues.tanktemp);
+            transformedData.tankwaterlevel.push(log.sensorvalues.tankwaterlevel);
+        });
+
+        return transformedData;
+    };
+
+    const updateModularChartData = (
+        data: TransformedData,
+        selectedSensors: EnabledSensors,
+        setChartData: (data: any) => void
+    ) => {
+        const datasets = [];
+
+        if (selectedSensors.temp) {
+            datasets.push({
+                label: "Temperatura vode",
+                data: data.temp,
+                borderColor: "rgba(255, 99, 132, 1)",
+                backgroundColor: "rgba(255, 99, 132, 0.3)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+        if (selectedSensors.tempk) {
+            datasets.push({
+                label: "Temperatura konzerve",
+                data: data.tempk,
+                borderColor: "rgba(204, 71, 71, 1)",
+                backgroundColor: "rgba(204, 71, 71, 0.25)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+        if (selectedSensors.pressure) {
+            datasets.push({
+                label: "Tlak",
+                data: data.pressure,
+                borderColor: "rgba(153, 102, 255, 1)",
+                backgroundColor: "rgba(153, 102, 255, 0.23)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+        if (selectedSensors.expansiontemp) {
+            datasets.push({
+                label: "Temperatura ekspanzije",
+                data: data.expansiontemp,
+                borderColor: "rgba(75, 192, 192, 1)",
+                backgroundColor: "rgba(75, 192, 192, 0.3)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+        if (selectedSensors.heatertemp) {
+            datasets.push({
+                label: "Temperatura grijača",
+                data: data.heatertemp,
+                borderColor: "rgba(255, 206, 86, 1)",
+                backgroundColor: "rgba(255, 206, 86, 0.3)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+        if (selectedSensors.steampressure) {
+            datasets.push({
+                label: "Tlak pare",
+                data: data.steampressure,
+                borderColor: "rgba(54, 162, 235, 1)",
+                backgroundColor: "rgba(54, 162, 235, 0.3)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+        if (selectedSensors.tanktemp) {
+            datasets.push({
+                label: "Temperatura spremnika",
+                data: data.tanktemp,
+                borderColor: "rgba(255, 159, 64, 1)",
+                backgroundColor: "rgba(255, 159, 64, 0.3)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+        if (selectedSensors.tankwaterlevel) {
+            datasets.push({
+                label: "Razina vode u spremniku",
+                data: data.tankwaterlevel,
+                borderColor: "rgba(153, 102, 255, 1)",
+                backgroundColor: "rgba(153, 102, 255, 0.3)",
+                borderWidth: 2,
+                fill: false,
+            });
+        }
+
+        setChartData({
+            labels: data.timestamp,
+            datasets,
+        });
+    };
+
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
-    const [selectedValues, setSelectedValues] = useState<EnabledSensors>(getFromLocalStorage(SELECTED_VALUES_CONSTANT));
+    const [selectedValues, setSelectedValues] = useState<EnabledSensors>({
+        temp: true,
+        tempk: false,
+        pressure: false,
+        expansiontemp: false,
+        heatertemp: false,
+        steampressure: false,
+        tanktemp: false,
+        tankwaterlevel: false,
+    });
 
-    // Automatically save to localStorage whenever selectedValues changes
-    useEffect(() => {
-        setToLocalStorage(SELECTED_VALUES_CONSTANT, selectedValues);
-    }, [selectedValues]); // Dependency array listens for changes in selectedValues
-
-    
     const chartRef = useRef<any>(null);
-    const { isLoading: isLogLoading, refetch } = useQuery({
-        queryKey: ["processLogs2"],
+
+    const { isLoading: isLogLoading, data } = useQuery({
+        queryKey: ["processLogs2", chartInfoProps.id],
         queryFn: async () => {
             const { data } = await getProcessLogsAction({
                 ids: [chartInfoProps.id],
                 source: "graph",
             });
-            const parsedData = data?.processlogsList?.map((process, index) => {
-                return {
-                    ...process,
-                    timestamp: index === 0 ? formatTime(process.timestamp) : `+${index}min`,
-                };
-            });
-
-            updateModularChartData(
-                modularDataTransformation({ processlogsList: parsedData }),
-                setChartData
-            );
-            return parsedData;
+            return modularDataTransformation({ processlogsList: data?.processlogsList || [] });
         },
-        refetchInterval: chartInfoProps.refetchInterval ? chartInfoProps.refetchInterval : false,
+        refetchInterval: chartInfoProps.refetchInterval || false,
+        onSuccess: (data) => {
+            updateModularChartData(data, selectedValues, setChartData);
+        },
     });
 
     useEffect(() => {
-        refetch();
         setChartOptions(updateChartOptions("white", "white", chartInfoProps));
-    }, [chartInfoProps.id, refetch]);
+    }, [chartInfoProps]);
 
     const handleExportToPdf = () => {
-        setToLocalStorage("selectedValues", JSON.stringify(selectedValues));
-        //handleExportToPDF(chartRef, chartOptions, chartInfoProps);
+        // handleExportToPDF(chartRef, chartOptions, chartInfoProps);
     };
 
     const onValueChange = (e: any) => {
         const { name, checked } = e.target;
-        setSelectedValues((prev: any) => ({
-            ...prev,
-            [name]: checked,
-        }));
+        const updatedValues = { ...selectedValues, [name]: checked };
+        setSelectedValues(updatedValues);
+
+        if (data) {
+            updateModularChartData(data, updatedValues, setChartData);
+        }
     };
 
     return (
@@ -96,107 +211,28 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                 </div>
             ) : (
                 <>
-                    {/* Checkbox Section */}
                     <div
                         className="mb-4"
                         style={{
                             display: "grid",
                             gridTemplateColumns: "repeat(4, 1fr)",
                             gap: "10px",
-                            alignItems: "center",
                         }}
                     >
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="temp"
-                                name="temp"
-                                checked={selectedValues.temp}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="temp" className="ml-2">
-                                Temperatura autoklava
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="heatertemp"
-                                name="heatertemp"
-                                checked={selectedValues.heatertemp}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="heatertemp" className="ml-2">
-                                Temperatura Grijača
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="pressure"
-                                name="pressure"
-                                checked={selectedValues.pressure}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="pressure" className="ml-2">
-                                Tlak autoklava
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="expansiontemp"
-                                name="expansiontemp"
-                                checked={selectedValues.expansiontemp}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="expansiontemp" className="ml-2">
-                                Temperatura Ekspanzije
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="tempk"
-                                name="tempk"
-                                checked={selectedValues.tempk}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="tempk" className="ml-2">
-                                Temperatura Konzerve
-                            </label>                            
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="tanktemp"
-                                name="tanktemp"
-                                checked={selectedValues.tanktemp}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="tanktemp" className="ml-2">
-                                Temperatura Spremnika
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">                            
-                            <Checkbox
-                                inputId="steampressure"
-                                name="steampressure"
-                                checked={selectedValues.steampressure}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="steampressure" className="ml-2">
-                                Tlak Pare
-                            </label>
-                        </div>
-                        <div className="flex align-items-center">
-                            <Checkbox
-                                inputId="tankwaterlevel"
-                                name="tankwaterlevel"
-                                checked={selectedValues.tankwaterlevel}
-                                onChange={onValueChange}
-                            />
-                            <label htmlFor="tankwaterlevel" className="ml-2">
-                                Razina Vode u Spremniku
-                            </label>
-                        </div>
+                        {Object.keys(selectedValues).map((key) => (
+                            <div key={key} className="flex align-items-center">
+                                <Checkbox
+                                    inputId={key}
+                                    name={key}
+                                    checked={selectedValues[key as keyof EnabledSensors]}
+                                    onChange={onValueChange}
+                                />
+                                <label htmlFor={key} className="ml-2">
+                                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                                </label>
+                            </div>
+                        ))}
                     </div>
-
-                    {/* Chart Section */}
                     <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
                     <Button
                         label="Prebaci u PDF"
