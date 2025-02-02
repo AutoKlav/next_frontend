@@ -157,6 +157,17 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
         tankwaterlevel: false,
     });
 
+    const sensorLabels: Record<keyof EnabledSensors, string> = {
+        temp: "Temperatura vode",
+        tempk: "Temperatura konzerve",
+        pressure: "Tlak",
+        expansiontemp: "Temperatura ekspanzije",
+        heatertemp: "Temperatura grijača",
+        steampressure: "Tlak pare",
+        tanktemp: "Temperatura spremnika",
+        tankwaterlevel: "Razina vode u spremniku",
+    };   
+
     const chartRef = useRef<any>(null);
 
     const { isLoading: isLogLoading, data } = useQuery({
@@ -228,7 +239,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
                                     onChange={onValueChange}
                                 />
                                 <label htmlFor={key} className="ml-2">
-                                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                                    {sensorLabels[key as keyof EnabledSensors]}
                                 </label>
                             </div>
                         ))}
