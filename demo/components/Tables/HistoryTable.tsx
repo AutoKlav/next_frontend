@@ -2,7 +2,7 @@
 
 import { Chart } from "primereact/chart";
 import { ChartOptions } from "chart.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { FilterMatchMode } from "primereact/api";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -44,12 +44,17 @@ const HistoryTable = () => {
             console.log(err);
         },
     });
-
+    console.log(chartData);
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: ({data, source}) => {
-            console.log("Process logs:", data);
-
-            if (source === "print") {                
+            if (source === "updateGraph") {
+                console.log('Data',data.processlogsList);
+                updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
+                
+                const chartInfo = getChartInfo(selectedProcesses[0]);                
+                console.log(chartInfo);
+            }
+            else if (source === "print") {                
                 updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
                 
                 const chartInfo = getChartInfo(selectedProcesses[0]);                
@@ -140,9 +145,10 @@ const HistoryTable = () => {
     };
 
     const handlePrint = () => {
+        console.log('Selected processes', selectedProcesses);
         const ids = selectedProcesses.map((process) => process.id);
+        console.log('Selected IDs', ids);
         getProcessLogMutation({ ids: ids, source: "print" });        
-        setShowChart(true); // Make the chart visible before exporting
     };
 
     const handleGraph = () => {
@@ -191,21 +197,15 @@ const HistoryTable = () => {
         return formatDateTime(date.toString());
     };
 
-    useEffect(() => {
-        // Usage    
-        setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
-    }, []);
-
     const header = renderHeader();
-
-    const [showChart, setShowChart] = useState(false); // State to control chart visibility
-    useEffect(() => {
-        // Hide chart again after a short delay (optional, if required for export operations)
-        if (showChart) {
-            const timer = setTimeout(() => setShowChart(false), 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [showChart]);
+    
+    const handleSelectionChange = (e: any) => {
+        setSelectedProcesses(e.value);
+        setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
+        const ids = selectedProcesses.map((process) => process.id);
+        console.log(ids);
+        getProcessLogMutation({ ids: ids, source: "updateGraph" });        
+    };
     
     return (
         <div className="card">
@@ -220,7 +220,7 @@ const HistoryTable = () => {
                 dataKey="id"
                 filters={filters}
                 selection={selectedProcesses}
-                onSelectionChange={(e) => setSelectedProcesses(e.value)}
+                onSelectionChange={handleSelectionChange}
                 filterDisplay="menu"
                 globalFilterFields={["productname", "processstart"]}
                 header={header}

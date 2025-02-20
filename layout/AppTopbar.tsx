@@ -16,15 +16,15 @@ const gentleBellShake = keyframes`
 `;
 
 // Styled component for the bell icon with conditional animation
-const AnimatedBell = styled.i<{ isActive: boolean }>`
+const AnimatedBell = styled.i<{ $isactive: boolean }>`
     display: flex;
     align-items: center;
     justify-content: center;
     color: #e05858; // Light red color
     font-size: 2rem; // Increased size
     transform-origin: center;
-    ${({ isActive }) =>
-        isActive &&
+    ${({ $isactive }) =>
+        $isactive &&
         css`
             animation: ${gentleBellShake} 1s infinite; // Subtle shaking animation
         `}
@@ -82,7 +82,7 @@ const AppTopbar = forwardRef<AppTopbarRef>((props, ref) => {
                     onClick={() => setBellActive(!isBellActive)} // Toggle animation state
                 >
                     {/* Centered Bell Icon */}
-                    <AnimatedBell className="pi pi-bell" isActive={isBellActive} />
+                    <AnimatedBell className="pi pi-bell" $isactive={isBellActive} />
                     {/* Animated Badge */}
                     <AnimatedBadge value={1} severity="danger" className="ml-2" />
                 </button>
