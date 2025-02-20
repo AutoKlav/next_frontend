@@ -49,13 +49,13 @@ const HistoryTable = () => {
         onSuccess: ({data, source}) => {
             if (source === "updateGraph") {
                 console.log('Data',data.processlogsList);
-                updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
+                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
                 
                 const chartInfo = getChartInfo(selectedProcesses[0]);                
                 console.log(chartInfo);
             }
             else if (source === "print") {                
-                updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
+                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
                 
                 const chartInfo = getChartInfo(selectedProcesses[0]);                
                 handleExportToPDF(chartRef, chartOptions, chartInfo);
@@ -144,21 +144,21 @@ const HistoryTable = () => {
         );
     };
 
+    console.log('Selected processes', selectedProcesses);
+    
     const handlePrint = () => {
-        console.log('Selected processes', selectedProcesses);
-        const ids = selectedProcesses.map((process) => process.id);
-        console.log('Selected IDs', ids);
-        getProcessLogMutation({ ids: ids, source: "print" });        
+        const ids = selectedProcesses.map((process) => process.id);        
+        getProcessLogMutation({ id: ids[0], source: "print" });        
     };
 
     const handleGraph = () => {
         const ids = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation({ ids: ids, source: "graph" });
+        getProcessLogMutation({ id: ids[0], source: "graph" });
     };
 
     const handleModularGraph = () => {
         const ids = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation({ ids: ids, source: "modularGraph" });
+        getProcessLogMutation({ id: ids[0], source: "modularGraph" });
     }
 
     const handleDateFilterApply = () => {
@@ -198,14 +198,13 @@ const HistoryTable = () => {
     };
 
     const header = renderHeader();
-    
-    const handleSelectionChange = (e: any) => {
-        setSelectedProcesses(e.value);
+
+    useEffect(() => {
         setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
-        const ids = selectedProcesses.map((process) => process.id);
-        console.log(ids);
-        getProcessLogMutation({ ids: ids, source: "updateGraph" });        
-    };
+        const ids = selectedProcesses.map((process) => process.id);        
+        
+        getProcessLogMutation({ id: ids[0], source: "updateGraph" });        
+    }, [selectedProcesses]);
     
     return (
         <div className="card">
@@ -220,7 +219,7 @@ const HistoryTable = () => {
                 dataKey="id"
                 filters={filters}
                 selection={selectedProcesses}
-                onSelectionChange={handleSelectionChange}
+                onSelectionChange={(e) => setSelectedProcesses(e.value)}
                 filterDisplay="menu"
                 globalFilterFields={["productname", "processstart"]}
                 header={header}

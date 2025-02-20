@@ -46,10 +46,8 @@ export const getFilteredModeValuesAction = async (filterModeRequest: ProcessFilt
     return filteredValues;
 }
 
-export const getProcessLogsAction = async ({ids, source} : {ids: number[], source:string}) => {    
-    console.log('From action IDs', ids);
-    const processLogs = await getAllProcessLogs(ids);    
-    console.log('From action', processLogs);
+export const getProcessLogsAction = async ({id, source} : {id: number, source:string}) => {    
+    const processLogs = await getAllProcessLogs([id]);
     return {data: processLogs, source: source};
 }
 

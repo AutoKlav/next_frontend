@@ -27,7 +27,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
     const { isLoading: isLogLoading, refetch } = useQuery({
         queryKey: ["processLogs1"], // Unique key for the query
         queryFn: async () => {
-            const { data } = await getProcessLogsAction({ ids: [chartInfoProps.id], source: "graph" });
+            const { data } = await getProcessLogsAction({ id: chartInfoProps.id, source: "graph" });
             const parsedData = data?.processlogsList?.map((process, index) => {
                 return {
                     ...process,
