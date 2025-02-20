@@ -193,7 +193,7 @@ const HistoryTable = () => {
 
     useEffect(() => {
         // Usage    
-        setChartOptions(updateChartOptions("#1f2937", "#1f2937", {id:1, title:'', subtitle:''})); // Initial white theme
+        setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
     }, []);
 
     const header = renderHeader();
