@@ -46,8 +46,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
         setChartOptions(updateChartOptions("white", "white", chartInfoProps)); // Initial white theme
     }, [chartInfoProps.id, refetch]);
 
-    const handleExportToPdf = () => {
-        //setChartOptions(updateChartOptions("black", "black", chartInfoProps));
+    const handleExportToPdf = () => {        
         handleExportToPDF(chartRef, chartOptions, chartInfoProps);
     }
     
