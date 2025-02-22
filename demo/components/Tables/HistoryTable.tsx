@@ -203,7 +203,7 @@ const HistoryTable = () => {
         setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
         const ids = selectedProcesses.map((process) => process.id);        
         
-        getProcessLogMutation({ id: ids[0], source: "updateGraph" });        
+        getProcessLogMutation({ id: ids[ids.length-1], source: "updateGraph" });        
     }, [selectedProcesses]);
     
     return (
