@@ -2,7 +2,7 @@
 
 import { Chart } from "primereact/chart";
 import { ChartOptions } from "chart.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { FilterMatchMode } from "primereact/api";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -44,13 +44,18 @@ const HistoryTable = () => {
             console.log(err);
         },
     });
-
+    console.log(chartData);
     const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: ({data, source}) => {
-            console.log("Process logs:", data);
-
-            if (source === "print") {                
-                updateChartData(transformData({ processlogsList: data.processlogsList }), setChartData);
+            if (source === "updateGraph") {
+                console.log('Data',data.processlogsList);
+                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
+                
+                const chartInfo = getChartInfo(selectedProcesses[0]);                
+                console.log(chartInfo);
+            }
+            else if (source === "print") {                
+                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
                 
                 const chartInfo = getChartInfo(selectedProcesses[0]);                
                 handleExportToPDF(chartRef, chartOptions, chartInfo);
@@ -139,20 +144,21 @@ const HistoryTable = () => {
         );
     };
 
+    console.log('Selected processes', selectedProcesses);
+    
     const handlePrint = () => {
-        const ids = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation({ ids: ids, source: "print" });        
-        setShowChart(true); // Make the chart visible before exporting
+        const ids = selectedProcesses.map((process) => process.id);        
+        getProcessLogMutation({ id: ids[0], source: "print" });        
     };
 
     const handleGraph = () => {
         const ids = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation({ ids: ids, source: "graph" });
+        getProcessLogMutation({ id: ids[0], source: "graph" });
     };
 
     const handleModularGraph = () => {
         const ids = selectedProcesses.map((process) => process.id);
-        getProcessLogMutation({ ids: ids, source: "modularGraph" });
+        getProcessLogMutation({ id: ids[0], source: "modularGraph" });
     }
 
     const handleDateFilterApply = () => {
@@ -191,21 +197,14 @@ const HistoryTable = () => {
         return formatDateTime(date.toString());
     };
 
-    useEffect(() => {
-        // Usage    
-        setChartOptions(updateChartOptions("#1f2937", "#1f2937", {id:1, title:'', subtitle:''})); // Initial white theme
-    }, []);
-
     const header = renderHeader();
 
-    const [showChart, setShowChart] = useState(false); // State to control chart visibility
     useEffect(() => {
-        // Hide chart again after a short delay (optional, if required for export operations)
-        if (showChart) {
-            const timer = setTimeout(() => setShowChart(false), 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [showChart]);
+        setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
+        const ids = selectedProcesses.map((process) => process.id);        
+        
+        getProcessLogMutation({ id: ids[ids.length-1], source: "updateGraph" });        
+    }, [selectedProcesses]);
     
     return (
         <div className="card">

@@ -174,7 +174,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
         queryKey: ["processLogs2", chartInfoProps.id],
         queryFn: async () => {
             const { data } = await getProcessLogsAction({
-                ids: [chartInfoProps.id],
+                id: chartInfoProps.id,
                 source: "graph",
             });
             return modularDataTransformation({ processlogsList: data?.processlogsList || [] });
