@@ -45,7 +45,7 @@ const HistoryTable = () => {
         },
     });
     console.log(chartData);
-    const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
+    const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: ({data, source}) => {
             if (source === "updateGraph") {
                 console.log('Data',data.processlogsList);
