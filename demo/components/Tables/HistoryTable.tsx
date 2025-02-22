@@ -199,10 +199,14 @@ const HistoryTable = () => {
 
     const header = renderHeader();
 
-    useEffect(() => {
+    // Set 
+    useEffect(() => {        
         setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
+    }, []);
+
+    useEffect(() => {
         const ids = selectedProcesses.map((process) => process.id);        
-        
+                
         getProcessLogMutation({ id: ids[ids.length-1], source: "updateGraph" });        
     }, [selectedProcesses]);
     
