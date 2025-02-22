@@ -205,10 +205,14 @@ const HistoryTable = () => {
     }, []);
 
     useEffect(() => {
+        fetchAndDisplayParallel();
+    }, [selectedProcesses]);
+    
+    const fetchAndDisplayParallel= async () => {
         const ids = selectedProcesses.map((process) => process.id);        
                 
-        getProcessLogMutation({ id: ids[ids.length-1], source: "updateGraph" });        
-    }, [selectedProcesses]);
+        getProcessLogMutation({ id: ids[ids.length-1], source: "updateGraph" });
+    }
     
     return (
         <div className="card">
