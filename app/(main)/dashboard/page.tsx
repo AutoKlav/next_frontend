@@ -521,6 +521,7 @@ const DashboardPage = () => {
                 
             </div>
         </div>            
+        {/* Display cards */}
         <div className="col-4">
             {/* Control Relays */}            
             <div className="card f-height border-green-600">
@@ -557,7 +558,9 @@ const DashboardPage = () => {
             </div>
             </div>
         </div>
-         <div className="col-4">            
+        
+        {/* Display first column */}
+        <div className="col-4">            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.slice(0,4).map((item, index) => (
@@ -565,24 +568,32 @@ const DashboardPage = () => {
                         ))}
                     </ul>                    
                 </div>
-            </div>
-            
-            <div className="col-4">
-            <div className="card border-red-700">                                                                
-                    <ul className="list-none p-0 m-0">
-                        {temperatures.slice(4,8).map((item, index) => (
-                            <DataCard key={item.headerName} {...item} />
-                        ))}
-                    </ul>                
-                </div>
                 <div className="card border-cyan-700">
                     <ul className="list-none p-0 m-0">
-                        {stateValues.map((item, index) => (
+                        {stateValues.slice(0,2).map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>                                        
                 </div>
-            </div>    
+        </div>
+            
+        {/* Display second column */}
+        <div className="col-4">
+            <div className="card border-red-700">                                                                
+                <ul className="list-none p-0 m-0">
+                    {temperatures.slice(4,8).map((item, index) => (
+                        <DataCard key={item.headerName} {...item} />
+                    ))}
+                </ul>                
+            </div>
+            <div className="card border-cyan-700">
+                <ul className="list-none p-0 m-0">
+                    {stateValues.slice(2,3).map((item, index) => (
+                        <DataCard key={item.headerName} {...item} />
+                    ))}
+                </ul>                                        
+            </div>
+        </div>    
     </div>
     );
 };
