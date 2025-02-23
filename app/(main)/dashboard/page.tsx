@@ -70,7 +70,7 @@ const DashboardPage = () => {
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
-    const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
+    const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[1]);
     // Bakterija TODO fetch from API
     const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>(bacteriaDropdownValues[0]);
     
