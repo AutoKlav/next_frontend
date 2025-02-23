@@ -127,9 +127,7 @@ export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): 
     const startDate = new Date(process.processstart);
     const processEndTimestamp = startDate.getTime() + Number(process.processlength);
     processEndDate = formatDateTime(new Date(processEndTimestamp).toISOString()); 
-  } else {
-    console.log("Invalid process start or length");
-  }
+  } 
 
   return {
       id: process.id,

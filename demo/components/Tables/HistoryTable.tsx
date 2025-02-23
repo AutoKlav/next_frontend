@@ -45,17 +45,10 @@ const HistoryTable = () => {
             console.log(err);
         },
     });
-    console.log(chartData);
+    
     const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: async ({data, source}) => {
-            if (source === "updateGraph") {
-                console.log('Data',data.processlogsList);
-                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
-                
-                const chartInfo = getChartInfo(selectedProcesses[0]);                
-                console.log(chartInfo);
-            }
-            else if (source === "print") {                
+            if (source === "print") {                
                 updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
                 
                 // Wait for 3 seconds before moving to the next iteration until Chart 
@@ -148,8 +141,6 @@ const HistoryTable = () => {
             </div>
         );
     };
-
-    console.log('Selected processes', selectedProcesses);
     
     const handlePrint = () => {        
         fetchAndDisplaySequential();    
