@@ -54,7 +54,8 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchInterval = 3000;    
+    const refetchStateMachineIntervals = 5000; 
+    const refetchIntervalRelay = 2000;   
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
@@ -143,7 +144,7 @@ const DashboardPage = () => {
         { 
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
-            refetchInterval: refetchInterval,
+            refetchInterval: refetchStateMachineIntervals,
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
                 showError('Proces','Greška prilikom dohvaćanja podataka');
@@ -309,7 +310,7 @@ const DashboardPage = () => {
         { 
             queryKey: ['relaySensorValues'],
             queryFn: () => getSensorRelayValuesAction(),
-            refetchInterval: refetchInterval,
+            refetchInterval: refetchIntervalRelay,
             onError: (error) => {
                 console.error('Error getting relay sensor values:', error);
                 showError('Relej','Greška prilikom dohvaćanja podataka');

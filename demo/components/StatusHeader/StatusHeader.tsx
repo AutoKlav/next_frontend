@@ -85,12 +85,12 @@ export const RenderState = (state: number) => {
         case 1:
             return (
                 <div
-                    className={`bg-blue-300 text-900 ${baseClass}`}
+                    className={`bg-blue-500 text-900 ${baseClass}`}
                     style={{ borderRadius: "12px" }}
                 >
-                    <span className={spanClass}>Proces se pokreće</span>
+                    <span className={spanClass}>Proces je pokrenut za izvođenje</span>
                     <div className="flex items-center">
-                        <i className={`pi pi-spin pi-spinner ${iconClassMultipleRows}`}></i>
+                        <i className={`pi pi-info-circle ${iconClassMultipleRows}`}></i>
                     </div>
                 </div>
             );
