@@ -16,7 +16,7 @@ export const transformData = (data: { processlogsList: StateMachineValues[] }): 
         pressure: [],
     };
 
-    data.processlogsList.forEach((log) => {      
+    data?.processlogsList?.forEach((log) => {      
         transformedData.timestamp?.push(log.timestamp);
         transformedData.temp?.push(log.sensorvalues.temp);
         transformedData.tempk?.push(log.sensorvalues.tempk);

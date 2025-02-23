@@ -17,12 +17,13 @@ import { getChartInfo, updateChartOptions } from "@/utils/chartOptionsUtil";
 import { transformData, updateChartData } from "@/utils/transformData";
 import { handleExportToPDF } from "@/utils/exportUtil";
 import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
+import { delay } from "@/utils/delayUtil";
 
 const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
     const chartRef = useRef<any>(null);
-
+    
     const router = useRouter()
     const { showError } = useToast();
     
@@ -44,19 +45,16 @@ const HistoryTable = () => {
             console.log(err);
         },
     });
-    console.log(chartData);
-    const { isLoading: isLogLoading, mutate: getProcessLogMutation } = useMutation(getProcessLogsAction, {
-        onSuccess: ({data, source}) => {
-            if (source === "updateGraph") {
-                console.log('Data',data.processlogsList);
+    
+    const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
+        onSuccess: async ({data, source}) => {
+            if (source === "print") {                
                 updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
                 
-                const chartInfo = getChartInfo(selectedProcesses[0]);                
-                console.log(chartInfo);
-            }
-            else if (source === "print") {                
-                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
-                
+                // Wait for 3 seconds before moving to the next iteration until Chart 
+                // loads animation is complete
+                await delay(3000); 
+
                 const chartInfo = getChartInfo(selectedProcesses[0]);                
                 handleExportToPDF(chartRef, chartOptions, chartInfo);
             } else if (source === "graph") {                
@@ -143,12 +141,9 @@ const HistoryTable = () => {
             </div>
         );
     };
-
-    console.log('Selected processes', selectedProcesses);
     
-    const handlePrint = () => {
-        const ids = selectedProcesses.map((process) => process.id);        
-        getProcessLogMutation({ id: ids[0], source: "print" });        
+    const handlePrint = () => {        
+        fetchAndDisplaySequential();    
     };
 
     const handleGraph = () => {
@@ -199,12 +194,22 @@ const HistoryTable = () => {
 
     const header = renderHeader();
 
-    useEffect(() => {
+    // Set 
+    useEffect(() => {        
         setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
-        const ids = selectedProcesses.map((process) => process.id);        
-        
-        getProcessLogMutation({ id: ids[ids.length-1], source: "updateGraph" });        
+    }, []);
+
+    useEffect(() => {
+        //fetchAndDisplaySequential();
     }, [selectedProcesses]);
+    
+    const fetchAndDisplaySequential= async () => {        
+        const ids = selectedProcesses.map((process) => process.id);                
+        
+        for (const id of ids) {
+            await getProcessLogMutation({ id, source: "print" });
+        }
+    }
     
     return (
         <div className="card">
@@ -249,9 +254,8 @@ const HistoryTable = () => {
                 dateFilterOption={dateFilterOption}
                 setDateFilterOption={setDateFilterOption}
             />
-                
             <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-            
+                        
         </div>
     );
 };

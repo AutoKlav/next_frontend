@@ -9,7 +9,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
 import ChipStates from '@/demo/components/Chips/ChipList';
 import { useToast } from '@/layout/context/toastcontext';
-import { checkForErrors } from '@/utils/errorUtil';
+import { checkForErrors, responseParserUtil } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
 import { Bacteria, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
@@ -54,7 +54,8 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchInterval = 3000;    
+    const refetchStateMachineIntervals = 5000; 
+    const refetchIntervalRelay = 2000;   
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
@@ -69,7 +70,7 @@ const DashboardPage = () => {
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
-    const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[0]);
+    const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[1]);
     // Bakterija TODO fetch from API
     const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>(bacteriaDropdownValues[0]);
     
@@ -126,12 +127,14 @@ const DashboardPage = () => {
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
         onError: (error) => {
+            console.log('Error stopping process:', error);
             console.error('Error stopping process:', error);
             showError('Proces','Greška prilikom zaustavljanja procesa');
         },
-        onSuccess: (data) => {
+        onSuccess: (data) => 
+        {
             if(checkForErrors(data)){
-                showError('Proces','Greška prilikom zaustavljanja procesa');
+                showError('Proces','Greška prilikom dohvaćanja podataka');
                 return;
             }
 
@@ -143,10 +146,10 @@ const DashboardPage = () => {
         { 
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),            
-            refetchInterval: refetchInterval,
+            refetchInterval: refetchStateMachineIntervals,
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
-                showError('Proces','Greška prilikom dohvaćanja podataka');
+                showError('Proces','Greška prilikom dohvaćanja podataka', 5000);
             },
             onSuccess: (data) => {                
                 if(checkForErrors(data)){
@@ -165,7 +168,13 @@ const DashboardPage = () => {
         },
         onSuccess: (data) => {
             if(checkForErrors(data)){
-                showError('Proces','Greška prilikom pokretanja procesa');
+                showError('Proces','Greška prilikom dohvaćanja podataka');
+                return;
+            }
+
+            const errors = responseParserUtil(data.errorsstring);            
+            if (errors[0] !== '') {
+                errors.forEach(error => showError('Proces', error, 5000));
                 return;
             }
 
@@ -309,7 +318,7 @@ const DashboardPage = () => {
         { 
             queryKey: ['relaySensorValues'],
             queryFn: () => getSensorRelayValuesAction(),
-            refetchInterval: refetchInterval,
+            refetchInterval: refetchIntervalRelay,
             onError: (error) => {
                 console.error('Error getting relay sensor values:', error);
                 showError('Relej','Greška prilikom dohvaćanja podataka');
@@ -521,6 +530,7 @@ const DashboardPage = () => {
                 
             </div>
         </div>            
+        {/* Display cards */}
         <div className="col-4">
             {/* Control Relays */}            
             <div className="card f-height border-green-600">
@@ -535,7 +545,7 @@ const DashboardPage = () => {
             </div>
             <div className='col-12'>
                 {state === 0 ?
-                        <ProgressBar className='ml-1' value={0} color='green' mode="determinate" style={{ height: '10px' }}/> :
+                        <ProgressBar className='ml-1' color='green' mode="determinate" style={{ height: '10px' }}/> :
                         <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
                     }
             </div>
@@ -557,7 +567,9 @@ const DashboardPage = () => {
             </div>
             </div>
         </div>
-         <div className="col-4">            
+        
+        {/* Display first column */}
+        <div className="col-4">            
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
                         {temperatures.slice(0,4).map((item, index) => (
@@ -565,24 +577,32 @@ const DashboardPage = () => {
                         ))}
                     </ul>                    
                 </div>
-            </div>
-            
-            <div className="col-4">
-            <div className="card border-red-700">                                                                
-                    <ul className="list-none p-0 m-0">
-                        {temperatures.slice(4,8).map((item, index) => (
-                            <DataCard key={item.headerName} {...item} />
-                        ))}
-                    </ul>                
-                </div>
                 <div className="card border-cyan-700">
                     <ul className="list-none p-0 m-0">
-                        {stateValues.map((item, index) => (
+                        {stateValues.slice(0,2).map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>                                        
                 </div>
-            </div>    
+        </div>
+            
+        {/* Display second column */}
+        <div className="col-4">
+            <div className="card border-red-700">                                                                
+                <ul className="list-none p-0 m-0">
+                    {temperatures.slice(4,8).map((item, index) => (
+                        <DataCard key={item.headerName} {...item} />
+                    ))}
+                </ul>                
+            </div>
+            <div className="card border-cyan-700">
+                <ul className="list-none p-0 m-0">
+                    {stateValues.slice(2,3).map((item, index) => (
+                        <DataCard key={item.headerName} {...item} />
+                    ))}
+                </ul>                                        
+            </div>
+        </div>    
     </div>
     );
 };
