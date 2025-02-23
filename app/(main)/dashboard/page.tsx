@@ -9,7 +9,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
 import ChipStates from '@/demo/components/Chips/ChipList';
 import { useToast } from '@/layout/context/toastcontext';
-import { checkForErrors } from '@/utils/errorUtil';
+import { checkForErrors, responseParserUtil } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
 import { Bacteria, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
@@ -127,12 +127,15 @@ const DashboardPage = () => {
     const { mutate: stopProcess } = useMutation({
         mutationFn: stopProcessAction,
         onError: (error) => {
+            console.log('Error stopping process:', error);
             console.error('Error stopping process:', error);
             showError('Proces','Greška prilikom zaustavljanja procesa');
         },
-        onSuccess: (data) => {
+        onSuccess: (data) => 
+        {
+            console.log('Success stopping process:', data);
             if(checkForErrors(data)){
-                showError('Proces','Greška prilikom zaustavljanja procesa');
+                showError('Proces','Greška prilikom dohvaćanja podataka');
                 return;
             }
 
@@ -147,7 +150,7 @@ const DashboardPage = () => {
             refetchInterval: refetchStateMachineIntervals,
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
-                showError('Proces','Greška prilikom dohvaćanja podataka');
+                showError('Proces','Greška prilikom dohvaćanja podataka', 5000);
             },
             onSuccess: (data) => {                
                 if(checkForErrors(data)){
@@ -166,7 +169,13 @@ const DashboardPage = () => {
         },
         onSuccess: (data) => {
             if(checkForErrors(data)){
-                showError('Proces','Greška prilikom pokretanja procesa');
+                showError('Proces','Greška prilikom dohvaćanja podataka');
+                return;
+            }
+
+            const errors = responseParserUtil(data.errorsstring);
+            if (errors.length > 0) {
+                errors.forEach(error => showError('Proces', error, 5000));
                 return;
             }
 
