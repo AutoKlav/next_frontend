@@ -90,7 +90,7 @@ export const RenderState = (state: number) => {
                 >
                     <span className={spanClass}>Proces je pokrenut za izvođenje</span>
                     <div className="flex items-center">
-                        <i className={`pi pi-info-circle ${iconClassMultipleRows}`}></i>
+                        <i className={`pi pi-spinner ${iconClassMultipleRows}`}></i>
                     </div>
                 </div>
             );
