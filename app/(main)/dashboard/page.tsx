@@ -133,7 +133,6 @@ const DashboardPage = () => {
         },
         onSuccess: (data) => 
         {
-            console.log('Success stopping process:', data);
             if(checkForErrors(data)){
                 showError('Proces','Greška prilikom dohvaćanja podataka');
                 return;
@@ -173,8 +172,8 @@ const DashboardPage = () => {
                 return;
             }
 
-            const errors = responseParserUtil(data.errorsstring);
-            if (errors.length > 0) {
+            const errors = responseParserUtil(data.errorsstring);            
+            if (errors[0] !== '') {
                 errors.forEach(error => showError('Proces', error, 5000));
                 return;
             }
@@ -546,7 +545,7 @@ const DashboardPage = () => {
             </div>
             <div className='col-12'>
                 {state === 0 ?
-                        <ProgressBar className='ml-1' value={0} color='green' mode="determinate" style={{ height: '10px' }}/> :
+                        <ProgressBar className='ml-1' color='green' mode="determinate" style={{ height: '10px' }}/> :
                         <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
                     }
             </div>
