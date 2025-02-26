@@ -21,10 +21,17 @@ export const generateTablePDF = () => {
     autoTable(doc, {
         theme: "grid",
         head: [["Ime: Testni podaci | Kolicina: sint aliqua do laborum | Pocetak: 17:28:53, 28/11/2024 | Trajanje: 15656h:33m | Kraj: 03:02:47, 12/0912026"]], // Single title spanning all columns
-        body: [["Bakterija: clostridium botulinum | Opis: G pozitivna, anaerobna bakterija | Broj sarze: LT0324325345 | do: 0.2 | z0: 10"]],
         styles: { halign: "center", fontSize: 14, fontStyle: "bold", textColor: [0, 0, 0] },
-        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], fontStyle:'normal', fontSize:11 }, // White background, black text, center align title
-        bodyStyles: { halign: 'center', fontStyle: 'normal', fontSize:9 }, // Center align body, normal text font
+        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], fontStyle: 'normal', fontSize: 11 }, // White background, black text, center align title        
+    });
+
+    // Add a title row spanning all columns
+    autoTable(doc, {
+        theme: "grid",
+        head: [["Bakterija: clostridium botulinum | Opis: G pozitivna, anaerobna bakterija | Broj sarze: LT0324325345 | do: 0.2 | z0: 10"]],
+        styles: { halign: "center", fontSize: 14, fontStyle: "bold", textColor: [0, 0, 0] },
+        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], fontStyle: 'normal', fontSize: 9 }, // White background, black text, center align title
+        bodyStyles: { }, // Center align body, normal text font
     });
 
     // Add table data below the title
@@ -32,8 +39,8 @@ export const generateTablePDF = () => {
         theme: "grid",
         head: [columns],
         body: rows,
-        styles: { textColor: [0, 0, 0] }, // Black text
-        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center' }, // White background, black text, center align headers
+        styles: { textColor: [0, 0, 0], fontSize: 7 }, // Black text, reduced font size
+        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', fontSize: 8 }, // White background, black text, center align headers, reduced font size
         columnStyles: {
             0: { halign: 'center' }, // Center align Temperature
             1: { halign: 'center' }, // Center align Delta T
