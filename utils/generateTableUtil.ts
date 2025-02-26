@@ -20,10 +20,18 @@ export const generateTablePDF = () => {
     // Add a title row spanning all columns
     autoTable(doc, {
         theme: "grid",
-        head: [["Ime: Testni podaci | Kolicina: sint aliqua do laborum | Pocetak: 17:28:53, 28/11/2024 | Trajanje: 15656h:33m | Kraj: 03:02:47, 12/0912026"], 
-              ["Bakterija: clostridium botulinum | Opis: G pozitivna, anaerobna bakterija | Broj sarze: LT0324325345 | do: 0.2 | z0: 10"]], // Single title spanning all columns
+        head: [["Ime: Testni podaci | Kolicina: sint aliqua do laborum | Pocetak: 17:28:53, 28/11/2024 | Trajanje: 15656h:33m | Kraj: 03:02:47, 12/0912026"]], // Single title spanning all columns
         styles: { halign: "center", fontSize: 14, fontStyle: "bold", textColor: [0, 0, 0] },
         headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], fontStyle: 'normal', fontSize: 11 }, // White background, black text, center align title        
+    });
+
+    // Add a title row spanning all columns
+    autoTable(doc, {
+        theme: "grid",
+        head: [["Bakterija: clostridium botulinum | Opis: G pozitivna, anaerobna bakterija | Broj sarze: LT0324325345 | do: 0.2 | z0: 10"]],
+        styles: { halign: "center", fontSize: 14, fontStyle: "bold", textColor: [0, 0, 0] },
+        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], fontStyle: 'normal', fontSize: 9 }, // White background, black text, center align title
+        bodyStyles: { }, // Center align body, normal text font
     });
 
     // Add table data below the title
