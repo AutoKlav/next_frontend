@@ -5,8 +5,8 @@ export const generateTablePDF = () => {
     const doc = new jsPDF();
 
     // Sample data
-    const data = Array.from({ length: 10 }, (_, i) => ({
-        tempK: 300 + i * 10,
+    const data = Array.from({ length: 40 }, (_, i) => ({
+        tempK: 300 + i * 40,
         dTemp: 5 + i,
         D5: 10 + i,
         F5: 15 + i,
