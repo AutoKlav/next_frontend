@@ -39,7 +39,7 @@ export const generateTablePDF = () => {
         theme: "grid",
         head: [columns],
         body: rows,
-        styles: { textColor: [0, 0, 0], fontSize: 7 }, // Black text, reduced font size
+        styles: { textColor: [0, 0, 0], fontSize: 7 }, // Black text, reduced font size table data
         headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', fontSize: 8 }, // White background, black text, center align headers, reduced font size
         columnStyles: {
             0: { halign: 'center' }, // Center align Temperature
