@@ -2,7 +2,7 @@
 
 import { Chart } from "primereact/chart";
 import { ChartOptions } from "chart.js";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FilterMatchMode } from "primereact/api";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
@@ -18,6 +18,7 @@ import { transformData, updateChartData } from "@/utils/transformData";
 import { handleExportToPDF } from "@/utils/exportUtil";
 import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
 import { delay } from "@/utils/delayUtil";
+import { generateTablePDF } from "@/utils/generateTableUtil";
 
 const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
@@ -118,6 +119,14 @@ const HistoryTable = () => {
                         onClick={handleModularGraph} 
                     />
                     )}
+                    {selectedProcesses.length === 1 && (
+                        <Button
+                        icon="pi pi-file-excel"
+                        className="p-button-text p-button-plain"
+                        size="large"
+                        onClick={handleTableExport} 
+                    />
+                    )}
                     {selectedProcesses.length > 0 && (                        
                         <Button
                             icon="pi pi-print"
@@ -154,6 +163,10 @@ const HistoryTable = () => {
     const handleModularGraph = () => {
         const ids = selectedProcesses.map((process) => process.id);
         getProcessLogMutation({ id: ids[0], source: "modularGraph" });
+    }
+
+    const handleTableExport = () => {
+        generateTablePDF();
     }
 
     const handleDateFilterApply = () => {
