@@ -62,17 +62,12 @@ const DashboardPage = () => {
         { id: 0, name: 'Ciljni F' },
         { id: 1, name: 'Na Vrijeme' },
     ];
-    
-    const bacteriaDropdownValues: ProcessType[] = [
-        { id: 1, name: 'constrilium botilium', d0: 0.2, z: 10 }
-    ];
-
+        
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[1]);
-    // Bakterija TODO fetch from API
-    const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>(bacteriaDropdownValues[0]);
+    const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>();
     
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
@@ -83,8 +78,8 @@ const DashboardPage = () => {
     
     const [maintainTemp, setMaintainTemp] = useState<number>(0);
     
-    const [d0, setD0] = useState<number>(0.2);
-    const [z, setZ] = useState<number>(10);
+    const [d0, setD0] = useState<number>(0);
+    const [z, setZ] = useState<number>(0);
 
     const targetF = React.useRef<number>(0);
     
@@ -107,14 +102,14 @@ const DashboardPage = () => {
         setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
         setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
-        setBacteriaDropdown(bacteriaDropdownValues[0]);
+        //setBacteriaDropdown(fetchedBacteria.current[0]);
         //#endregion
         
         //#region typeDropdown
         targetF.current = 0;
         
-        setD0(0.2);
-        setZ(10);        
+        setD0(fetchedBacteria.current?.[0]?.d0 || 0);
+        setZ(fetchedBacteria.current?.[0]?.z || 0);        
 
         targetCoolingTime.current = 0;
         targetHeatingTime.current = 0;
@@ -244,18 +239,22 @@ const DashboardPage = () => {
             }            
           
             fetchedBacteria.current = data.bacteriaList;            
+            setBacteriaDropdown(data?.bacteriaList?.[0]);
+            setD0(data?.bacteriaList?.[0]?.d0);
+            setZ(data?.bacteriaList?.[0]?.z);
         },
     });
+
+    console.log(fetchedBacteria.current)
     
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
-        //getBacteria(); TODO 
+        getBacteria();
     }, [processTypes]);
 
     // Set default values for custom process types
     useEffect(() => {
-        
         if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
             typeDropdown?.id === ProcessConfigType.PASTERIZATION)
         {            
@@ -517,7 +516,7 @@ const DashboardPage = () => {
                             <hr />
                         </div>  
                         <div className="col-4">
-                            <StartProcessDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={bacteriaDropdownValues} />
+                            <StartProcessDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={fetchedBacteria.current} />
                         </div>                        
                         <div className="col-4">
                             <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[d0, setD0]} />
