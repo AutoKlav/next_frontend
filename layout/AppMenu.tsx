@@ -33,7 +33,7 @@ const AppMenu = () => {
                             to: '/settings/globals'
                         },
                         {
-                            label: 'Bacteria',
+                            label: 'Bakterije',
                             icon: 'pi pi-fw pi-bolt', // Bacteria icon   
                             to: '/settings/bacteria'
                         },

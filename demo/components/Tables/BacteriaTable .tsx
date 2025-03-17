@@ -4,11 +4,16 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { CSSProperties } from 'react';
-import { BacteriaList } from '@/types/grpc';
+import { Bacteria } from '@/types/grpc';
 import { Toast } from 'primereact/toast';
 
-const BacteriaTable = (bacteria: BacteriaList) => {
-    const [config, setConfig] = useState([...bacteria.bacteriaList]);
+interface BacteriaTableProps {
+    bacteria: Bacteria[];
+}
+
+const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
+    
+    const [config, setConfig] = useState(bacteria);
     const toast = useRef<Toast>(null);
 
     const deleteRow = (id: string) => {
