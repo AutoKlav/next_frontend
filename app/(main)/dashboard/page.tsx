@@ -280,6 +280,14 @@ const DashboardPage = () => {
         };
     }, [productName, productQuantity, nameAndQuantityFilterMode]);
 
+    // Change the mode dropdown based on the selected type
+    useEffect(() => {
+        if (bacteriaDropdown) {
+            setD0(bacteriaDropdown.d0 ?? 0);
+            setZ(bacteriaDropdown.z ?? 0);
+        }
+    }, [bacteriaDropdown]); // Runs whenever bacteriaDropdown changes
+
     const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
 
     const [processSuggestions, setProcessSuggestions] = useState<ProcessSuggestions>({
