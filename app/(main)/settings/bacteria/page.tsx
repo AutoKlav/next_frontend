@@ -1,5 +1,4 @@
 import React from 'react';
-import VariablesTable from '@/demo/components/Tables/VariablesTable';
 import { getBacteriaAction } from '../../api/actions';
 import BacteriaTable from '@/demo/components/Tables/BacteriaTable ';
 
