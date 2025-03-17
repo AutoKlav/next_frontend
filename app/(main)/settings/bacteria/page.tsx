@@ -1,0 +1,17 @@
+import React from 'react';
+import VariablesTable from '@/demo/components/Tables/VariablesTable';
+import { getVariablesAction } from '../../api/actions';
+
+const BacteriaPage = async () => {
+    const [variables] = await Promise.all([getVariablesAction()]);
+    
+    return (
+        <div className="grid">                        
+            <div className='col-12'>
+                <VariablesTable data={variables} />
+            </div>
+        </div>
+    );
+};
+
+export default BacteriaPage;
