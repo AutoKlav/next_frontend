@@ -96,12 +96,14 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
             <Toast ref={toast} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h2 style={{ textAlign: 'left', margin: 0 }}>Globalne varijable</h2>
-                <Button 
-                    label="Dodaj bakteriju" 
-                    icon="pi pi-plus" 
-                    onClick={() => setModalVisibility(true)}
-                    className="p-button-sm"
-                />
+                <div style={{ textAlign: 'right' }}>
+                    <Button 
+                        label="Dodaj bakteriju" 
+                        icon="pi pi-plus" 
+                        onClick={() => setModalVisibility(true)}
+                        className="p-button-sm"
+                    />
+                </div>
             </div>
             
             <DataTable 
