@@ -244,9 +244,7 @@ const DashboardPage = () => {
             setZ(data?.bacteriaList?.[0]?.z);
         },
     });
-
-    console.log(fetchedBacteria.current)
-    
+   
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
