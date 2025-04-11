@@ -7,29 +7,29 @@ import { CSSProperties } from 'react';
 import { Bacteria } from '@/types/grpc';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { InputNumber } from 'primereact/inputnumber';
+import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
+import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
+import { useToast } from '@/layout/context/toastcontext';
 
 interface BacteriaTableProps {
     bacteria: Bacteria[];
 }
 
 const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
+    const { showSuccess, showError, showWarn } = useToast();
     const [config, setConfig] = useState(bacteria);
     const toast = useRef<Toast>(null);
     const [isModalVisible, setModalVisibility] = useState(false);
     
-    // Form state
-    const [newBacteria, setNewBacteria] = useState({
-        name: '',
-        description: '',
-        d0: 0,
-        z: 0
-    });
+    // Form state using refs for numbers to match DashboardPage pattern
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const d0 = useRef<number>(0);
+    const z = useRef<number>(0);
 
     const deleteRow = (id: string) => {
         setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
-        toast.current?.show({ severity: 'warn', summary: 'Deleted', detail: 'Row has been deleted', life: 3000 });
+        showSuccess('Bakterija', 'Bakterija je izbrisana');
     };
 
     const columns = [
@@ -44,13 +44,8 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
     };
 
     const handleAddBacteria = () => {
-        if (!newBacteria.name || newBacteria.d0 <= 0 || newBacteria.z <= 0) {
-            toast.current?.show({
-                severity: 'error',
-                summary: 'Greška',
-                detail: 'Molimo popunite sva obavezna polja',
-                life: 3000
-            });
+        if (!name || d0.current <= 0 || z.current <= 0) {
+            showError('Bakterija', 'Molimo popunite sva obavezna polja');
             return;
         }
         
@@ -59,27 +54,21 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
         setConfig(prevConfig => [
             ...prevConfig,
             {
-                id: newId, // Now this is a number
-                name: newBacteria.name,
-                description: newBacteria.description,
-                d0: newBacteria.d0,
-                z: newBacteria.z
+                id: newId,
+                name: name,
+                description: description,
+                d0: d0.current,
+                z: z.current
             }
         ]);
 
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Nova bakterija je dodana',
-            life: 3000
-        });
+        showSuccess('Bakterija', 'Nova bakterija je dodana');
 
-        setNewBacteria({
-            name: '',
-            description: '',
-            d0: 0,
-            z: 0
-        });
+        // Reset form
+        setName('');
+        setDescription('');
+        d0.current = 0;
+        z.current = 0;
 
         setModalVisibility(false);
     };
@@ -129,44 +118,33 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
                 onHide={() => setModalVisibility(false)}
                 footer={modalFooter}
             >
-                <div className="p-fluid grid">
-                    <div className="field col-12">
-                        <label htmlFor="name">Ime*</label>
-                        <InputText 
-                            id="name" 
-                            value={newBacteria.name} 
-                            onChange={(e) => setNewBacteria({...newBacteria, name: e.target.value})} 
-                            required 
+                <div className="grid">
+                    <div className="col-6">
+                        <GeneralStringInput 
+                            headerName="Ime*" 
+                            placeholder="Unesite ime bakterije"
+                            inputValue={[name, setName]}
+                            suggestions={[]}
                         />
                     </div>
-                    <div className="field col-12">
-                        <label htmlFor="description">Opis</label>
-                        <InputText 
-                            id="description" 
-                            value={newBacteria.description} 
-                            onChange={(e) => setNewBacteria({...newBacteria, description: e.target.value})} 
+                    <div className="col-6">
+                        <GeneralStringInput 
+                            headerName="Opis" 
+                            placeholder="Unesite opis bakterije"
+                            inputValue={[description, setDescription]}
+                            suggestions={[]}
                         />
                     </div>
-                    <div className="field col-6">
-                        <label htmlFor="d0">d0*</label>
-                        <InputNumber 
-                            id="d0" 
-                            value={newBacteria.d0} 
-                            onValueChange={(e) => setNewBacteria({...newBacteria, d0: e.value || 0})} 
-                            mode="decimal" 
-                            min={0} 
-                            required 
+                    <div className="col-6">
+                        <GeneralNumberInput 
+                            headerName="d0*" 
+                            inputValue={z}
                         />
                     </div>
-                    <div className="field col-6">
-                        <label htmlFor="z">z*</label>
-                        <InputNumber 
-                            id="z" 
-                            value={newBacteria.z} 
-                            onValueChange={(e) => setNewBacteria({...newBacteria, z: e.value || 0})} 
-                            mode="decimal" 
-                            min={0} 
-                            required 
+                    <div className="col-6">
+                        <GeneralNumberInput 
+                            headerName="z*" 
+                            inputValue={d0}
                         />
                     </div>
                 </div>
