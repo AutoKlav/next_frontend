@@ -67,7 +67,7 @@ const DashboardPage = () => {
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[1]);
-    const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>();
+    const [bacteriaDropdown, setBacteriaDropdown] = useState<Bacteria>();
     
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
@@ -237,7 +237,7 @@ const DashboardPage = () => {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }            
-          
+            
             fetchedBacteria.current = data.bacteriaList;            
             setBacteriaDropdown(data?.bacteriaList?.[0]);
             setD0(data?.bacteriaList?.[0]?.d0);
