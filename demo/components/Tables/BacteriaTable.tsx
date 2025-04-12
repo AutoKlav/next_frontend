@@ -138,13 +138,13 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
                     <div className="col-6">
                         <GeneralNumberInput 
                             headerName="d0*" 
-                            inputValue={z}
+                            inputValue={d0}
                         />
                     </div>
                     <div className="col-6">
                         <GeneralNumberInput 
                             headerName="z*" 
-                            inputValue={d0}
+                            inputValue={z}
                         />
                     </div>
                 </div>

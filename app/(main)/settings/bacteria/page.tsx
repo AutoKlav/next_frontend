@@ -1,6 +1,6 @@
 import React from 'react';
 import { getBacteriaAction } from '../../api/actions';
-import BacteriaTable from '@/demo/components/Tables/BacteriaTable ';
+import BacteriaTable from '@/demo/components/Tables/BacteriaTable';
 
 const BacteriaPage = async () => {
     const bacteria = await Promise.all([getBacteriaAction()]);
