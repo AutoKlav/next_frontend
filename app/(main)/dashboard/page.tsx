@@ -19,6 +19,7 @@ import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcess
 import { ProcessInfoFields } from '@/types/app';
 import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 import { TabView, TabPanel } from 'primereact/tabview';
+import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -67,7 +68,7 @@ const DashboardPage = () => {
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[1]);
-    const [bacteriaDropdown, setBacteriaDropdown] = useState<ProcessType>();
+    const [bacteriaDropdown, setBacteriaDropdown] = useState<Bacteria>();
     
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
@@ -237,16 +238,14 @@ const DashboardPage = () => {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;                
             }            
-          
+            
             fetchedBacteria.current = data.bacteriaList;            
             setBacteriaDropdown(data?.bacteriaList?.[0]);
             setD0(data?.bacteriaList?.[0]?.d0);
             setZ(data?.bacteriaList?.[0]?.z);
         },
     });
-
-    console.log(fetchedBacteria.current)
-    
+   
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
@@ -524,7 +523,7 @@ const DashboardPage = () => {
                             <hr />
                         </div>  
                         <div className="col-4">
-                            <StartProcessDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={fetchedBacteria.current} />
+                            <StartBacteriaDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={fetchedBacteria.current} />
                         </div>                        
                         <div className="col-4">
                             <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[d0, setD0]} />
