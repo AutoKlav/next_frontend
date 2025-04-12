@@ -19,6 +19,7 @@ import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcess
 import { ProcessInfoFields } from '@/types/app';
 import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 import { TabView, TabPanel } from 'primereact/tabview';
+import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -522,7 +523,7 @@ const DashboardPage = () => {
                             <hr />
                         </div>  
                         <div className="col-4">
-                            <StartProcessDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={fetchedBacteria.current} />
+                            <StartBacteriaDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={fetchedBacteria.current} />
                         </div>                        
                         <div className="col-4">
                             <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[d0, setD0]} />
