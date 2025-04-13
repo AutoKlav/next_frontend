@@ -81,7 +81,7 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
               pointBackgroundColor: "#9966ff2a",
               pointRadius: 0, 
               tension: 1,
-              yAxisID: "y2",
+              yAxisID: "y",
           },
           {
               label: "Fr  ",
