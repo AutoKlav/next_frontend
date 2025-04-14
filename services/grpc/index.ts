@@ -147,10 +147,30 @@ export const deleteProcessType = (typeRequest: TypeRequest) => {
   return gRpcCall<Status>("deleteProcessType", data);
 }
 
+export const deleteBacteria = (typeRequest: TypeRequest) => {
+  const data = new Messages.TypeRequest();
+  data.setId(typeRequest.id);
+
+  return gRpcCall<Status>("deleteBacteria", data);
+}
+
+export const deleteProcess = (typeRequest: TypeRequest) => {
+  const data = new Messages.TypeRequest();
+  data.setId(typeRequest.id);
+
+  return gRpcCall<Status>("deleteProcess", data);
+}
+
 export const getAllProcesses = () => {
   const data = new Messages.Empty();
 
   return gRpcCall<ProcessInfoList>("getAllProcesses", data);
+};
+
+export const getUniqueProcesses = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<ProcessInfoList>("getUniqueProcesses", data);
 };
 
 export const getDistinctProcessValues = (columnName: string) =>{
