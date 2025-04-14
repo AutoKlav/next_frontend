@@ -142,7 +142,7 @@ const BacteriaTable: React.FC<BacteriaTableProps> = () => {
         <div className="card p-fluid">
             <Toast ref={toast} />
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h2 style={{ textAlign: 'left', margin: 0 }}>Globalne varijable</h2>
+                <h2 style={{ textAlign: 'left', margin: 0 }}>Bakterije</h2>
                 <div style={{ textAlign: 'right' }}>
                     <Button 
                         label="Dodaj bakteriju" 
