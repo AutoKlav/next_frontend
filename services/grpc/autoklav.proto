@@ -13,32 +13,46 @@ service Autoklav {
     // Process
     rpc getAllProcesses(Empty) returns (ProcessInfoList);
     rpc getDistinctProcessValues(ProcessFilterRequest) returns (FilteredProcessList);
+    rpc getUniqueProcesses(Empty) returns (ProcessInfoList);
     rpc getFilteredModeValues(ProcessModeFilterRequest) returns (FilteredModeProcessList);
     rpc getProcessLogs(ProcessLogRequest) returns (ProcessLogList);
     rpc getAllProcessTypes(Empty) returns (ProcessTypesList);
     rpc createProcessType(ProcessTypeRequest) returns (Status);    
     rpc deleteProcessType(TypeRequest) returns (Status);
+    rpc deleteProcess(TypeRequest) returns (Status);
     rpc startProcess(StartProcessRequest) returns (Status);
     rpc stopProcess(Empty) returns (Status);
 
     // Sensor
     rpc getSensorPinValues(Empty) returns (SensorValues);
     rpc getSensorRelayValues(Empty) returns (SensorRelayValues);
-    rpc updateSensor(UpdateSensorRequest) returns (Status);
+    rpc updateAnalogSensor(UpdateAnalogSensorRequest) returns (Status);
 
     // Bacteria
     rpc getBacteria(Empty) returns (BacteriaList);
+    rpc createBacteria(BacteriaRequest) returns (Status);    
+    rpc deleteBacteria(TypeRequest) returns (Status);
 
     // StateMachine
     rpc getStateMachineValues(Empty) returns (StateMachineValues);
-    rpc setRelayStatus(SetVariable) returns (Status);    
-    rpc setStateMachineState(SetState) returns (Status);    
+    rpc setRelayStatus(SetRelay) returns (Status);    
 }
 
 message Empty {}
 
 message TypeRequest {
     int32 id = 1;
+}
+
+message PortInfo {
+  string name = 1; 
+  string description = 2;
+  string manufacturer = 3;
+  string serialNumber = 4;
+}
+
+message PortListResponse {
+  repeated PortInfo ports = 1;
 }
 
 message Status {
@@ -84,6 +98,11 @@ message SetVariable {
     string value = 2;
 }
 
+message SetRelay {
+    uint32 id = 1;
+    string value = 2;
+}
+
 message ProcessFilterRequest {
     string columnName = 1;    
 }
@@ -93,8 +112,8 @@ message ProcessModeFilterRequest {
     string productQuantity = 2;
 }
 
-message UpdateSensorRequest {
-    string name = 1;
+message UpdateAnalogSensorRequest {
+    uint32 id = 1;
     double minValue = 2;
     double maxValue = 3; 
 }
@@ -155,10 +174,6 @@ enum HeatingType {
     ELECTRIC = 1;
 }
 
-message SetState {
-    uint32 state = 1;
-}
-
 enum ProcessConfigMode {
     TARGETF = 0;
     TIME = 1;
@@ -196,6 +211,13 @@ message Bacteria {
     string description = 3;
     double d0 = 4;
     double z = 5;
+}
+
+message BacteriaRequest {    
+    string name = 1;
+    string description = 2;
+    double d0 = 3;
+    double z = 4;
 }
 
 message StartProcessRequest {
