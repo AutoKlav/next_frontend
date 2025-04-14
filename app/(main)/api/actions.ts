@@ -1,6 +1,6 @@
 "use server"
 
-import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState, getUniqueProcesses, deleteProcess, deleteBacteria } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
 import { ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
 
@@ -56,6 +56,11 @@ export const getProcessTypesAction = async () => {
     return processTypes;
 }
 
+export const getUniqueProcessesAction = async () => {
+    const uniqueProcesses = await getUniqueProcesses();    
+    return uniqueProcesses;
+}
+
 export const getBacteriaAction = async () => {
     const bacteria = await getBacteria();
     return bacteria;
@@ -70,6 +75,16 @@ export const createProcessTypeAction = async (processType: ProcessTypeRequest) =
 // TODO not tested
 export const deleteProcessTypeAction = async (processRequest: TypeRequest) => {
     const status = await deleteProcessType(processRequest);
+    return status;
+}
+
+export const deleteProcessAction = async (processRequest: TypeRequest) => {
+    const status = await deleteProcess(processRequest);
+    return status;
+}
+
+export const deleteBacteriaAction = async (bacteriaRequest: TypeRequest) => {
+    const status = await deleteBacteria(bacteriaRequest);
     return status;
 }
 
