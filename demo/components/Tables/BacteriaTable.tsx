@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import { useToast } from '@/layout/context/toastcontext';
+import { deleteBacteriaAction } from '@/app/(main)/api/actions';
 
 interface BacteriaTableProps {
     bacteria: Bacteria[];
@@ -27,8 +28,9 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
     const d0 = useRef<number>(0);
     const z = useRef<number>(0);
 
-    const deleteRow = (id: string) => {
+    const deleteBacteriaRow = async (id: string) => {
         setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
+        await deleteBacteriaAction({id: parseInt(id)});
         showSuccess('Bakterija', 'Bakterija je izbrisana');
     };
 
@@ -40,7 +42,7 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
     ];   
 
     const deleteButton = (rowData: any) => {
-        return <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteRow(rowData.id)} />;
+        return <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteBacteriaRow(rowData.id)} />;
     };
 
     const handleAddBacteria = () => {

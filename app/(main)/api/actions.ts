@@ -1,8 +1,8 @@
 "use server"
 
-import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState, getUniqueProcesses, deleteProcess, deleteBacteria } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState, getUniqueProcesses, deleteProcess, deleteBacteria, createBacteria } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
-import { ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
+import { BacteriaRequest, ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
 
 //#region GET Actions
 
@@ -69,6 +69,11 @@ export const getBacteriaAction = async () => {
 // TODO not tested
 export const createProcessTypeAction = async (processType: ProcessTypeRequest) => {
     const status = await createProcessType(processType);
+    return status;
+}
+
+export const createBacteriaAction = async (bacteria: BacteriaRequest) => {
+    const status = await createBacteria(bacteria);
     return status;
 }
 

@@ -1,5 +1,6 @@
 import {
   BacteriaList,
+  BacteriaRequest,
   FilteredModeProcessList,
   FilteredProcessList,
   ProcessFilterRequest,
@@ -138,6 +139,16 @@ export const createProcessType = (processRequest: ProcessTypeRequest) => {
   data.setPressure(processRequest.pressure);
 
   return gRpcCall<Status>("createProcessType", data);
+}
+
+export const createBacteria = (bacteriaRequest: BacteriaRequest) => {
+  const data = new Messages.BacteriaRequest();
+  data.setName(bacteriaRequest.name);
+  data.setDescription(bacteriaRequest.description);
+  data.setD0(bacteriaRequest.d0);
+  data.setZ(bacteriaRequest.z);
+
+  return gRpcCall<Status>("createBacteria", data);
 }
 
 export const deleteProcessType = (typeRequest: TypeRequest) => {

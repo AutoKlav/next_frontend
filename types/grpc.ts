@@ -131,6 +131,13 @@ export interface Bacteria {
   z: number;
 }
 
+export interface BacteriaRequest {  
+  name: string;
+  description: string;
+  d0: number;
+  z: number;
+}
+
 export interface BacteriaList {
   bacteriaList: Bacteria[];
 }
