@@ -219,17 +219,10 @@ export interface ProcessInfoRow {
   bacteria: string;
   description: string;
   processstart: string;
-  processlength: string;
-}
-
-export interface ProcessRow {
-  id: number;
-  productname: string;
-  productquantity: string;
-  bacteria: Bacteria;
-  //targetF: string; not needed
-  targetHeatingTime: string;
-  targetCoolingTime: string;
+  processlength: string;  
+  targetf: string;
+  targetheatingtime: string;
+  targetcoolingtime: string;
 }
 
 // ProcessInfoList message
@@ -238,7 +231,7 @@ export interface ProcessInfoList {
 }
 
 export interface ProcessList {
-  processesList: ProcessRow[];
+  processesList: ProcessInfoRow[];
 }
 
 export interface ProcessTypeRequest {
