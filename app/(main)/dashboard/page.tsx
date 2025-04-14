@@ -464,24 +464,6 @@ const DashboardPage = () => {
           border: '2px solid var(--primary-color)', // Specify width, style, and color          
         }}
       >
-        <div
-          style={{
-            width: '100px',
-            height: '100px',
-            overflow: 'hidden',
-            borderRadius: '30%',
-          }}
-        >
-          <img
-            src={`/layout/images/hotdog.jpg`}
-            alt="Placeholder"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
-        </div>
         <span className="text-center ml-3 mr-3">01-Hrenovka-100g</span>
       </Button>
     </div>
