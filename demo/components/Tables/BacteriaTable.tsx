@@ -12,11 +12,7 @@ import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNum
 import { useToast } from '@/layout/context/toastcontext';
 import { createBacteriaAction, deleteBacteriaAction, getBacteriaAction } from '@/app/(main)/api/actions';
 
-interface BacteriaTableProps {
-    bacteria: Bacteria[];
-}
-
-const BacteriaTable: React.FC<BacteriaTableProps> = () => {
+const BacteriaTable = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [config, setConfig] = useState<Bacteria[]>([]);
     const [loading, setLoading] = useState(false);

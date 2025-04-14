@@ -20,6 +20,7 @@ import { ProcessInfoFields } from '@/types/app';
 import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
 import { TabView, TabPanel } from 'primereact/tabview';
 import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
+import ProcessTable from '@/demo/components/Tables/ProcessTable';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -457,15 +458,8 @@ const DashboardPage = () => {
                 <TabView>
                 <TabPanel header="Jednostavni unos">
                 <div className="flex flex-col items-center">
-      <Button
-        className="p-button-rounded p-button-text p-0 flex flex-col items-center"
-        style={{
-          backgroundColor: 'transparent',
-          border: '2px solid var(--primary-color)', // Specify width, style, and color          
-        }}
-      >
-        <span className="text-center ml-3 mr-3">01-Hrenovka-100g</span>
-      </Button>
+      
+        <ProcessTable />
     </div>
                 </TabPanel>
                 <TabPanel header="Napredni unos"> 

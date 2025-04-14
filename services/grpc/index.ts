@@ -5,6 +5,7 @@ import {
   FilteredProcessList,
   ProcessFilterRequest,
   ProcessInfoList,
+  ProcessList,
   ProcessLogList,
   ProcessTypeRequest,
   ProcessTypesResponse,
@@ -181,7 +182,7 @@ export const getAllProcesses = () => {
 export const getUniqueProcesses = () => {
   const data = new Messages.Empty();
 
-  return gRpcCall<ProcessInfoList>("getUniqueProcesses", data);
+  return gRpcCall<ProcessList>("getUniqueProcesses", data);
 };
 
 export const getDistinctProcessValues = (columnName: string) =>{

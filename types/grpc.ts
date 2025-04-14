@@ -222,9 +222,23 @@ export interface ProcessInfoRow {
   processlength: string;
 }
 
+export interface ProcessRow {
+  id: number;
+  productname: string;
+  productquantity: string;
+  bacteria: Bacteria;
+  //targetF: string; not needed
+  targetHeatingTime: string;
+  targetCoolingTime: string;
+}
+
 // ProcessInfoList message
 export interface ProcessInfoList {
   processesList: ProcessInfoGraphView[];
+}
+
+export interface ProcessList {
+  processesList: ProcessRow[];
 }
 
 export interface ProcessTypeRequest {
