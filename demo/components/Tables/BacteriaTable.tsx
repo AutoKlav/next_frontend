@@ -10,7 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import { useToast } from '@/layout/context/toastcontext';
-import { deleteBacteriaAction } from '@/app/(main)/api/actions';
+import { createBacteriaAction, deleteBacteriaAction } from '@/app/(main)/api/actions';
 
 interface BacteriaTableProps {
     bacteria: Bacteria[];
@@ -28,9 +28,9 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
     const d0 = useRef<number>(0);
     const z = useRef<number>(0);
 
-    const deleteBacteriaRow = async (id: string) => {
-        setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
+    const deleteBacteriaRow = async (id: string) => {        
         await deleteBacteriaAction({id: parseInt(id)});
+        setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));        
         showSuccess('Bakterija', 'Bakterija je izbrisana');
     };
 
@@ -45,23 +45,24 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
         return <Button icon="pi pi-trash" className="p-button-rounded" onClick={() => deleteBacteriaRow(rowData.id)} />;
     };
 
-    const handleAddBacteria = () => {
+    const handleAddBacteria = async () => {
         if (!name || d0.current <= 0 || z.current <= 0) {
             showError('Bakterija', 'Molimo popunite sva obavezna polja');
             return;
         }
         
         const newId = config.length > 0 ? Math.max(...config.map(b => b.id)) + 1 : 1;
-    
+        const bacteria: Bacteria = {
+            id: newId,
+            name: name,
+            description: description,
+            d0: d0.current,
+            z: z.current
+        };
+        await createBacteriaAction(bacteria);
         setConfig(prevConfig => [
             ...prevConfig,
-            {
-                id: newId,
-                name: name,
-                description: description,
-                d0: d0.current,
-                z: z.current
-            }
+            bacteria
         ]);
 
         showSuccess('Bakterija', 'Nova bakterija je dodana');
