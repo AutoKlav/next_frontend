@@ -4,16 +4,12 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { CSSProperties } from 'react';
-import { ProcessInfoList, ProcessInfoRow } from '@/types/grpc';
+import { ProcessInfoRow } from '@/types/grpc';
 import { Toast } from 'primereact/toast';
 import { useToast } from '@/layout/context/toastcontext';
 import { getUniqueProcessesAction, deleteProcessAction } from '@/app/(main)/api/actions';
 
-interface ProcessTableProps {
-    
-}
-
-const ProcessTable: React.FC<ProcessTableProps> = () => {
+const ProcessTable = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [config, setConfig] = useState<ProcessInfoRow[]>([]);
     const [loading, setLoading] = useState(false);
