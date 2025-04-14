@@ -17,22 +17,24 @@ const ProcessTable: React.FC<ProcessTableProps> = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [config, setConfig] = useState<ProcessInfoRow[]>([]);
     const [loading, setLoading] = useState(false);
+    const [deleteLoadingId, setDeleteLoadingId] = useState<string | null>(null);
+    const [proceedLoadingId, setProceedLoadingId] = useState<string | null>(null);
     const toast = useRef<Toast>(null);
 
     const deleteProcessRow = async (id: string) => {
         try {
-            setLoading(true);
+            setDeleteLoadingId(id);
             await deleteProcessAction({id: parseInt(id)});
             
-            // Use functional update to ensure we have the latest state
-            //setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
+            // Remove the deleted item from the state
+            setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
             
-            showSuccess('Proces', 'Proces je uspješno izbrisana');
+            showSuccess('Proces', 'Proces je uspješno izbrisan');
         } catch (error) {
-            showError('Proces', 'Došlo je do greške prilikom brisanja bakterije');
+            showError('Proces', 'Došlo je do greške prilikom brisanja procesa');
             console.error('Error deleting process:', error);
         } finally {
-            setLoading(false);
+            setDeleteLoadingId(null);
         }
     };
 
@@ -40,12 +42,29 @@ const ProcessTable: React.FC<ProcessTableProps> = () => {
         try {
             setLoading(true);
             const response = await getUniqueProcessesAction();
+            console.log('Fetched processes:', response);
             setConfig(response.processesList);
         } catch (error) {
-            showError('Bakterija', 'Došlo je do greške prilikom učitavanja bakterija');
-            console.error('Error fetching bacteria:', error);
+            showError('Proces', 'Došlo je do greške prilikom učitavanja procesa');
+            console.error('Error fetching processes:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const startProcess = async (rowData: ProcessInfoRow) => {
+        try {
+            setProceedLoadingId(rowData.id.toString());
+            console.log('Starting process:', rowData);
+            // Add your process starting logic here
+            // await startProcessAction(rowData);
+            
+            showSuccess('Proces', 'Proces je uspješno pokrenut');
+        } catch (error) {
+            showError('Proces', 'Došlo je do greške prilikom pokretanja procesa');
+            console.error('Error starting process:', error);
+        } finally {
+            setProceedLoadingId(null);
         }
     };
 
@@ -56,19 +75,31 @@ const ProcessTable: React.FC<ProcessTableProps> = () => {
     const columns = [
         { field: 'productname', header: 'Ime' },
         { field: 'productquantity', header: 'Količina' },
-        { field: 'targetHeatingTime', header: 'Ciljano vrijeme grijanja' },
-        { field: 'targetCoolingTime', header: 'Ciljano vrijeme hlađenja' },        
+        { field: 'targetheatingtime', header: 'Vrijeme grijanja (min)' },
+        { field: 'targetcoolingtime', header: 'Vrijeme hlađenja (min)' },        
         { field: 'bacteria.name', header: 'Bakterija' },        
     ];   
 
-    const deleteButton = (rowData: ProcessInfoList) => {
+    const deleteButton = (rowData: ProcessInfoRow) => {
         return (
             <Button 
                 icon="pi pi-trash" 
                 className="p-button-rounded p-button-danger" 
-                //onClick={() => deleteProcessRow(rowData.id.toString())}
-                loading={loading}
-                disabled={loading}
+                onClick={() => deleteProcessRow(rowData.id.toString())}
+                loading={deleteLoadingId === rowData.id.toString()}
+                disabled={!!deleteLoadingId}
+            />
+        );
+    };
+
+    const proceedButton = (rowData: ProcessInfoRow) => {
+        return (
+            <Button 
+                icon="pi pi-arrow-right" 
+                className="p-button-rounded p-button-primary"
+                onClick={() => startProcess(rowData)}
+                loading={proceedLoadingId === rowData.id.toString()}
+                disabled={!!proceedLoadingId}
             />
         );
     };
@@ -76,10 +107,6 @@ const ProcessTable: React.FC<ProcessTableProps> = () => {
     return (
         <div className="card p-fluid">
             <Toast ref={toast} />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <h2 style={{ textAlign: 'left', margin: 0 }}>Procesi</h2>                
-            </div>
-            
             <DataTable 
                 dataKey="id" 
                 value={config}                 
@@ -91,12 +118,17 @@ const ProcessTable: React.FC<ProcessTableProps> = () => {
                         key={field} 
                         field={field} 
                         header={header} 
-                        style={{ width: '50%', textAlign: 'left' as CSSProperties['textAlign'] }} 
+                        style={{ width: '10%', textAlign: 'left' as CSSProperties['textAlign'] }} 
                     />
                 ))}
                 <Column 
                     body={deleteButton} 
-                    headerStyle={{ width: '10%', minWidth: '8rem' }} 
+                    headerStyle={{ width: '5%', minWidth: '2rem' }} 
+                    bodyStyle={{ textAlign: 'center' }} 
+                />
+                <Column 
+                    body={proceedButton} 
+                    headerStyle={{ width: '5%', minWidth: '2rem' }} 
                     bodyStyle={{ textAlign: 'center' }} 
                 />
             </DataTable>            
