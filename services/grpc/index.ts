@@ -66,12 +66,12 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   const processInfo = new Messages.ProcessInfo();
 
   // Create an instance of the Bacteria message
-const bacteria = new Messages.Bacteria();
-    bacteria.setId(startProcessRequest.processInfo.bacteria.id);
-    bacteria.setName(startProcessRequest.processInfo.bacteria.name);
-    bacteria.setDescription(startProcessRequest.processInfo.bacteria.description);
-    bacteria.setD0(startProcessRequest.processInfo.bacteria.d0);
-    bacteria.setZ(startProcessRequest.processInfo.bacteria.z);
+  const bacteria = new Messages.Bacteria();
+  bacteria.setId(startProcessRequest.processInfo.bacteria.id);
+  bacteria.setName(startProcessRequest.processInfo.bacteria.name);
+  bacteria.setDescription(startProcessRequest.processInfo.bacteria.description);
+  bacteria.setD0(startProcessRequest.processInfo.bacteria.d0);
+  bacteria.setZ(startProcessRequest.processInfo.bacteria.z);
 
   processInfo.setProductname(startProcessRequest.processInfo.productName);
   processInfo.setProductquantity(
@@ -87,16 +87,16 @@ const bacteria = new Messages.Bacteria();
 
   const processConfig = new Messages.ProcessConfig();
 
-  
   // Create and set ProcessType
   const processType = new Messages.ProcessType();
-  processType.setId(startProcessRequest.processConfig.processType.id);
   processType.setName(startProcessRequest.processConfig.processType.name);
-  processType.setCustomtemp(startProcessRequest.processConfig.processType.customtemp);
-  processType.setFinishtemp(startProcessRequest.processConfig.processType.finishtemp);
-  processType.setMaintaintemp(startProcessRequest.processConfig.processType.maintaintemp);
+  processType.setType(startProcessRequest.processConfig.processType.type || ''); // Added type field
+  processType.setCustomtemp(startProcessRequest.processConfig.processType.customTemp);
+  processType.setFinishtemp(startProcessRequest.processConfig.processType.finishTemp);
+  processType.setMaintaintemp(startProcessRequest.processConfig.processType.maintainTemp);
 
-  processConfig.setProcesstype(startProcessRequest.processConfig.processType);
+  // Use the processType message instance instead of the raw object
+  processConfig.setProcesstype(processType); // Fixed this line
   processConfig.setHeatingtype(startProcessRequest.processConfig.heatingType);
   processConfig.setMode(startProcessRequest.processConfig.mode);
   
