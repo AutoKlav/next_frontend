@@ -100,9 +100,9 @@ const DashboardPage = () => {
         setProductName('');        
         
         //#region modeDropdown        
-        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 0);        
-        setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
-        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
+        setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);        
+        setFinishTemp(fetchedTypes.current?.[0]?.finishTemp || 0);
+        setMaintainTemp(fetchedTypes.current?.[0]?.maintainTemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         //setBacteriaDropdown(fetchedBacteria.current[0]);
         //#endregion
@@ -259,7 +259,7 @@ const DashboardPage = () => {
             typeDropdown?.id === 1)
         {            
             setCustomTemp(121.11);            
-            setFinishTemp(typeDropdown?.finishtemp || 0);            
+            setFinishTemp(typeDropdown?.finishTemp || 0);            
             setMaintainTemp(116);            
         }
     }, [typeDropdown]);
@@ -377,9 +377,9 @@ const DashboardPage = () => {
             if(typeDropdown?.id === 0|| // TODO change this
                 typeDropdown?.id === 1)
             {                
-                setCustomTemp(typeDropdown?.customtemp || 0);                
-                setFinishTemp(typeDropdown?.finishtemp || 0);                
-                setMaintainTemp(typeDropdown?.maintaintemp || 0);
+                setCustomTemp(typeDropdown?.customTemp || 0);                
+                setFinishTemp(typeDropdown?.finishTemp || 0);                
+                setMaintainTemp(typeDropdown?.maintainTemp || 0);
             }
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
