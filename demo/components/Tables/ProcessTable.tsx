@@ -4,7 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { CSSProperties } from 'react';
-import { Bacteria, ProcessConfigMode, ProcessInfoRow, StartProcessRequest } from '@/types/grpc';
+import { Bacteria, HeatingType, ProcessConfigMode, ProcessInfoRow, StartProcessRequest } from '@/types/grpc';
 import { Toast } from 'primereact/toast';
 import { useToast } from '@/layout/context/toastcontext';
 import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
@@ -61,14 +61,22 @@ const ProcessTable = () => {
                 z: rowData.bacteria.z,
             };
 
+            const processType = {
+                id:0,
+                customTemp: 121.11,
+                mantainTemp: 116,
+                d0: 0.2,
+                z:10,
+                finishTemp: 0, // not important for time
+                name: "Sterilizacija",
+                description: "Sterilizacija",
+            }
+
             const request: StartProcessRequest = {                
-                processConfig: {                                    
-                    customTemp: 121.11,
-                    finishTemp: 0, // not important for time
-                    heatingType: 0,
-                    maintainTemp: 116,
+                processConfig: {                                                        
+                    heatingType: HeatingType.STEAM,                    
                     mode: ProcessConfigMode.TIME,
-                    type: 1//rowData.type,
+                    processType: processType,
                 },
                 processInfo: {
                     productName: rowData.productname,

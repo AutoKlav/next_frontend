@@ -86,13 +86,20 @@ const bacteria = new Messages.Bacteria();
   data.setProcessinfo(processInfo);
 
   const processConfig = new Messages.ProcessConfig();
-  processConfig.setType(startProcessRequest.processConfig.type);
+
+  
+  // Create and set ProcessType
+  const processType = new Messages.ProcessType();
+  processType.setId(startProcessRequest.processConfig.processType.id);
+  processType.setName(startProcessRequest.processConfig.processType.name);
+  processType.setCustomtemp(startProcessRequest.processConfig.processType.customtemp);
+  processType.setFinishtemp(startProcessRequest.processConfig.processType.finishtemp);
+  processType.setMaintaintemp(startProcessRequest.processConfig.processType.maintaintemp);
+
+  processConfig.setProcesstype(startProcessRequest.processConfig.processType);
   processConfig.setHeatingtype(startProcessRequest.processConfig.heatingType);
-  processConfig.setCustomtemp(startProcessRequest.processConfig.customTemp);
   processConfig.setMode(startProcessRequest.processConfig.mode);
-  processConfig.setMaintaintemp(startProcessRequest.processConfig.maintainTemp);
- 
-  processConfig.setFinishtemp(startProcessRequest.processConfig.finishTemp);
+  
   data.setProcessconfig(processConfig);
 
   return gRpcCall<Status>("startProcess", data);

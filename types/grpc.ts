@@ -114,9 +114,7 @@ export interface ProcessType {
   type?: string;
   customtemp?: number;
   finishtemp?: number;  
-  maintaintemp?: number;
-  d0?: number;
-  z?: number;
+  maintaintemp?: number;  
 }
 
 export interface ProcessTypesResponse {
@@ -142,14 +140,6 @@ export interface BacteriaList {
   bacteriaList: Bacteria[];
 }
 
-// Enum ProcessConfigType
-export enum ProcessConfigType {
-  UNKNOWN = -1,
-  STERILIZATION = 0,
-  PASTERIZATION = 1,
-  CUSTOM = 2,  
-}
-
 // Enum ProcessConfigState
 export enum ProcessConfigState {
   READY = 0,
@@ -168,14 +158,17 @@ export enum ProcessConfigMode {
   TIME = 1,
 }
 
+export enum HeatingType {
+  UNKNOWN = -1,
+  STEAM = 0,
+  WATER = 1,
+}
+
 // ProcessConfig message
 export interface ProcessConfig {
-  type: ProcessConfigType;
-  heatingType: number;
-  customTemp: number;
-  mode: ProcessConfigMode;  
-  maintainTemp: number;
-  finishTemp: number;
+  heatingType: HeatingType;
+  processType: ProcessType;
+  mode: ProcessConfigMode;    
 }
 
 // ProcessInfo message
