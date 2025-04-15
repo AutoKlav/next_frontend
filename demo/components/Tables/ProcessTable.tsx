@@ -4,10 +4,10 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { CSSProperties } from 'react';
-import { ProcessInfoRow } from '@/types/grpc';
+import { Bacteria, ProcessConfigMode, ProcessInfoRow, StartProcessRequest } from '@/types/grpc';
 import { Toast } from 'primereact/toast';
 import { useToast } from '@/layout/context/toastcontext';
-import { getUniqueProcessesAction, deleteProcessAction } from '@/app/(main)/api/actions';
+import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
 
 const ProcessTable = () => {
     const { showSuccess, showError, showWarn } = useToast();
@@ -48,12 +48,44 @@ const ProcessTable = () => {
         }
     };
 
-    const startProcess = async (rowData: ProcessInfoRow) => {
+    const startProcessButton = async (rowData: ProcessInfoRow) => {
         try {
             setProceedLoadingId(rowData.id.toString());
             console.log('Starting process:', rowData);
-            // Add your process starting logic here
-            // await startProcessAction(rowData);
+            
+            const bacteria: Bacteria = {
+                id: rowData.bacteria.id,
+                name: rowData.bacteria.name,
+                description: '',
+                d0: rowData.bacteria.d0,
+                z: rowData.bacteria.z,
+            };
+
+            const request: StartProcessRequest = {                
+                processConfig: {                                    
+                    customTemp: 121.11,
+                    finishTemp: 0, // not important for time
+                    heatingType: 0,
+                    maintainTemp: 116,
+                    mode: ProcessConfigMode.TIME,
+                    type: 1//rowData.type,
+                },
+                processInfo: {
+                    productName: rowData.productname,
+                    batchLTO: '',
+                    bacteria: bacteria,
+                    targetF: '0',
+                    productQuantity: rowData.productquantity,
+                    processStart: new Date().toISOString(),
+                    processLength: 'Proces nije završen',
+                    targetCoolingTime: ( parseFloat(rowData.targetcoolingtime) *60*1000).toString(),
+                    targetHeatingTime: (parseFloat(rowData.targetheatingtime) *60*1000).toString(),
+                },
+            };
+            console.log('Proces request', request);        
+            
+            startProcessAction(request);
+            //setModalVisibility(false);
             
             showSuccess('Proces', 'Proces je uspješno pokrenut');
         } catch (error) {
@@ -93,7 +125,7 @@ const ProcessTable = () => {
             <Button 
                 icon="pi pi-arrow-right" 
                 className="p-button-rounded p-button-primary"
-                onClick={() => startProcess(rowData)}
+                onClick={() => startProcessButton(rowData)}
                 loading={proceedLoadingId === rowData.id.toString()}
                 disabled={!!proceedLoadingId}
             />

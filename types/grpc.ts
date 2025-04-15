@@ -216,7 +216,7 @@ export interface ProcessInfoRow {
   id: number;
   productname: string;
   productquantity: string;
-  bacteria: string;
+  bacteria: Bacteria;
   description: string;
   processstart: string;
   processlength: string;  
