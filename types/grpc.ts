@@ -112,11 +112,9 @@ export interface ProcessType {
   id: number;
   name: string;
   type?: string;
-  customtemp?: number;
-  finishtemp?: number;  
-  maintaintemp?: number;
-  d0?: number;
-  z?: number;
+  customTemp?: number;
+  finishTemp?: number;  
+  maintainTemp?: number;  
 }
 
 export interface ProcessTypesResponse {
@@ -131,16 +129,15 @@ export interface Bacteria {
   z: number;
 }
 
-export interface BacteriaList {
-  bacteriaList: Bacteria[];
+export interface BacteriaRequest {  
+  name: string;
+  description: string;
+  d0: number;
+  z: number;
 }
 
-// Enum ProcessConfigType
-export enum ProcessConfigType {
-  UNKNOWN = -1,
-  STERILIZATION = 0,
-  PASTERIZATION = 1,
-  CUSTOM = 2,  
+export interface BacteriaList {
+  bacteriaList: Bacteria[];
 }
 
 // Enum ProcessConfigState
@@ -161,14 +158,17 @@ export enum ProcessConfigMode {
   TIME = 1,
 }
 
+export enum HeatingType {
+  UNKNOWN = -1,
+  STEAM = 0,
+  WATER = 1,
+}
+
 // ProcessConfig message
 export interface ProcessConfig {
-  type: ProcessConfigType;
-  heatingType: number;
-  customTemp: number;
-  mode: ProcessConfigMode;  
-  maintainTemp: number;
-  finishTemp: number;
+  heatingType: HeatingType;
+  processType: ProcessType;
+  mode: ProcessConfigMode;    
 }
 
 // ProcessInfo message
@@ -209,15 +209,22 @@ export interface ProcessInfoRow {
   id: number;
   productname: string;
   productquantity: string;
-  bacteria: string;
+  bacteria: Bacteria;
   description: string;
   processstart: string;
-  processlength: string;
+  processlength: string;  
+  targetf: string;
+  targetheatingtime: string;
+  targetcoolingtime: string;
 }
 
 // ProcessInfoList message
 export interface ProcessInfoList {
   processesList: ProcessInfoGraphView[];
+}
+
+export interface ProcessList {
+  processesList: ProcessInfoRow[];
 }
 
 export interface ProcessTypeRequest {

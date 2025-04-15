@@ -1,24 +1,4 @@
-import { ProcessConfigType } from "@/types/grpc";
 import { ProcessConfigMode } from "@/types/grpc";
-
-/**
- * Retrieves the ProcessConfigType based on the provided id.
- * @param id - The id of the ProcessConfigType.
- * @returns The corresponding ProcessConfigType or undefined if the id is invalid.
- */
-export const getProcessConfigTypeById = (id: number | undefined): ProcessConfigType => {
-    switch (id) {
-      case ProcessConfigType.STERILIZATION:
-        return ProcessConfigType.STERILIZATION;
-      case ProcessConfigType.PASTERIZATION:
-        return ProcessConfigType.PASTERIZATION;
-      case ProcessConfigType.CUSTOM:
-        return ProcessConfigType.CUSTOM;
-      default:
-        console.log('Invalid id:', id);
-        return ProcessConfigType.UNKNOWN;
-    }
-  }
   
 /**
  * Retrieves the ProcessConfigMode based on the provided id.

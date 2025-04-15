@@ -1,9 +1,11 @@
 import {
   BacteriaList,
+  BacteriaRequest,
   FilteredModeProcessList,
   FilteredProcessList,
   ProcessFilterRequest,
   ProcessInfoList,
+  ProcessList,
   ProcessLogList,
   ProcessTypeRequest,
   ProcessTypesResponse,
@@ -64,12 +66,12 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   const processInfo = new Messages.ProcessInfo();
 
   // Create an instance of the Bacteria message
-const bacteria = new Messages.Bacteria();
-    bacteria.setId(startProcessRequest.processInfo.bacteria.id);
-    bacteria.setName(startProcessRequest.processInfo.bacteria.name);
-    bacteria.setDescription(startProcessRequest.processInfo.bacteria.description);
-    bacteria.setD0(startProcessRequest.processInfo.bacteria.d0);
-    bacteria.setZ(startProcessRequest.processInfo.bacteria.z);
+  const bacteria = new Messages.Bacteria();
+  bacteria.setId(startProcessRequest.processInfo.bacteria.id);
+  bacteria.setName(startProcessRequest.processInfo.bacteria.name);
+  bacteria.setDescription(startProcessRequest.processInfo.bacteria.description);
+  bacteria.setD0(startProcessRequest.processInfo.bacteria.d0);
+  bacteria.setZ(startProcessRequest.processInfo.bacteria.z);
 
   processInfo.setProductname(startProcessRequest.processInfo.productName);
   processInfo.setProductquantity(
@@ -84,13 +86,20 @@ const bacteria = new Messages.Bacteria();
   data.setProcessinfo(processInfo);
 
   const processConfig = new Messages.ProcessConfig();
-  processConfig.setType(startProcessRequest.processConfig.type);
+
+  // Create and set ProcessType
+  const processType = new Messages.ProcessType();
+  processType.setName(startProcessRequest.processConfig.processType.name);
+  processType.setType(startProcessRequest.processConfig.processType.type || ''); // Added type field
+  processType.setCustomtemp(startProcessRequest.processConfig.processType.customTemp);
+  processType.setFinishtemp(startProcessRequest.processConfig.processType.finishTemp);
+  processType.setMaintaintemp(startProcessRequest.processConfig.processType.maintainTemp);
+
+  // Use the processType message instance instead of the raw object
+  processConfig.setProcesstype(processType); // Fixed this line
   processConfig.setHeatingtype(startProcessRequest.processConfig.heatingType);
-  processConfig.setCustomtemp(startProcessRequest.processConfig.customTemp);
   processConfig.setMode(startProcessRequest.processConfig.mode);
-  processConfig.setMaintaintemp(startProcessRequest.processConfig.maintainTemp);
- 
-  processConfig.setFinishtemp(startProcessRequest.processConfig.finishTemp);
+  
   data.setProcessconfig(processConfig);
 
   return gRpcCall<Status>("startProcess", data);
@@ -140,6 +149,16 @@ export const createProcessType = (processRequest: ProcessTypeRequest) => {
   return gRpcCall<Status>("createProcessType", data);
 }
 
+export const createBacteria = (bacteriaRequest: BacteriaRequest) => {
+  const data = new Messages.BacteriaRequest();
+  data.setName(bacteriaRequest.name);
+  data.setDescription(bacteriaRequest.description);
+  data.setD0(bacteriaRequest.d0);
+  data.setZ(bacteriaRequest.z);
+
+  return gRpcCall<Status>("createBacteria", data);
+}
+
 export const deleteProcessType = (typeRequest: TypeRequest) => {
   const data = new Messages.TypeRequest();
   data.setId(typeRequest.id);
@@ -147,10 +166,30 @@ export const deleteProcessType = (typeRequest: TypeRequest) => {
   return gRpcCall<Status>("deleteProcessType", data);
 }
 
+export const deleteBacteria = (typeRequest: TypeRequest) => {
+  const data = new Messages.TypeRequest();
+  data.setId(typeRequest.id);
+
+  return gRpcCall<Status>("deleteBacteria", data);
+}
+
+export const deleteProcess = (typeRequest: TypeRequest) => {
+  const data = new Messages.TypeRequest();
+  data.setId(typeRequest.id);
+
+  return gRpcCall<Status>("deleteProcess", data);
+}
+
 export const getAllProcesses = () => {
   const data = new Messages.Empty();
 
   return gRpcCall<ProcessInfoList>("getAllProcesses", data);
+};
+
+export const getUniqueProcesses = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<ProcessList>("getUniqueProcesses", data);
 };
 
 export const getDistinctProcessValues = (columnName: string) =>{

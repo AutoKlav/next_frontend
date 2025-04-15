@@ -1,8 +1,8 @@
 "use server"
 
-import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState, getUniqueProcesses, deleteProcess, deleteBacteria, createBacteria } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
-import { ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
+import { BacteriaRequest, ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
 
 //#region GET Actions
 
@@ -56,6 +56,11 @@ export const getProcessTypesAction = async () => {
     return processTypes;
 }
 
+export const getUniqueProcessesAction = async () => {
+    const uniqueProcesses = await getUniqueProcesses();    
+    return uniqueProcesses;
+}
+
 export const getBacteriaAction = async () => {
     const bacteria = await getBacteria();
     return bacteria;
@@ -67,9 +72,24 @@ export const createProcessTypeAction = async (processType: ProcessTypeRequest) =
     return status;
 }
 
+export const createBacteriaAction = async (bacteria: BacteriaRequest) => {
+    const status = await createBacteria(bacteria);
+    return status;
+}
+
 // TODO not tested
 export const deleteProcessTypeAction = async (processRequest: TypeRequest) => {
     const status = await deleteProcessType(processRequest);
+    return status;
+}
+
+export const deleteProcessAction = async (processRequest: TypeRequest) => {
+    const status = await deleteProcess(processRequest);
+    return status;
+}
+
+export const deleteBacteriaAction = async (bacteriaRequest: TypeRequest) => {
+    const status = await deleteBacteria(bacteriaRequest);
     return status;
 }
 

@@ -12,14 +12,15 @@ import { useToast } from '@/layout/context/toastcontext';
 import { checkForErrors, responseParserUtil } from '@/utils/errorUtil';
 import { Dialog } from 'primereact/dialog';
 import { ProgressBar } from 'primereact/progressbar';
-import { Bacteria, ProcessConfigMode, ProcessConfigType, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
+import { Bacteria, HeatingType, ProcessConfigMode, ProcessSuggestions, ProcessType, StartProcessRequest } from '@/types/grpc';
 import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStringInput';
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import StartProcessDropdown from '@/demo/components/Inputs/Dropdown/StartProcessDropdown';
 import { ProcessInfoFields } from '@/types/app';
-import { getProcessConfigModeById, getProcessConfigTypeById } from '@/utils/typeParserUtil';
+import { getProcessConfigModeById } from '@/utils/typeParserUtil';
 import { TabView, TabPanel } from 'primereact/tabview';
 import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
+import ProcessTable from '@/demo/components/Tables/ProcessTable';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -99,9 +100,9 @@ const DashboardPage = () => {
         setProductName('');        
         
         //#region modeDropdown        
-        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 0);        
-        setFinishTemp(fetchedTypes.current?.[0]?.finishtemp || 0);
-        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 0);
+        setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);        
+        setFinishTemp(fetchedTypes.current?.[0]?.finishTemp || 0);
+        setMaintainTemp(fetchedTypes.current?.[0]?.maintainTemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         //setBacteriaDropdown(fetchedBacteria.current[0]);
         //#endregion
@@ -226,7 +227,7 @@ const DashboardPage = () => {
             setTypeDropdown(data?.processtypesList?.[0]);            
         },
     });
-
+    
     const { mutate: getBacteria } = useMutation({
         mutationFn: getBacteriaAction,
         onError: (error) => {
@@ -254,11 +255,11 @@ const DashboardPage = () => {
 
     // Set default values for custom process types
     useEffect(() => {
-        if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
-            typeDropdown?.id === ProcessConfigType.PASTERIZATION)
+        if(typeDropdown?.id === 0 ||
+            typeDropdown?.id === 1)
         {            
             setCustomTemp(121.11);            
-            setFinishTemp(typeDropdown?.finishtemp || 0);            
+            setFinishTemp(typeDropdown?.finishTemp || 0);            
             setMaintainTemp(116);            
         }
     }, [typeDropdown]);
@@ -373,15 +374,23 @@ const DashboardPage = () => {
         }
 
         if(state === 0){            
-            if(typeDropdown?.id === ProcessConfigType.STERILIZATION ||
-                typeDropdown?.id === ProcessConfigType.PASTERIZATION)
+            if(typeDropdown?.id === 0|| // TODO change this
+                typeDropdown?.id === 1)
             {                
-                setCustomTemp(typeDropdown?.customtemp || 0);                
-                setFinishTemp(typeDropdown?.finishtemp || 0);                
-                setMaintainTemp(typeDropdown?.maintaintemp || 0);
+                setCustomTemp(typeDropdown?.customTemp || 0);                
+                setFinishTemp(typeDropdown?.finishTemp || 0);                
+                setMaintainTemp(typeDropdown?.maintainTemp || 0);
             }
-            const parsedType = getProcessConfigTypeById(typeDropdown?.id);
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
+
+            const processType = {
+                id: typeDropdown?.id || 0,
+                customTemp: customTemp,
+                maintainTemp: maintainTemp,
+                finishTemp: finishTemp,
+                name: typeDropdown?.name || '',
+                
+            }
 
             const bacteria: Bacteria = {
                 id: bacteriaDropdown?.id || 1,
@@ -392,13 +401,10 @@ const DashboardPage = () => {
             };
 
             const request: StartProcessRequest = {                
-                processConfig: {                                    
-                    customTemp: customTemp,
-                    finishTemp: finishTemp,
-                    heatingType: 0,
-                    maintainTemp: maintainTemp,
+                processConfig: {   
+                    heatingType: HeatingType.STEAM,
                     mode: parsedMode,
-                    type: parsedType,
+                    processType: processType,
                 },
                 processInfo: {
                     productName: productName,
@@ -440,7 +446,7 @@ const DashboardPage = () => {
         setModalVisibility(true);
     }
 
-    const disabledInput = typeDropdown?.id !== ProcessConfigType.CUSTOM;
+    const disabledInput = typeDropdown?.id !== 2;
 
     const footerContent = (
         <div>
@@ -457,33 +463,8 @@ const DashboardPage = () => {
                 <TabView>
                 <TabPanel header="Jednostavni unos">
                 <div className="flex flex-col items-center">
-      <Button
-        className="p-button-rounded p-button-text p-0 flex flex-col items-center"
-        style={{
-          backgroundColor: 'transparent',
-          border: '2px solid var(--primary-color)', // Specify width, style, and color          
-        }}
-      >
-        <div
-          style={{
-            width: '100px',
-            height: '100px',
-            overflow: 'hidden',
-            borderRadius: '30%',
-          }}
-        >
-          <img
-            src={`/layout/images/hotdog.jpg`}
-            alt="Placeholder"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
-        </div>
-        <span className="text-center ml-3 mr-3">01-Hrenovka-100g</span>
-      </Button>
+      
+        <ProcessTable />
     </div>
                 </TabPanel>
                 <TabPanel header="Napredni unos"> 
