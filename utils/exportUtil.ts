@@ -20,7 +20,26 @@ export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOpt
         });
 
         pdf.addImage(imageData, "PNG", 7, 5, 285, 200); // Cover the rotated landscape A4 page 
-        pdf.save(`${getCurrentDateTime()}.pdf`);
+        // pdf.save(`${getCurrentDateTime()}.pdf`);
+        
+        // Auto print graph
+        pdf.autoPrint();
+        const blobUrl = pdf.output("bloburl");
+        
+        const iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+	iframe.src = blobUrl;
+        iframe.onload = () => {
+                iframe.contextWindow?.focus();
+                iframe.contextWindow?.print();
+
+		setTimeout(() => {
+                        document.body.removeChild(iframe);
+                        URL.revokeObjectURL(blobUrl);
+                }, 500);
+        };
+
+	console.log("Test");
 
         chartInstance.options = chartOptions;
         chartInstance.update();
