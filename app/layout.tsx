@@ -24,6 +24,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     return (
         <html lang="en" suppressHydrationWarning>
             <head>
+                <meta name="apple-mobile-web-app-title" content="Autoklav" />
                 <link id="theme-css" href={`/themes/lara-dark-purple/theme.css`} rel="stylesheet"></link>
             </head>
             <body>
