@@ -56,8 +56,8 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchStateMachineIntervals = 5000; 
-    const refetchIntervalRelay = 2000;   
+    const refetchStateMachineIntervals = 1000; 
+    const refetchIntervalRelay = 1000;   
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
@@ -338,7 +338,7 @@ const DashboardPage = () => {
             },
         },
     );
-    
+    console.log(stateMachineValues?.sensorvalues);
     temperatures[0].value = stateMachineValues?.sensorvalues?.temp?.toString() || 'N/A';
     temperatures[1].value = stateMachineValues?.sensorvalues?.heatertemp?.toString() || 'N/A';
     temperatures[2].value = stateMachineValues?.sensorvalues?.tempk ?.toString() || 'N/A';
