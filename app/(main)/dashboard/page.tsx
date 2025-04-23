@@ -338,7 +338,7 @@ const DashboardPage = () => {
             },
         },
     );
-    console.log(stateMachineValues?.sensorvalues);
+
     temperatures[0].value = stateMachineValues?.sensorvalues?.temp?.toString() || 'N/A';
     temperatures[1].value = stateMachineValues?.sensorvalues?.heatertemp?.toString() || 'N/A';
     temperatures[2].value = stateMachineValues?.sensorvalues?.tempk ?.toString() || 'N/A';
