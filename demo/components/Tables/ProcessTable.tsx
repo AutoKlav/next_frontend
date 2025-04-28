@@ -115,7 +115,10 @@ const ProcessTable = () => {
         { field: 'targetcoolingtime', header: 'Vrijeme hlađenja (min)' },        
         { field: 'bacteria.name', header: 'Bakterija' },        
         { field: 'bacteria.d0', header: 'd0' },        
-        { field: 'bacteria.z', header: 'z' },        
+        { field: 'bacteria.z', header: 'z' },  
+        { field: 'processtype.name', header: 'Ime tipa' },        
+        { field: 'processtype.customtemp', header: 'Prilagođena temperatura' },
+        { field: 'processtype.maintaintemp', header: 'Temperatura održavanja' },
     ];   
 
     const deleteButton = (rowData: ProcessInfoRow) => {

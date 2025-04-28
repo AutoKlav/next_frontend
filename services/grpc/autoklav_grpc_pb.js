@@ -224,15 +224,15 @@ function deserialize_autoklav_TypeRequest(buffer_arg) {
   return services_grpc_autoklav_pb.TypeRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
-function serialize_autoklav_UpdateAnalogSensorRequest(arg) {
-  if (!(arg instanceof services_grpc_autoklav_pb.UpdateAnalogSensorRequest)) {
-    throw new Error('Expected argument of type autoklav.UpdateAnalogSensorRequest');
+function serialize_autoklav_UpdateInputPinRequest(arg) {
+  if (!(arg instanceof services_grpc_autoklav_pb.UpdateInputPinRequest)) {
+    throw new Error('Expected argument of type autoklav.UpdateInputPinRequest');
   }
   return Buffer.from(arg.serializeBinary());
 }
 
-function deserialize_autoklav_UpdateAnalogSensorRequest(buffer_arg) {
-  return services_grpc_autoklav_pb.UpdateAnalogSensorRequest.deserializeBinary(new Uint8Array(buffer_arg));
+function deserialize_autoklav_UpdateInputPinRequest(buffer_arg) {
+  return services_grpc_autoklav_pb.UpdateInputPinRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_autoklav_Variables(arg) {
@@ -428,14 +428,14 @@ getSensorPinValues: {
     responseSerialize: serialize_autoklav_SensorRelayValues,
     responseDeserialize: deserialize_autoklav_SensorRelayValues,
   },
-  updateAnalogSensor: {
-    path: '/autoklav.Autoklav/updateAnalogSensor',
+  updateInputPin: {
+    path: '/autoklav.Autoklav/updateInputPin',
     requestStream: false,
     responseStream: false,
-    requestType: services_grpc_autoklav_pb.UpdateAnalogSensorRequest,
+    requestType: services_grpc_autoklav_pb.UpdateInputPinRequest,
     responseType: services_grpc_autoklav_pb.Status,
-    requestSerialize: serialize_autoklav_UpdateAnalogSensorRequest,
-    requestDeserialize: deserialize_autoklav_UpdateAnalogSensorRequest,
+    requestSerialize: serialize_autoklav_UpdateInputPinRequest,
+    requestDeserialize: deserialize_autoklav_UpdateInputPinRequest,
     responseSerialize: serialize_autoklav_Status,
     responseDeserialize: deserialize_autoklav_Status,
   },

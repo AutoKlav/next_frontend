@@ -216,6 +216,7 @@ export interface ProcessInfoRow {
   targetf: string;
   targetheatingtime: string;
   targetcoolingtime: string;
+  processType: ProcessType;
 }
 
 // ProcessInfoList message
