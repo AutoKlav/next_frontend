@@ -114,6 +114,8 @@ const ProcessTable = () => {
         { field: 'targetheatingtime', header: 'Vrijeme grijanja (min)' },
         { field: 'targetcoolingtime', header: 'Vrijeme hlađenja (min)' },        
         { field: 'bacteria.name', header: 'Bakterija' },        
+        { field: 'bacteria.d0', header: 'd0' },        
+        { field: 'bacteria.z', header: 'z' },        
     ];   
 
     const deleteButton = (rowData: ProcessInfoRow) => {
