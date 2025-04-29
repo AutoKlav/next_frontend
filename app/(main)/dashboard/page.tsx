@@ -85,8 +85,8 @@ const DashboardPage = () => {
 
     const targetF = React.useRef<number>(0);
     
-    const targetHeatingTime = React.useRef<number>(0);
-    const targetCoolingTime = React.useRef<number>(0);
+    const targetHeatingTime = React.useRef<number>(1);
+    const targetCoolingTime = React.useRef<number>(1);
     const batchLTO = React.useRef<string>('');
         
     const fetchedTypes = useRef<ProcessType[]>();
@@ -373,6 +373,16 @@ const DashboardPage = () => {
             return;
         }
 
+        if(targetHeatingTime.current <= 0){
+            showWarn('Proces','Vrijeme sterilizacije mora biti veće od 0');
+            return;
+        }
+
+        if(targetCoolingTime.current <= 0){
+            showWarn('Proces','Vrijeme hlađenja mora biti veće od 0');
+            return;
+        }
+
         if(state === 0){            
             if(typeDropdown?.id === 0|| // TODO change this
                 typeDropdown?.id === 1)
@@ -459,7 +469,7 @@ const DashboardPage = () => {
         <div className="grid p-2">
             <div className="m-0">
             <div className="grid p-2">                
-                <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '60vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '90vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                 <TabView>
                 <TabPanel header="Jednostavni unos">
                 <div className="flex flex-col items-center">

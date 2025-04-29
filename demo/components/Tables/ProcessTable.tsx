@@ -113,12 +113,12 @@ const ProcessTable = () => {
         { field: 'productquantity', header: 'Količina' },
         { field: 'targetheatingtime', header: 'Vrijeme grijanja (min)' },
         { field: 'targetcoolingtime', header: 'Vrijeme hlađenja (min)' },        
-        { field: 'bacteria.name', header: 'Bakterija' },        
-        { field: 'bacteria.d0', header: 'd0' },        
-        { field: 'bacteria.z', header: 'z' },  
-        { field: 'processtype.name', header: 'Ime tipa' },        
         { field: 'processtype.customtemp', header: 'Prilagođena temperatura' },
+        { field: 'processtype.name', header: 'Ime tipa' },        
         { field: 'processtype.maintaintemp', header: 'Temperatura održavanja' },
+        { field: 'bacteria.name', header: 'Bakterija' },        
+        // { field: 'bacteria.d0', header: 'd0' },        
+        // { field: 'bacteria.z', header: 'z' },  
     ];   
 
     const deleteButton = (rowData: ProcessInfoRow) => {
