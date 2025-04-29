@@ -413,8 +413,7 @@ const DashboardPage = () => {
             const request: StartProcessRequest = {                
                 processConfig: {   
                     heatingType: HeatingType.STEAM,
-                    mode: parsedMode,
-                    processType: processType,
+                    mode: parsedMode,                    
                 },
                 processInfo: {
                     productName: productName,
@@ -426,6 +425,7 @@ const DashboardPage = () => {
                     processLength: 'Proces nije završen',
                     targetCoolingTime: (targetCoolingTime.current*60*1000).toString(),
                     targetHeatingTime: (targetHeatingTime.current*60*1000).toString(),
+                    processType: processType,
                 },
             };
             console.log('Proces request', request);        

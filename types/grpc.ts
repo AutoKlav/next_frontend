@@ -166,8 +166,7 @@ export enum HeatingType {
 
 // ProcessConfig message
 export interface ProcessConfig {
-  heatingType: HeatingType;
-  processType: ProcessType;
+  heatingType: HeatingType;  
   mode: ProcessConfigMode;    
 }
 
@@ -182,6 +181,7 @@ export interface ProcessInfo {
   processLength: string;
   targetHeatingTime: string;
   targetCoolingTime: string;   
+  processType: ProcessType;
 }
 
 export interface ProcessInfoGraphView {

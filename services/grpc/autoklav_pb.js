@@ -4220,8 +4220,7 @@ proto.autoklav.ProcessConfig.prototype.toObject = function(opt_includeInstance) 
 proto.autoklav.ProcessConfig.toObject = function(includeInstance, msg) {
   var f, obj = {
     heatingtype: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    processtype: (f = msg.getProcesstype()) && proto.autoklav.ProcessType.toObject(includeInstance, f),
-    mode: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    mode: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -4263,11 +4262,6 @@ proto.autoklav.ProcessConfig.deserializeBinaryFromReader = function(msg, reader)
       msg.setHeatingtype(value);
       break;
     case 2:
-      var value = new proto.autoklav.ProcessType;
-      reader.readMessage(value,proto.autoklav.ProcessType.deserializeBinaryFromReader);
-      msg.setProcesstype(value);
-      break;
-    case 3:
       var value = /** @type {!proto.autoklav.ProcessConfigMode} */ (reader.readEnum());
       msg.setMode(value);
       break;
@@ -4307,18 +4301,10 @@ proto.autoklav.ProcessConfig.serializeBinaryToWriter = function(message, writer)
       f
     );
   }
-  f = message.getProcesstype();
-  if (f != null) {
-    writer.writeMessage(
-      2,
-      f,
-      proto.autoklav.ProcessType.serializeBinaryToWriter
-    );
-  }
   f = message.getMode();
   if (f !== 0.0) {
     writer.writeEnum(
-      3,
+      2,
       f
     );
   }
@@ -4344,48 +4330,11 @@ proto.autoklav.ProcessConfig.prototype.setHeatingtype = function(value) {
 
 
 /**
- * optional ProcessType processType = 2;
- * @return {?proto.autoklav.ProcessType}
- */
-proto.autoklav.ProcessConfig.prototype.getProcesstype = function() {
-  return /** @type{?proto.autoklav.ProcessType} */ (
-    jspb.Message.getWrapperField(this, proto.autoklav.ProcessType, 2));
-};
-
-
-/**
- * @param {?proto.autoklav.ProcessType|undefined} value
- * @return {!proto.autoklav.ProcessConfig} returns this
-*/
-proto.autoklav.ProcessConfig.prototype.setProcesstype = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.autoklav.ProcessConfig} returns this
- */
-proto.autoklav.ProcessConfig.prototype.clearProcesstype = function() {
-  return this.setProcesstype(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.autoklav.ProcessConfig.prototype.hasProcesstype = function() {
-  return jspb.Message.getField(this, 2) != null;
-};
-
-
-/**
- * optional ProcessConfigMode mode = 3;
+ * optional ProcessConfigMode mode = 2;
  * @return {!proto.autoklav.ProcessConfigMode}
  */
 proto.autoklav.ProcessConfig.prototype.getMode = function() {
-  return /** @type {!proto.autoklav.ProcessConfigMode} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {!proto.autoklav.ProcessConfigMode} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -4394,7 +4343,7 @@ proto.autoklav.ProcessConfig.prototype.getMode = function() {
  * @return {!proto.autoklav.ProcessConfig} returns this
  */
 proto.autoklav.ProcessConfig.prototype.setMode = function(value) {
-  return jspb.Message.setProto3EnumField(this, 3, value);
+  return jspb.Message.setProto3EnumField(this, 2, value);
 };
 
 

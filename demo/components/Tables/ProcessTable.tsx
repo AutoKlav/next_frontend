@@ -75,8 +75,7 @@ const ProcessTable = () => {
             const request: StartProcessRequest = {                
                 processConfig: {                                                        
                     heatingType: HeatingType.STEAM,                    
-                    mode: ProcessConfigMode.TIME,
-                    processType: processType,
+                    mode: ProcessConfigMode.TIME,                    
                 },
                 processInfo: {
                     productName: rowData.productname,
@@ -88,6 +87,7 @@ const ProcessTable = () => {
                     processLength: 'Proces nije završen',
                     targetCoolingTime: ( parseFloat(rowData.targetcoolingtime) *60*1000).toString(),
                     targetHeatingTime: (parseFloat(rowData.targetheatingtime) *60*1000).toString(),
+                    processType: processType,
                 },
             };
             console.log('Proces request', request);        
