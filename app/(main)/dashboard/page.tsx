@@ -113,8 +113,8 @@ const DashboardPage = () => {
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
         setZ(fetchedBacteria.current?.[0]?.z || 0);        
 
-        targetCoolingTime.current = 0;
-        targetHeatingTime.current = 0;
+        targetCoolingTime.current = 1;
+        targetHeatingTime.current = 1;
         batchLTO.current = '';
 
         //#endregion
