@@ -89,11 +89,11 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
 
   // Create and set ProcessType
   const processType = new Messages.ProcessType();
-  processType.setName(startProcessRequest.processConfig.processType.name);
-  processType.setType(startProcessRequest.processConfig.processType.type || ''); // Added type field
-  processType.setCustomtemp(startProcessRequest.processConfig.processType.customTemp);
-  processType.setFinishtemp(startProcessRequest.processConfig.processType.finishTemp);
-  processType.setMaintaintemp(startProcessRequest.processConfig.processType.maintainTemp);
+  processType.setName(startProcessRequest.processInfo.processType.name);
+  processType.setType(startProcessRequest.processInfo.processType.type || ''); // Added type field
+  processType.setCustomtemp(startProcessRequest.processInfo.processType.customTemp);
+  processType.setFinishtemp(startProcessRequest.processInfo.processType.finishTemp);
+  processType.setMaintaintemp(startProcessRequest.processInfo.processType.maintainTemp);
 
   // Use the processType message instance instead of the raw object
   processConfig.setProcesstype(processType); // Fixed this line
