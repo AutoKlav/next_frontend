@@ -113,8 +113,8 @@ const DashboardPage = () => {
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
         setZ(fetchedBacteria.current?.[0]?.z || 0);        
 
-        targetCoolingTime.current = 0;
-        targetHeatingTime.current = 0;
+        targetCoolingTime.current = 1;
+        targetHeatingTime.current = 1;
         batchLTO.current = '';
 
         //#endregion
@@ -224,9 +224,15 @@ const DashboardPage = () => {
             }
                         
             fetchedTypes.current = data.processtypesList;                        
-            setTypeDropdown(data?.processtypesList?.[0]);            
+            console.log('Fetched process types:', fetchedTypes.current);
+            setTypeDropdown(data?.processtypesList?.[0]);
+            setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);
+            setFinishTemp(fetchedTypes.current?.[0]?.finishTemp || 0);
+            setMaintainTemp(data?.processtypesList?.[0]?.maintainTemp || 0);
         },
     });
+
+    console.log(customTemp, maintainTemp, finishTemp);
     
     const { mutate: getBacteria } = useMutation({
         mutationFn: getBacteriaAction,
@@ -251,9 +257,9 @@ const DashboardPage = () => {
     useEffect(() => {
         processTypes();
         getBacteria();
-    }, [processTypes]);
+    }, [processTypes, getBacteria]);
 
-    // Set default values for custom process types
+    // Set default values for custom process types    
     useEffect(() => {
         if(typeDropdown?.id === 0 ||
             typeDropdown?.id === 1)
@@ -270,8 +276,7 @@ const DashboardPage = () => {
             nameAndQuantityFilterMode({
                 productName: productName,
                 productQuantity: productQuantity
-            });
-            processTypes();
+            });            
         }, debounceInterval); // 3 seconds debounce
 
         // Cleanup the timeout if productName or productQuantity changes before the timeout completes
@@ -285,7 +290,7 @@ const DashboardPage = () => {
         if (bacteriaDropdown) {
             setD0(bacteriaDropdown.d0 ?? 0);
             setZ(bacteriaDropdown.z ?? 0);
-        }
+        }        
     }, [bacteriaDropdown]); // Runs whenever bacteriaDropdown changes
 
     const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);

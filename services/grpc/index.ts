@@ -73,20 +73,6 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   bacteria.setD0(startProcessRequest.processInfo.bacteria.d0);
   bacteria.setZ(startProcessRequest.processInfo.bacteria.z);
 
-  processInfo.setProductname(startProcessRequest.processInfo.productName);
-  processInfo.setProductquantity(
-    startProcessRequest.processInfo.productQuantity
-  );
-  processInfo.setBacteria(bacteria);
-  processInfo.setProcessstart(startProcessRequest.processInfo.processStart);
-  processInfo.setTargetf(startProcessRequest.processInfo.targetF);
-  processInfo.setProcesslength(startProcessRequest.processInfo.processLength);
-  processInfo.setTargetheatingtime(startProcessRequest.processInfo.targetHeatingTime);
-  processInfo.setTargetcoolingtime(startProcessRequest.processInfo.targetCoolingTime);
-  data.setProcessinfo(processInfo);
-
-  const processConfig = new Messages.ProcessConfig();
-
   // Create and set ProcessType
   const processType = new Messages.ProcessType();
   processType.setName(startProcessRequest.processInfo.processType.name);
@@ -95,8 +81,23 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   processType.setFinishtemp(startProcessRequest.processInfo.processType.finishTemp);
   processType.setMaintaintemp(startProcessRequest.processInfo.processType.maintainTemp);
 
-  // Use the processType message instance instead of the raw object
-  processConfig.setProcesstype(processType); // Fixed this line
+  processInfo.setProductname(startProcessRequest.processInfo.productName);
+  processInfo.setProductquantity(
+    startProcessRequest.processInfo.productQuantity
+  );
+  processInfo.setBacteria(bacteria);
+  processInfo.setProcesstype(processType);
+  processInfo.setProcessstart(startProcessRequest.processInfo.processStart);
+  processInfo.setTargetf(startProcessRequest.processInfo.targetF);
+  processInfo.setProcesslength(startProcessRequest.processInfo.processLength);
+  processInfo.setTargetheatingtime(startProcessRequest.processInfo.targetHeatingTime);
+  processInfo.setTargetcoolingtime(startProcessRequest.processInfo.targetCoolingTime);
+
+  data.setProcessinfo(processInfo);
+
+
+  const processConfig = new Messages.ProcessConfig(); 
+  
   processConfig.setHeatingtype(startProcessRequest.processConfig.heatingType);
   processConfig.setMode(startProcessRequest.processConfig.mode);
   

@@ -37,8 +37,7 @@ const ProcessTable = () => {
     const fetchProcesses = async () => {
         try {
             setLoading(true);
-            const response = await getUniqueProcessesAction();
-            console.log('Fetched processes:', response);
+            const response = await getUniqueProcessesAction();            
             setConfig(response.processesList);
         } catch (error) {
             showError('Proces', 'Došlo je do greške prilikom učitavanja procesa');
