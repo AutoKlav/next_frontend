@@ -25,7 +25,7 @@ export const calculateSlope = (x1x2: number[], y1y2: number[]) => {
     console.log(`Line equation: y = ${m}x + ${b}`);
     
     const calibratedMinimum = m * 0 + b;
-    const calibratedMaximum = m * 25000 + b;    
+    const calibratedMaximum = m * 1024 + b;    
 
     console.log(`Calibrated minimum: ${calibratedMinimum}, calibrated maximum: ${calibratedMaximum}`);
     return [calibratedMinimum, calibratedMaximum];
