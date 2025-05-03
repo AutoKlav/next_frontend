@@ -39,7 +39,7 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
       labels: data.timestamp,
       datasets: [
           {
-              label: "Temperatura vode",
+              label: "Temperatura autoklava ",
               data: data.temp,
               fill: false,
               borderColor: "rgba(255, 99, 132, 1)",  // Light red
@@ -54,7 +54,7 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
               yAxisID: "y",
           },
           {
-              label: "Temperatura konzerve  ",
+              label: "Temperatura sredine ",
               data: data.tempk,
               fill: false,
               borderColor: "rgba(204, 71, 71, 1)",  // Slightly lighter red than before
