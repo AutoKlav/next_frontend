@@ -30,6 +30,7 @@
     "primereact": "^10.8.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-player": "^2.16.0",
     "sakai-react": ".",
     "styled-components": "^6.1.14",
     "typescript": "5.1.3"
