@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player/file";
+import Head from "next/head";
 
 // Stream type definition
 type Stream = {
@@ -37,14 +38,32 @@ const Player: React.FC = () => {
     fetchStreams();
   }, []);
 
+  // on mount, set title + favicon
+  useEffect(() => {
+    // 1) TITLE
+    document.title = "Nogomet";
+
+    // 2) FAVICON
+    const link =
+      document.querySelector<HTMLLinkElement>("link[rel*='icon']") ||
+      document.createElement("link");
+    link.type = "image/png";
+    link.rel = "icon";
+    link.href = "/favicon-nogomet.ico";
+    document.getElementsByTagName("head")[0].appendChild(link);
+  }, []);
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!stream) return <div>No stream available</div>;
-
-  console.log(stream);
   
   return (
     <>
+      <Head>
+        <title>Nogomet</title>
+        <link rel="icon" href="/favicon-nogomet.ico" />
+      </Head>
+
       {stream.type === "iframe" && (
         <iframe
           id="videoIframe"
