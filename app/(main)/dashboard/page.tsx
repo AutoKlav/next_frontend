@@ -101,7 +101,7 @@ const DashboardPage = () => {
         
         //#region modeDropdown        
         setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);        
-        setFinishTemp(fetchedTypes.current?.[0]?.finishTemp || 0);
+        setFinishTemp(0);
         setMaintainTemp(fetchedTypes.current?.[0]?.maintainTemp || 0);
         setTypeDropdown(fetchedTypes.current?.[0]);
         //setBacteriaDropdown(fetchedBacteria.current[0]);
@@ -227,7 +227,7 @@ const DashboardPage = () => {
             console.log('Fetched process types:', fetchedTypes.current);
             setTypeDropdown(data?.processtypesList?.[0]);
             setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);
-            setFinishTemp(fetchedTypes.current?.[0]?.finishTemp || 0);
+            setFinishTemp(30);
             setMaintainTemp(data?.processtypesList?.[0]?.maintainTemp || 0);
         },
     });
@@ -265,7 +265,7 @@ const DashboardPage = () => {
             typeDropdown?.id === 1)
         {            
             setCustomTemp(121.11);            
-            setFinishTemp(typeDropdown?.finishTemp || 0);            
+            setFinishTemp(30);            
             setMaintainTemp(116);            
         }
     }, [typeDropdown]);
@@ -393,7 +393,7 @@ const DashboardPage = () => {
                 typeDropdown?.id === 1)
             {                
                 setCustomTemp(typeDropdown?.customTemp || 121.11);                
-                setFinishTemp(typeDropdown?.finishTemp || 30);                
+                setFinishTemp(30);                
                 setMaintainTemp(typeDropdown?.maintainTemp || 116);
             }
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
@@ -401,10 +401,8 @@ const DashboardPage = () => {
             const processType = {
                 id: typeDropdown?.id || 0,
                 customTemp: customTemp,
-                maintainTemp: maintainTemp,
-                finishTemp: finishTemp,
-                name: typeDropdown?.name || '',
-                
+                maintainTemp: maintainTemp,                
+                name: typeDropdown?.name || '',                
             }
 
             const bacteria: Bacteria = {
@@ -431,6 +429,7 @@ const DashboardPage = () => {
                     targetCoolingTime: (targetCoolingTime.current*60*1000).toString(),
                     targetHeatingTime: (targetHeatingTime.current*60*1000).toString(),
                     processType: processType,
+                    finishTemp: finishTemp.toString(),
                 },
             };
             console.log('Proces request', request);        

@@ -65,8 +65,7 @@ const ProcessTable = () => {
                 customTemp: 121.11,
                 mantainTemp: 116,
                 d0: 0.2,
-                z:10,
-                finishTemp: 0, // not important for time
+                z:10,                
                 name: "Sterilizacija",
                 description: "Sterilizacija",
             }
@@ -87,6 +86,7 @@ const ProcessTable = () => {
                     targetCoolingTime: ( parseFloat(rowData.targetcoolingtime) *60*1000).toString(),
                     targetHeatingTime: (parseFloat(rowData.targetheatingtime) *60*1000).toString(),
                     processType: processType,
+                    finishTemp: '',
                 },
             };
             console.log('Proces request', request);        

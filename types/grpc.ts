@@ -112,8 +112,7 @@ export interface ProcessType {
   id: number;
   name: string;
   type?: string;
-  customTemp?: number;
-  finishTemp?: number;  
+  customTemp?: number;  
   maintainTemp?: number;  
 }
 
@@ -182,6 +181,7 @@ export interface ProcessInfo {
   targetHeatingTime: string;
   targetCoolingTime: string;   
   processType: ProcessType;
+  finishTemp: string;
 }
 
 export interface ProcessInfoGraphView {
@@ -229,8 +229,7 @@ export interface ProcessList {
 }
 
 export interface ProcessTypeRequest {
-  customTemp: number;
-  finishTemp: number;  
+  customTemp: number;  
   name: string;
   pressure: number;
   type: string;

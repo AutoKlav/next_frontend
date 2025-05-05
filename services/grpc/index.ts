@@ -78,7 +78,6 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   processType.setName(startProcessRequest.processInfo.processType.name);
   processType.setType(startProcessRequest.processInfo.processType.type || ''); // Added type field
   processType.setCustomtemp(startProcessRequest.processInfo.processType.customTemp);
-  processType.setFinishtemp(startProcessRequest.processInfo.processType.finishTemp);
   processType.setMaintaintemp(startProcessRequest.processInfo.processType.maintainTemp);
 
   processInfo.setProductname(startProcessRequest.processInfo.productName);
@@ -92,6 +91,7 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   processInfo.setProcesslength(startProcessRequest.processInfo.processLength);
   processInfo.setTargetheatingtime(startProcessRequest.processInfo.targetHeatingTime);
   processInfo.setTargetcoolingtime(startProcessRequest.processInfo.targetCoolingTime);
+  processInfo.setFinishtemp(startProcessRequest.processInfo.finishTemp);
 
   data.setProcessinfo(processInfo);
 
@@ -143,8 +143,7 @@ export const createProcessType = (processRequest: ProcessTypeRequest) => {
   const data = new Messages.ProcessTypeRequest();
   data.setName(processRequest.name);
   data.setType(processRequest.type);
-  data.setCustomtemp(processRequest.customTemp);
-  data.setFinishtemp(processRequest.finishTemp);  
+  data.setCustomtemp(processRequest.customTemp);  
   data.setPressure(processRequest.pressure);
 
   return gRpcCall<Status>("createProcessType", data);
