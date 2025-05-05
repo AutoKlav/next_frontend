@@ -61,7 +61,7 @@ const DashboardPage = () => {
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
-        { id: 0, name: 'Ciljni F' }, //TODO revert this
+        { id: 0, name: 'Ciljni F' },
         { id: 1, name: 'Na Vrijeme' },
     ];
         
@@ -224,6 +224,11 @@ const DashboardPage = () => {
             }
                         
             fetchedTypes.current = data.processtypesList;                        
+
+            console.log('Fetched process types:', fetchedTypes.current);
+            setTypeDropdown(data?.processtypesList?.[0]);
+            setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);            
+            setMaintainTemp(data?.processtypesList?.[0]?.maintainTemp || 0);
         },
     });    
     
