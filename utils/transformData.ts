@@ -36,9 +36,9 @@ export const transformData = (data: { processlogsList: StateMachineValues[] }): 
 
 export const updateChartData = (data: TransformedData, setChartData: (data: any) => void) => {    
     // Check if fr array has any non-null values
-    const hasFrData = data.fr && data.fr.some(val => val !== null);
+    const hasFrData = data.fr && data.fr.some(val => val === null);
     // Check if sumfr array has any non-null values
-    const hasSumFrData = data.sumfr && data.sumfr.some(val => val !== null);
+    const hasSumFrData = data.sumfr && data.sumfr.some(val => val === null);
 
     const datasets = [
         {
@@ -83,35 +83,35 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             yAxisID: "y",
         },
         // Conditionally include fr dataset
-        ...(hasFrData ? [{
-            label: "Fr  ",
-            data: data.fr,
-            fill: false,
-            borderColor: "rgba(54, 162, 235, 1)",
-            backgroundColor: "rgba(54, 162, 235, 0.3)",
-            borderWidth: 4,
-            pointStyle: "circle",
-            pointBorderColor: "rgba(54, 162, 235, 1)",
-            pointBackgroundColor: "rgba(54, 162, 235, 0.4)",
-            pointRadius: 0,
-            tension: 1,
-            yAxisID: "y2",
-        }] : []),
-        // Conditionally include sumfr dataset
-        ...(hasSumFrData ? [{
-            label: "sumFr",
-            data: data.sumfr,
-            fill: false,
-            borderColor: "rgba(30, 144, 255, 1)",
-            backgroundColor: "rgba(30, 144, 255, 0.4)",
-            borderWidth: 2,
-            pointStyle: "circle",
-            pointBorderColor: "rgba(30, 144, 255, 1)",
-            pointBackgroundColor: "rgba(30, 144, 255, 0.5)",
-            pointRadius: 0,
-            tension: 1,
-            yAxisID: "y2",
-        }] : [])
+        // ...(hasFrData ? [{
+        //     label: "Fr  ",
+        //     data: data.fr,
+        //     fill: false,
+        //     borderColor: "rgba(54, 162, 235, 1)",
+        //     backgroundColor: "rgba(54, 162, 235, 0.3)",
+        //     borderWidth: 4,
+        //     pointStyle: "circle",
+        //     pointBorderColor: "rgba(54, 162, 235, 1)",
+        //     pointBackgroundColor: "rgba(54, 162, 235, 0.4)",
+        //     pointRadius: 0,
+        //     tension: 1,
+        //     yAxisID: "y2",
+        // }] : []),
+        // // Conditionally include sumfr dataset
+        // ...(hasSumFrData ? [{
+        //     label: "sumFr",
+        //     data: data.sumfr,
+        //     fill: false,
+        //     borderColor: "rgba(30, 144, 255, 1)",
+        //     backgroundColor: "rgba(30, 144, 255, 0.4)",
+        //     borderWidth: 2,
+        //     pointStyle: "circle",
+        //     pointBorderColor: "rgba(30, 144, 255, 1)",
+        //     pointBackgroundColor: "rgba(30, 144, 255, 0.5)",
+        //     pointRadius: 0,
+        //     tension: 1,
+        //     yAxisID: "y2",
+        // }] : [])
     ];        
     
     setChartData({
