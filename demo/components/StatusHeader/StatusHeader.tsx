@@ -135,6 +135,7 @@ export const RenderState = (state: number) => {
             );
 
         case 5:
+        case 6:
             return (
                 <div
                     className={`bg-blue-500 text-900 ${baseClass}`}
@@ -147,7 +148,7 @@ export const RenderState = (state: number) => {
                 </div>
             );
 
-        case 6:
+        case 7:
             return (
                 <div
                     className={`bg-green-700 text-900 ${baseClass}`}
@@ -160,7 +161,7 @@ export const RenderState = (state: number) => {
                 </div>
             );
 
-        case 7:
+        case 8:
             return (
                 <div
                     className={`bg-green-800 text-900 ${baseClass}`}

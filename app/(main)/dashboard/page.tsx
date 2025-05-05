@@ -392,9 +392,9 @@ const DashboardPage = () => {
             if(typeDropdown?.id === 0|| // TODO change this
                 typeDropdown?.id === 1)
             {                
-                setCustomTemp(typeDropdown?.customTemp || 0);                
-                setFinishTemp(typeDropdown?.finishTemp || 0);                
-                setMaintainTemp(typeDropdown?.maintainTemp || 0);
+                setCustomTemp(typeDropdown?.customTemp || 121.11);                
+                setFinishTemp(typeDropdown?.finishTemp || 30);                
+                setMaintainTemp(typeDropdown?.maintainTemp || 116);
             }
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
