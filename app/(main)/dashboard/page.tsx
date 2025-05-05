@@ -29,7 +29,7 @@ const temperatures = [
     { icon: 'pi-gauge', headerName: 'TLAK AK.', value: '', unit: 'bar', color: 'blue' },
     { icon: 'pi-box', headerName: 'TEMP. SPREM.', value: '', unit: '°C', color: 'red' },    
     { icon: 'pi-cloud', headerName: 'NIVO. SPREM.', value: '', unit: '%', color: 'black' },    
-    { icon: 'pi-box', headerName: 'CIJEV PROŠ.', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'TEMP. CIJEV PROŠ.', value: '', unit: '°C', color: 'red' },    
     { icon: 'pi-cloud', headerName: 'TLAK PARE', value: '', unit: 'bar', color: 'blue' },        
 ];
 
@@ -46,7 +46,7 @@ const relayMapper = [
     { name: 'heating', label: 'GRIJ. AK', value: 0 },
     { name: 'cooling', label: 'HLADENJE', value: 0 },
     { name: 'coolingHelper', label: 'POM. HLADJ', value: 0 },
-    { name: 'extensionCooling', label: 'CIJEV PROŠ.', value: 0 },
+    { name: 'extensionCooling', label: 'CIJEV PROŠ. HLAD.', value: 0 },
     { name: 'waterDrain', label: 'ISP. VODE', value: 0 },
     { name: 'pump', label: 'PUMPA', value: 0 },
     { name: 'increasePressure', label: 'DIZ. TL. AK', value: 0 },
