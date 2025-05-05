@@ -61,7 +61,7 @@ const DashboardPage = () => {
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
-        { id: 0, name: 'Ciljni F' },
+        { id: 0, name: 'Ciljni F' }, //TODO revert this
         { id: 1, name: 'Na Vrijeme' },
     ];
         
@@ -100,11 +100,11 @@ const DashboardPage = () => {
         setProductName('');        
         
         //#region modeDropdown        
-        setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);        
+        setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 121.11);        
         setFinishTemp(0);
-        setMaintainTemp(fetchedTypes.current?.[0]?.maintainTemp || 0);
+        setMaintainTemp(fetchedTypes.current?.[0]?.maintainTemp || 116);
         setTypeDropdown(fetchedTypes.current?.[0]);
-        //setBacteriaDropdown(fetchedBacteria.current[0]);
+        
         //#endregion
         
         //#region typeDropdown
@@ -224,15 +224,8 @@ const DashboardPage = () => {
             }
                         
             fetchedTypes.current = data.processtypesList;                        
-            console.log('Fetched process types:', fetchedTypes.current);
-            setTypeDropdown(data?.processtypesList?.[0]);
-            setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);
-            setFinishTemp(30);
-            setMaintainTemp(data?.processtypesList?.[0]?.maintainTemp || 0);
         },
-    });
-
-    console.log(customTemp, maintainTemp, finishTemp);
+    });    
     
     const { mutate: getBacteria } = useMutation({
         mutationFn: getBacteriaAction,
@@ -264,8 +257,7 @@ const DashboardPage = () => {
         if(typeDropdown?.id === 0 ||
             typeDropdown?.id === 1)
         {            
-            setCustomTemp(121.11);            
-            setFinishTemp(30);            
+            setCustomTemp(121.11);                        
             setMaintainTemp(116);            
         }
     }, [typeDropdown]);
@@ -392,9 +384,8 @@ const DashboardPage = () => {
             if(typeDropdown?.id === 0|| // TODO change this
                 typeDropdown?.id === 1)
             {                
-                setCustomTemp(typeDropdown?.customTemp || 121.11);                
-                setFinishTemp(30);                
-                setMaintainTemp(typeDropdown?.maintainTemp || 116);
+                setCustomTemp(121.11);
+                setMaintainTemp(116);
             }
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
@@ -413,6 +404,8 @@ const DashboardPage = () => {
                 z: z,
             };
 
+            const finishTempEdited = modeDropdown?.id === ProcessConfigMode.TIME ? '' : finishTemp;
+
             const request: StartProcessRequest = {                
                 processConfig: {   
                     heatingType: HeatingType.STEAM,
@@ -429,7 +422,7 @@ const DashboardPage = () => {
                     targetCoolingTime: (targetCoolingTime.current*60*1000).toString(),
                     targetHeatingTime: (targetHeatingTime.current*60*1000).toString(),
                     processType: processType,
-                    finishTemp: finishTemp.toString(),
+                    finishTemp: finishTempEdited.toString(),
                 },
             };
             console.log('Proces request', request);        
