@@ -93,7 +93,9 @@ export const updateChartOptions = (
     },
     y: {
       ticks: { color: textColor, stepSize: 5 },
-      grid: { color: gridColor },      
+      grid: { color: gridColor },
+      min: 0,
+      max: 130,      
     },
     // y2: { //TODO revert this
     //   position: "right",

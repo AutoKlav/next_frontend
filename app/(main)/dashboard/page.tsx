@@ -21,6 +21,7 @@ import { getProcessConfigModeById } from '@/utils/typeParserUtil';
 import { TabView, TabPanel } from 'primereact/tabview';
 import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
 import ProcessTable from '@/demo/components/Tables/ProcessTable';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -458,6 +459,17 @@ const DashboardPage = () => {
         setModalVisibility(true);
     }
 
+    const handleStopProcess = () => {
+        confirmDialog({
+            message: 'Jeste li sigurni da želite zaustaviti proces?',
+            header: 'Potvrda zaustavljanja',
+            icon: 'pi pi-exclamation-triangle',
+            rejectLabel: 'Odustani',
+            acceptLabel: 'Zaustavi',
+            accept: () => stopProcess(),
+        });
+    }
+
     const disabledInput = typeDropdown?.id !== 2;
 
     const footerContent = (
@@ -467,8 +479,9 @@ const DashboardPage = () => {
         </div>
     );
 
-    return (
+    return (        
         <div className="grid p-2">
+            <ConfirmDialog />
             <div className="m-0">
             <div className="grid p-2">                
                 <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '90vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
@@ -540,7 +553,7 @@ const DashboardPage = () => {
             </div>
             <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">
             <Button label="Pokreni proces" onClick={handleOpenDialog} className="p-button-success" />
-            <Button label="Zaustavi proces" onClick={() => stopProcess()} className="p-button-danger" />                        
+            <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />                        
             </div>
             <div className='col-12'>
                 {state === 0 ?
