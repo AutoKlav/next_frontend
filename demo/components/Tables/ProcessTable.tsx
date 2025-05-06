@@ -9,7 +9,12 @@ import { Toast } from 'primereact/toast';
 import { useToast } from '@/layout/context/toastcontext';
 import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
 
-const ProcessTable = () => {
+// In ProcessTable.tsx
+interface ProcessTableProps {
+    onProcessStart?: () => void;
+}
+
+const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const { showSuccess, showError, showWarn } = useToast();
     const [config, setConfig] = useState<ProcessInfoRow[]>([]);
     const [loading, setLoading] = useState(false);
@@ -95,6 +100,11 @@ const ProcessTable = () => {
             //setModalVisibility(false);
             
             showSuccess('Proces', 'Proces je uspješno pokrenut');
+
+            // Call the callback to close the modal
+            if (onProcessStart) {
+                onProcessStart();
+            }
         } catch (error) {
             showError('Proces', 'Došlo je do greške prilikom pokretanja procesa');
             console.error('Error starting process:', error);

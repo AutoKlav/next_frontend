@@ -487,9 +487,8 @@ const DashboardPage = () => {
                 <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '90vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
                 <TabView>
                 <TabPanel header="Jednostavni unos">
-                <div className="flex flex-col items-center">
-      
-        <ProcessTable />
+                <div className="flex flex-col items-center">      
+                    <ProcessTable onProcessStart={() => setModalVisibility(false)} />
     </div>
                 </TabPanel>
                 <TabPanel header="Napredni unos"> 
