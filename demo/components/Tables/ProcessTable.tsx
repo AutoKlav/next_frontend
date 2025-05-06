@@ -6,10 +6,11 @@ import { Button } from 'primereact/button';
 import { CSSProperties } from 'react';
 import { Bacteria, HeatingType, ProcessConfigMode, ProcessInfoRow, StartProcessRequest } from '@/types/grpc';
 import { Toast } from 'primereact/toast';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
 import { useToast } from '@/layout/context/toastcontext';
 import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
 
-// In ProcessTable.tsx
 interface ProcessTableProps {
     onProcessStart?: () => void;
 }
@@ -20,6 +21,9 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const [loading, setLoading] = useState(false);
     const [deleteLoadingId, setDeleteLoadingId] = useState<string | null>(null);
     const [proceedLoadingId, setProceedLoadingId] = useState<string | null>(null);
+    const [showBatchDialog, setShowBatchDialog] = useState(false);
+    const [batchLTO, setBatchLTO] = useState('');
+    const [selectedRow, setSelectedRow] = useState<ProcessInfoRow | null>(null);
     const toast = useRef<Toast>(null);
 
     const deleteProcessRow = async (id: string) => {
@@ -27,9 +31,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             setDeleteLoadingId(id);
             await deleteProcessAction({id: parseInt(id)});
             
-            // Remove the deleted item from the state
             setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
-            
             showSuccess('Proces', 'Proces je uspješno izbrisan');
         } catch (error) {
             showError('Proces', 'Došlo je do greške prilikom brisanja procesa');
@@ -52,25 +54,31 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
         }
     };
 
-    const startProcessButton = async (rowData: ProcessInfoRow) => {
+    const handleProceedClick = (rowData: ProcessInfoRow) => {
+        setSelectedRow(rowData);
+        setShowBatchDialog(true);
+    };
+
+    const startProcessButton = async () => {
+        if (!selectedRow) return;
+
         try {
-            setProceedLoadingId(rowData.id.toString());
-            console.log('Starting process:', rowData);
+            setProceedLoadingId(selectedRow.id.toString());
             
             const bacteria: Bacteria = {
-                id: rowData.bacteria.id,
-                name: rowData.bacteria.name,
+                id: selectedRow.bacteria.id,
+                name: selectedRow.bacteria.name,
                 description: '',
-                d0: rowData.bacteria.d0,
-                z: rowData.bacteria.z,
+                d0: selectedRow.bacteria.d0,
+                z: selectedRow.bacteria.z,
             };
 
             const processType = {
-                id:0,
+                id: 0,
                 customTemp: 121.11,
                 mantainTemp: 116,
                 d0: 0.2,
-                z:10,                
+                z: 10,                
                 name: "Sterilizacija",
                 description: "Sterilizacija",
             }
@@ -81,27 +89,23 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                     mode: ProcessConfigMode.TIME,                    
                 },
                 processInfo: {
-                    productName: rowData.productname,
-                    batchLTO: '',
+                    productName: selectedRow.productname,
+                    batchLTO: batchLTO || '', // Use the entered batchLTO or empty string
                     bacteria: bacteria,
                     targetF: '0',
-                    productQuantity: rowData.productquantity,
+                    productQuantity: selectedRow.productquantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
-                    targetCoolingTime: ( parseFloat(rowData.targetcoolingtime) *60*1000).toString(),
-                    targetHeatingTime: (parseFloat(rowData.targetheatingtime) *60*1000).toString(),
+                    targetCoolingTime: (parseFloat(selectedRow.targetcoolingtime) * 60 * 1000).toString(),
+                    targetHeatingTime: (parseFloat(selectedRow.targetheatingtime) * 60 * 1000).toString(),
                     processType: processType,
                     finishTemp: '',
                 },
             };
-            console.log('Proces request', request);        
             
-            startProcessAction(request);
-            //setModalVisibility(false);
-            
+            await startProcessAction(request);
             showSuccess('Proces', 'Proces je uspješno pokrenut');
-
-            // Call the callback to close the modal
+            
             if (onProcessStart) {
                 onProcessStart();
             }
@@ -110,6 +114,9 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             console.error('Error starting process:', error);
         } finally {
             setProceedLoadingId(null);
+            setShowBatchDialog(false);
+            setBatchLTO('');
+            setSelectedRow(null);
         }
     };
 
@@ -125,9 +132,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
         { field: 'processtype.customtemp', header: 'Prilagođena temperatura' },
         { field: 'processtype.name', header: 'Ime tipa' },        
         { field: 'processtype.maintaintemp', header: 'Temperatura održavanja' },
-        { field: 'bacteria.name', header: 'Bakterija' },        
-        // { field: 'bacteria.d0', header: 'd0' },        
-        // { field: 'bacteria.z', header: 'z' },  
+        { field: 'bacteria.name', header: 'Bakterija' },
     ];   
 
     const deleteButton = (rowData: ProcessInfoRow) => {
@@ -147,12 +152,23 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             <Button 
                 icon="pi pi-arrow-right" 
                 className="p-button-rounded p-button-primary"
-                onClick={() => startProcessButton(rowData)}
+                onClick={() => handleProceedClick(rowData)}
                 loading={proceedLoadingId === rowData.id.toString()}
                 disabled={!!proceedLoadingId}
             />
         );
     };
+
+    const batchDialogFooter = (
+        <div>
+            <Button label="Odustani" icon="pi pi-times" onClick={() => {
+                setShowBatchDialog(false);
+                setBatchLTO('');
+                setSelectedRow(null);
+            }} className="p-button-text" />
+            <Button label="Pokreni" icon="pi pi-check" onClick={startProcessButton} autoFocus />
+        </div>
+    );
     
     return (
         <div className="card p-fluid">
@@ -181,7 +197,31 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                     headerStyle={{ width: '5%', minWidth: '2rem' }} 
                     bodyStyle={{ textAlign: 'center' }} 
                 />
-            </DataTable>            
+            </DataTable>
+
+            <Dialog 
+                header="Unesite broj šarže" 
+                visible={showBatchDialog} 
+                style={{ width: '30vw' }} 
+                onHide={() => {
+                    setShowBatchDialog(false);
+                    setBatchLTO('');
+                    setSelectedRow(null);
+                }}
+                footer={batchDialogFooter}
+            >
+                <div className="p-fluid">
+                    <div className="field">
+                        <label htmlFor="batchLTO">Broj šarže (opcionalno)</label>
+                        <InputText 
+                            id="batchLTO"
+                            value={batchLTO}
+                            onChange={(e) => setBatchLTO(e.target.value)}
+                            placeholder="LOT356357"
+                        />
+                    </div>
+                </div>
+            </Dialog>
         </div>
     );
 }
