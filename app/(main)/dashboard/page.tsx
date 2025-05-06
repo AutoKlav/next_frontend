@@ -496,7 +496,7 @@ const DashboardPage = () => {
                     <div className="grid">
                         <div className="col-4">                                    
                             <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>                                                        
-                            <GeneralStringInput headerName="Broj šarže" placeholder='LTO3242654234' inputValue={batchLTO} suggestions={[]} />                            
+                            <GeneralStringInput headerName="Broj šarže" placeholder='LOT003576' inputValue={batchLTO} suggestions={[]} />                            
                         </div>                
                         <div className="col-4">
                             <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                            
