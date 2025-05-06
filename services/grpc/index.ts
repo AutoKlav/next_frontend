@@ -85,6 +85,7 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
     startProcessRequest.processInfo.productQuantity
   );
   processInfo.setBacteria(bacteria);
+  processInfo.setBatchlto(startProcessRequest.processInfo.batchLTO);
   processInfo.setProcesstype(processType);
   processInfo.setProcessstart(startProcessRequest.processInfo.processStart);
   processInfo.setTargetf(startProcessRequest.processInfo.targetF);
