@@ -55,19 +55,19 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             tension: 1,
             yAxisID: "y",
         },
-        {
-            label: "Temperatura sredine ",
-            data: data.tempk,
-            fill: false,
-            borderColor: "rgba(255, 182, 193, 1)", // Pale red (light pink)
-            backgroundColor: "rgba(255, 182, 193, 0.3)", // Lighter pale red background
-            borderWidth: 4,
-            pointBorderColor: "rgba(255, 182, 193, 1)",
-            pointBackgroundColor: "rgba(255, 182, 193, 0.5)",
-            pointRadius: 0,
-            tension: 1,
-            yAxisID: "y",
-        },
+        // {
+        //     label: "Temperatura sredine ",
+        //     data: data.tempk,
+        //     fill: false,
+        //     borderColor: "rgba(255, 182, 193, 1)", // Pale red (light pink)
+        //     backgroundColor: "rgba(255, 182, 193, 0.3)", // Lighter pale red background
+        //     borderWidth: 4,
+        //     pointBorderColor: "rgba(255, 182, 193, 1)",
+        //     pointBackgroundColor: "rgba(255, 182, 193, 0.5)",
+        //     pointRadius: 0,
+        //     tension: 1,
+        //     yAxisID: "y",
+        // },
         {
             label: "Tlak/10  ",
             data: data.pressure,
