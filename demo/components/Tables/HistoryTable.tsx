@@ -245,6 +245,7 @@ const HistoryTable = () => {
             >
                 <Column selectionMode="multiple" headerStyle={{ width: "3em" }} />
                 <Column field="productname" header="Naziv procesa" />
+                <Column field="productquantity" header="Količina" />
                 <Column 
                     field="processstart" 
                     header="Datum početka" 
