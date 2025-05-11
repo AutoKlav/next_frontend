@@ -177,7 +177,8 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                 dataKey="id" 
                 value={config}                 
                 loading={loading}
-                tableStyle={{ minWidth: '50rem' }}
+                tableStyle={{ minWidth: '50rem' }}                
+                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} 
             >
                 {columns.map(({ field, header }) => (
                     <Column 

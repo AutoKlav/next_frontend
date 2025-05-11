@@ -232,8 +232,7 @@ const HistoryTable = () => {
                 showGridlines
                 value={processesDataQuery || []}
                 loading={loading || isLogLoading}
-                paginator
-                rows={6}
+                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} 
                 dataKey="id"
                 filters={filters}
                 selection={selectedProcesses}
