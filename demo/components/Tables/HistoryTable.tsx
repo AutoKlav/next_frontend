@@ -19,6 +19,7 @@ import { handleExportToPDF } from "@/utils/exportUtil";
 import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
 import { delay } from "@/utils/delayUtil";
 import { generateTablePDF } from "@/utils/generateTableUtil";
+import { hideFSumFR } from "@/utils/targetTimeOrFevaulator";
 
 const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
@@ -49,8 +50,9 @@ const HistoryTable = () => {
     
     const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: async ({data, source}) => {
-            if (source === "print") {                
-                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
+            if (source === "print") {                     
+                const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf);                
+                updateChartData(transformData({ processlogsList: data?.processlogsList }), hideFSumFRBool, setChartData);
                 
                 // Wait for 3 seconds before moving to the next iteration until Chart 
                 // loads animation is complete
