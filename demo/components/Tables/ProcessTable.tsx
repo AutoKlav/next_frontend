@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { useToast } from '@/layout/context/toastcontext';
 import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
+import useTemperatureTiming from '@/hooks/useTemperatureTiming';
 
 interface ProcessTableProps {
     onProcessStart?: () => void;
@@ -25,6 +26,12 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const [batchLTO, setBatchLTO] = useState('');
     const [selectedRow, setSelectedRow] = useState<ProcessInfoRow | null>(null);
     const toast = useRef<Toast>(null);
+
+    
+    const {        
+        setTargetHeatingTime,
+        setTargetCoolingTime,        
+      } = useTemperatureTiming();
 
     const deleteProcessRow = async (id: string) => {
         try {
@@ -102,6 +109,9 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                     finishTemp: '',
                 },
             };
+        
+            setTargetHeatingTime(request.processInfo.targetHeatingTime);
+            setTargetCoolingTime(request.processInfo.targetCoolingTime);
             
             await startProcessAction(request);
             showSuccess('Proces', 'Proces je uspješno pokrenut');

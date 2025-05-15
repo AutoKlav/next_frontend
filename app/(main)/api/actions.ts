@@ -3,7 +3,7 @@
 import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState, getUniqueProcesses, deleteProcess, deleteBacteria, createBacteria } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
 import { BacteriaRequest, ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
-import useTemperatureTiming from "@/hooks/useTemperatureTiming";
+
 
 //#region GET Actions
 
@@ -99,14 +99,6 @@ export const deleteBacteriaAction = async (bacteriaRequest: TypeRequest) => {
 //#region POST Actions
 
 export const startProcessAction = async (request: StartProcessRequest) => {
-    const {        
-        setTargetHeatingTime,
-        setTargetCoolingTime,        
-      } = useTemperatureTiming();
-
-      setTargetHeatingTime(request.processInfo.targetHeatingTime);
-      setTargetCoolingTime(request.processInfo.targetCoolingTime);
-
       const response = await startProcess(request);
       return response;
  };

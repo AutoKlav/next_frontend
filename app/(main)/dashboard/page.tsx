@@ -65,6 +65,8 @@ const DashboardPage = () => {
     const {        
         startHeating,
         startCooling,       
+        setTargetCoolingTime,
+        setTargetHeatingTime,
       } = useTemperatureTiming();
 
     // Used for calculation of ending heating time
@@ -469,6 +471,9 @@ const DashboardPage = () => {
                 },
             };
             console.log('Proces request', request);        
+        
+            setTargetHeatingTime(request.processInfo.targetHeatingTime);
+            setTargetCoolingTime(request.processInfo.targetCoolingTime);
 
             resetInputs();
             startProcess(request);
