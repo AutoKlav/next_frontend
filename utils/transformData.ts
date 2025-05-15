@@ -34,12 +34,8 @@ export const transformData = (data: { processlogsList: StateMachineValues[] }): 
  * @param setChartData - The function to set the chart data.
  */
 
-export const updateChartData = (data: TransformedData, setChartData: (data: any) => void) => {    
-    // Check if fr array has any non-null values
-    const hasFrData = data.fr && data.fr.some(val => val === null);
-    // Check if sumfr array has any non-null values
-    const hasSumFrData = data.sumfr && data.sumfr.some(val => val === null);
-
+export const updateChartData = (data: TransformedData, hideFSumFR: boolean | undefined, setChartData: (data: any) => void) => {    
+    
     const datasets = [
         {
             label: "Temperatura autoklava ",
@@ -83,7 +79,7 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             yAxisID: "y",
         },
         //TODO revert this        
-        ...(!hasFrData ? [{
+        ...(!hideFSumFR ? [{
             label: "Fr  ",
             data: data.fr,
             fill: false,
@@ -98,7 +94,7 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             yAxisID: "y2",
         }] : []),
         // Conditionally include sumfr dataset
-        ...(!hasSumFrData ? [{
+        ...(!hideFSumFR ? [{
             label: "sumFr",
             data: data.sumfr,
             fill: false,

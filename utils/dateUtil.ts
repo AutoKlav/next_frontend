@@ -54,7 +54,7 @@ export const formatTime = (dateString: string) => {
 
 // create method that will convert mseconds to hh:mm format
 export const secondsToHms = (input: number) => {
-    if(isNaN(input)) return '0h:0m';
+    if(isNaN(input)) return '0h:0min';
 
     input = Number(input) / 1000;
     const h = Math.floor(input / 3600);
@@ -65,5 +65,5 @@ export const secondsToHms = (input: number) => {
     const mDisplay = m > 0 ? String(m).padStart(2, '0') : '00';
     //const sDisplay = s > 0 ? String(s).padStart(2, '0') : '00';
 
-    return `${hDisplay}h:${mDisplay}m`;
+    return `${hDisplay}h:${mDisplay}min`;
 };

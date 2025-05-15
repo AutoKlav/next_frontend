@@ -192,6 +192,7 @@ export interface ProcessInfoGraphView {
   productquantity?: string;
   processstart?: string;
   processlength?: string;
+  targetf?: string;
 };
 
 export interface ProcessSuggestions {

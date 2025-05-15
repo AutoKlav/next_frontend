@@ -17,6 +17,7 @@ interface ChartInfo {
     title: string;
     subtitle: string;
     refetchInterval?: number;
+    hideFSumFR?: boolean;
 }
 
 export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) => {    
@@ -35,7 +36,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
                 };
             });
             
-            updateChartData(transformData({ processlogsList: parsedData }), setChartData);
+            updateChartData(transformData({ processlogsList: parsedData }), chartInfoProps.hideFSumFR, setChartData);
             return parsedData; // Ensure the query function returns the parsed data
         },
         refetchInterval: chartInfoProps.refetchInterval ? chartInfoProps.refetchInterval : false,
