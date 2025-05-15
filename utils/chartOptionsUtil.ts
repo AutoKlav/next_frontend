@@ -97,11 +97,11 @@ export const updateChartOptions = (
       min: 0,
       max: 130,      
     },
-    // y2: { //TODO revert this
-    //   position: "right",
-    //   ticks: { color: textColor, stepSize: 0.5 },
-    //   grid: { drawOnChartArea: false },      
-    // },
+    y2: { //TODO revert this
+      position: "right",
+      ticks: { color: textColor, stepSize: 0.5 },
+      grid: { drawOnChartArea: false },      
+    },
   },
 });
 

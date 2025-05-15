@@ -55,19 +55,19 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             tension: 1,
             yAxisID: "y",
         },
-        // {
-        //     label: "Temperatura sredine ",
-        //     data: data.tempk,
-        //     fill: false,
-        //     borderColor: "rgba(255, 182, 193, 1)", // Pale red (light pink)
-        //     backgroundColor: "rgba(255, 182, 193, 0.3)", // Lighter pale red background
-        //     borderWidth: 4,
-        //     pointBorderColor: "rgba(255, 182, 193, 1)",
-        //     pointBackgroundColor: "rgba(255, 182, 193, 0.5)",
-        //     pointRadius: 0,
-        //     tension: 1,
-        //     yAxisID: "y",
-        // },
+        {
+            label: "Temperatura sredine ",
+            data: data.tempk,
+            fill: false,
+            borderColor: "rgba(255, 182, 193, 1)", // Pale red (light pink)
+            backgroundColor: "rgba(255, 182, 193, 0.3)", // Lighter pale red background
+            borderWidth: 4,
+            pointBorderColor: "rgba(255, 182, 193, 1)",
+            pointBackgroundColor: "rgba(255, 182, 193, 0.5)",
+            pointRadius: 0,
+            tension: 1,
+            yAxisID: "y",
+        },
         {
             label: "Tlak/10  ",
             data: data.pressure,
@@ -82,36 +82,36 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             tension: 1,
             yAxisID: "y",
         },
-        // Conditionally include fr dataset
-        // ...(hasFrData ? [{
-        //     label: "Fr  ",
-        //     data: data.fr,
-        //     fill: false,
-        //     borderColor: "rgba(54, 162, 235, 1)",
-        //     backgroundColor: "rgba(54, 162, 235, 0.3)",
-        //     borderWidth: 4,
-        //     pointStyle: "circle",
-        //     pointBorderColor: "rgba(54, 162, 235, 1)",
-        //     pointBackgroundColor: "rgba(54, 162, 235, 0.4)",
-        //     pointRadius: 0,
-        //     tension: 1,
-        //     yAxisID: "y2",
-        // }] : []),
-        // // Conditionally include sumfr dataset
-        // ...(hasSumFrData ? [{
-        //     label: "sumFr",
-        //     data: data.sumfr,
-        //     fill: false,
-        //     borderColor: "rgba(30, 144, 255, 1)",
-        //     backgroundColor: "rgba(30, 144, 255, 0.4)",
-        //     borderWidth: 2,
-        //     pointStyle: "circle",
-        //     pointBorderColor: "rgba(30, 144, 255, 1)",
-        //     pointBackgroundColor: "rgba(30, 144, 255, 0.5)",
-        //     pointRadius: 0,
-        //     tension: 1,
-        //     yAxisID: "y2",
-        // }] : [])
+        //TODO revert this        
+        ...(!hasFrData ? [{
+            label: "Fr  ",
+            data: data.fr,
+            fill: false,
+            borderColor: "rgba(0, 51, 153, 1)", // Darker blue
+            backgroundColor: "rgba(0, 51, 153, 0.3)", // Lighter background for contrast
+            borderWidth: 4,
+            pointStyle: "circle",
+            pointBorderColor: "rgba(0, 51, 153, 1)",
+            pointBackgroundColor: "rgba(0, 51, 153, 0.4)",
+            pointRadius: 0,
+            tension: 1,
+            yAxisID: "y2",
+        }] : []),
+        // Conditionally include sumfr dataset
+        ...(!hasSumFrData ? [{
+            label: "sumFr",
+            data: data.sumfr,
+            fill: false,
+            borderColor: "rgba(135, 206, 250, 1)", // Lighter blue (sky blue)
+            backgroundColor: "rgba(135, 206, 250, 0.4)", // Pale blue background
+            borderWidth: 2,
+            pointStyle: "circle",
+            pointBorderColor: "rgba(135, 206, 250, 1)",
+            pointBackgroundColor: "rgba(135, 206, 250, 0.5)",
+            pointRadius: 0,
+            tension: 1,
+            yAxisID: "y2",
+        }] : [])
     ];        
     
     setChartData({
