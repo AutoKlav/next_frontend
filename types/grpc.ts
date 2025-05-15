@@ -246,7 +246,7 @@ export interface StartProcessRequest {
 }
 
 export interface UpdateSensorRequest {
-  name: string | undefined;
+  name: number;
   minValue: number;
   maxValue: number;
 }

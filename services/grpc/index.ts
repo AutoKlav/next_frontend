@@ -137,7 +137,7 @@ export const updateSensor = (updateSensorRequest: UpdateSensorRequest) => {
   data.setMinvalue(updateSensorRequest.minValue);
   data.setMaxvalue(updateSensorRequest.maxValue);
 
-  return gRpcCall<Status>("updateSensor", data);
+  return gRpcCall<Status>("updateInputPin", data);
 }
 
 export const createProcessType = (processRequest: ProcessTypeRequest) => {

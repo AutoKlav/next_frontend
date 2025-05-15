@@ -189,17 +189,17 @@ const FullStepper = () => {
             resetValues();
             return;
         }
-
+                
         const updateSensor: UpdateSensorRequest = {
-            name: selectedSensorRef.current?.id,
+            name: selectedSensorRef.current?.position || 0,
             minValue: result[0],
             maxValue: result[1],
         }
-
+        
         setSensorMutation(updateSensor);
         resetValues();
     }
-    
+
     return (
         <div className="card p-7 shadow-lg rounded-lg">
             <div className="flex flex-column gap-3">

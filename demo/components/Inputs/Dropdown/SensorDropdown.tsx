@@ -4,6 +4,7 @@ import { Dropdown } from 'primereact/dropdown';
 interface SensorDropdown {
     id: string;
     name: string;
+    position: number;
 }
 
 interface SensorDropdownProps {
@@ -16,14 +17,14 @@ const SensorDropdown: React.FC<SensorDropdownProps> = (props) => {
     const [selectedSensor, setSelectedSensor] = useState<string | null>(null);
 
     const sensors: SensorDropdown[] = [
-        { id: 'temp', name: 'Temperatura' },
-        { id: 'tempK', name: 'Temperatura konzerve' },
-        { id: 'pressure', name: 'Tlak' },
-        { id: 'expansionTemp', name: 'Temperatura ekspanzije' },
-        { id: 'heaterTemp', name: 'Temperatura grijača' },
-        { id: 'tankTemp', name: 'Temperatura spremnika' },
-        { id: 'tankWaterLevel', name: 'Razina vode u spremniku' },
-        { id: 'steamPressure', name: 'Tlak pare' },        
+        { id: 'temp', position: 0, name: 'Temperatura Autoklava' },
+        { id: 'tempK', position: 1, name: 'Temperatura Konzerve' },
+        { id: 'expansionTemp', position: 2, name: 'Temperatura Ekspanzije' },
+        { id: 'heaterTemp', position: 3, name: 'Temperatura Grijača' },
+        { id: 'tankTemp', position: 4, name: 'Temperatura Tanka' },
+        { id: 'tankWaterLevel', position: 5, name: 'Nivo Vode u Tanku' },
+        { id: 'steamPressure', position: 6, name: 'Pritisak Pare' },
+        { id: 'pressure', position: 7, name: 'Pritisak' },      
     ];
 
     const handleChange = (e: { value: string }) => {
