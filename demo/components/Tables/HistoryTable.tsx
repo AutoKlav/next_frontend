@@ -50,8 +50,9 @@ const HistoryTable = () => {
     
     const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
         onSuccess: async ({data, source}) => {
-            if (source === "print") {                     
-                const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf);                
+            if (source === "print") {                             
+                const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf.toString());                  
+
                 updateChartData(transformData({ processlogsList: data?.processlogsList }), hideFSumFRBool, setChartData);
                 
                 // Wait for 3 seconds before moving to the next iteration until Chart 

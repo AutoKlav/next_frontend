@@ -48,7 +48,7 @@ const ChartPage = () => {
     const process = filteredProcessQuery?.[0]; // Get the first matching process
     console.log(process);
     const chartInfo = getChartInfo(process);
-    const hideFSumFRBool = hideFSumFR(process);
+    const hideFSumFRBool = hideFSumFR(process?.targetf || "0");
 
     return (
         <div className="grid">            
