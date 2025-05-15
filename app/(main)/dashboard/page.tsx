@@ -22,6 +22,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
 import ProcessTable from '@/demo/components/Tables/ProcessTable';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import useTemperatureTiming from '@/hooks/useTemperatureTiming';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -61,6 +62,16 @@ const DashboardPage = () => {
     const refetchIntervalRelay = 1000;   
     const debounceInterval = 2000;
 
+    const {        
+        startHeating,
+        startCooling,       
+      } = useTemperatureTiming();
+
+    // Used for calculation of ending heating time
+    const hasHeatingStartedRef = useRef<boolean>(false);
+    const hasCoolingStartedRef = useRef<boolean>(false);
+    const prevStateRef = useRef<number>(0);
+
     const modeDropdownValues: ProcessType[] = [
         { id: 0, name: 'Ciljni F' },
         { id: 1, name: 'Na Vrijeme' },
@@ -86,8 +97,8 @@ const DashboardPage = () => {
 
     const targetF = React.useRef<number>(0);
     
-    const targetHeatingTime = React.useRef<number>(1);
-    const targetCoolingTime = React.useRef<number>(1);
+    const targetHeatingTime = React.useRef<number>(0);
+    const targetCoolingTime = React.useRef<number>(0);
     const batchLTO = React.useRef<string>('');
         
     const fetchedTypes = useRef<ProcessType[]>();
@@ -114,8 +125,8 @@ const DashboardPage = () => {
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
         setZ(fetchedBacteria.current?.[0]?.z || 0);        
 
-        targetCoolingTime.current = 1;
-        targetHeatingTime.current = 1;
+        targetCoolingTime.current = 0;
+        targetHeatingTime.current = 0;
         batchLTO.current = '';
 
         //#endregion
@@ -355,7 +366,7 @@ const DashboardPage = () => {
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
     
-    const state = stateMachineValues?.state || 0;
+   const state = stateMachineValues?.state || 0;   
     
     relayMapper[0].value = relaySensorValues?.filltankwithwater || 0;
     relayMapper[1].value = relaySensorValues?.tankheating || 0;
@@ -368,6 +379,32 @@ const DashboardPage = () => {
     relayMapper[8].value = relaySensorValues?.pump || 0;
     relayMapper[9].value = relaySensorValues?.increasepressure || 0;
     relayMapper[10].value = relaySensorValues?.alarmsignal || 0;
+
+    // Used for calculation of ending heating time and cooling time
+    useEffect(() => {
+        // Heating logic (state 4)
+        if (state === 4 && prevStateRef.current !== 4 && !hasHeatingStartedRef.current) {
+          startHeating();
+          hasHeatingStartedRef.current = true;
+        }
+        
+        // Cooling logic (state 6)
+        if (state === 6 && prevStateRef.current !== 6 && !hasCoolingStartedRef.current) {
+          startCooling();
+          hasCoolingStartedRef.current = true;
+        }
+        
+        // Update previous state reference
+        prevStateRef.current = state;
+        
+        // Reset flags when state goes below thresholds
+        if (state < 4) {
+          hasHeatingStartedRef.current = false;
+        }
+        if (state < 6) {
+          hasCoolingStartedRef.current = false;
+        }
+      }, [state, startHeating, startCooling]);
 
     const handleStartProcess = () => {        
 
