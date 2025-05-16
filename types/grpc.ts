@@ -112,8 +112,8 @@ export interface ProcessType {
   id: number;
   name: string;
   type?: string;
-  customTemp?: number;  
-  maintainTemp?: number;  
+  customtemp?: number;  
+  maintaintemp?: number;  
 }
 
 export interface ProcessTypesResponse {

@@ -89,10 +89,10 @@ const DashboardPage = () => {
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
         
-    const [customTemp, setCustomTemp] = useState<number>(0);    
+    const [customTemp, setCustomTemp] = useState<number>(121.11);    
     const [finishTemp, setFinishTemp] = useState<number>(0);
     
-    const [maintainTemp, setMaintainTemp] = useState<number>(0);
+    const [maintainTemp, setMaintainTemp] = useState<number>(116);
     
     const [d0, setD0] = useState<number>(0);
     const [z, setZ] = useState<number>(0);
@@ -114,9 +114,9 @@ const DashboardPage = () => {
         setProductName('');        
         
         //#region modeDropdown        
-        setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 121.11);        
+        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);        
         setFinishTemp(0);
-        setMaintainTemp(fetchedTypes.current?.[0]?.maintainTemp || 116);
+        setMaintainTemp(fetchedTypes.current?.[0]?.customtemp || 116);
         setTypeDropdown(fetchedTypes.current?.[0]);
         
         //#endregion
@@ -126,6 +126,9 @@ const DashboardPage = () => {
         
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
         setZ(fetchedBacteria.current?.[0]?.z || 0);        
+
+        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);
+        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 116);
 
         targetCoolingTime.current = 0;
         targetHeatingTime.current = 0;
@@ -237,15 +240,13 @@ const DashboardPage = () => {
                 return;                
             }
                         
-            fetchedTypes.current = data.processtypesList;                        
-
-            console.log('Fetched process types:', fetchedTypes.current);
+            fetchedTypes.current = data.processtypesList;                                    
             setTypeDropdown(data?.processtypesList?.[0]);
-            setCustomTemp(fetchedTypes.current?.[0]?.customTemp || 0);            
-            setMaintainTemp(data?.processtypesList?.[0]?.maintainTemp || 0);
+            setCustomTemp(data?.processtypesList?.[0]?.customtemp || 0);            
+            setMaintainTemp(data?.processtypesList?.[0]?.maintaintemp || 0);
         },
     });    
-    
+
     const { mutate: getBacteria } = useMutation({
         mutationFn: getBacteriaAction,
         onError: (error) => {
@@ -269,17 +270,7 @@ const DashboardPage = () => {
     useEffect(() => {
         processTypes();
         getBacteria();
-    }, [processTypes, getBacteria]);
-
-    // Set default values for custom process types    
-    useEffect(() => {
-        if(typeDropdown?.id === 0 ||
-            typeDropdown?.id === 1)
-        {            
-            setCustomTemp(121.11);                        
-            setMaintainTemp(116);            
-        }
-    }, [typeDropdown]);
+    }, [processTypes, getBacteria]);    
     
     // Debounce the name and quantity filter mode after changed
     useEffect(() => {
@@ -303,6 +294,16 @@ const DashboardPage = () => {
             setZ(bacteriaDropdown.z ?? 0);
         }        
     }, [bacteriaDropdown]); // Runs whenever bacteriaDropdown changes
+    
+    // Set default values for custom process types    
+    useEffect(() => {
+        if(typeDropdown)
+        {            
+            console.log('Type dropdown', typeDropdown);
+            setCustomTemp(typeDropdown.customtemp ?? 0);                        
+            setMaintainTemp(typeDropdown.maintaintemp ?? 0);            
+        }
+    }, [typeDropdown]);
 
     const { mutateAsync: getDistinctProcessValues } = useMutation(getDistinctProcessValuesAction);
 
@@ -432,13 +433,7 @@ const DashboardPage = () => {
             }
         }        
 
-        if(state === 0){            
-            if(typeDropdown?.id === 0|| // TODO change this
-                typeDropdown?.id === 1)
-            {                
-                setCustomTemp(121.11);
-                setMaintainTemp(116);
-            }
+        if(state === 0){                        
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
             const processType = {
@@ -456,7 +451,9 @@ const DashboardPage = () => {
                 z: z,
             };
 
-            const finishTempEdited = modeDropdown?.id === ProcessConfigMode.TIME ? '' : finishTemp;
+            const timeMode = modeDropdown?.id === ProcessConfigMode.TIME;
+            const finishTempEdited = timeMode ? '' : finishTemp;
+            const targetFEdited = isNaN(targetF.current) || timeMode ? '0' : targetF.current.toString()
 
             const request: StartProcessRequest = {                
                 processConfig: {   
@@ -467,7 +464,7 @@ const DashboardPage = () => {
                     productName: productName,
                     batchLTO: batchLTO.current,
                     bacteria: bacteria,
-                    targetF: isNaN(targetF.current) ? '0' : targetF.current.toString(),
+                    targetF: targetFEdited,
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
