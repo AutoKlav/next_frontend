@@ -77,8 +77,8 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   const processType = new Messages.ProcessType();
   processType.setName(startProcessRequest.processInfo.processType.name);
   processType.setType(startProcessRequest.processInfo.processType.type || ''); // Added type field
-  processType.setCustomtemp(startProcessRequest.processInfo.processType.customTemp);
-  processType.setMaintaintemp(startProcessRequest.processInfo.processType.maintainTemp);
+  processType.setCustomtemp(startProcessRequest.processInfo.processType.customtemp);
+  processType.setMaintaintemp(startProcessRequest.processInfo.processType.maintaintemp);
 
   processInfo.setProductname(startProcessRequest.processInfo.productName);
   processInfo.setProductquantity(
