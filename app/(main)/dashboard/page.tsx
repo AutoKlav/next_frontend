@@ -410,20 +410,27 @@ const DashboardPage = () => {
 
     const handleStartProcess = () => {        
 
-        if(productName === '' || productQuantity === '') {
-            showWarn('Proces','Molimo unesite sve podatke');
+        if(productName === '') {
+            showWarn('Proces','Molimo unesite naziv proizvoda');
             return;
         }
 
-        if(targetHeatingTime.current <= 0){
-            showWarn('Proces','Vrijeme sterilizacije mora biti veće od 0');
+        if(productQuantity === '') {
+            showWarn('Proces','Molimo unesite količinu proizvoda');
             return;
         }
 
-        if(targetCoolingTime.current <= 0){
-            showWarn('Proces','Vrijeme hlađenja mora biti veće od 0');
-            return;
-        }
+        if(modeDropdown?.id === ProcessConfigMode.TIME) {
+            if(targetHeatingTime.current <= 0){
+                showWarn('Proces','Vrijeme sterilizacije mora biti veće od 0');
+                return;
+            }
+    
+            if(targetCoolingTime.current <= 0){
+                showWarn('Proces','Vrijeme hlađenja mora biti veće od 0');
+                return;
+            }
+        }        
 
         if(state === 0){            
             if(typeDropdown?.id === 0|| // TODO change this
