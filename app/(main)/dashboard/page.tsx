@@ -298,8 +298,7 @@ const DashboardPage = () => {
     // Set default values for custom process types    
     useEffect(() => {
         if(typeDropdown)
-        {            
-            console.log('Type dropdown', typeDropdown);
+        {   
             setCustomTemp(typeDropdown.customtemp ?? 0);                        
             setMaintainTemp(typeDropdown.maintaintemp ?? 0);            
         }
@@ -436,12 +435,14 @@ const DashboardPage = () => {
         if(state === 0){                        
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
-            const processType = {
+            const processType : ProcessType = {
                 id: typeDropdown?.id || 0,
-                customTemp: customTemp,
-                maintainTemp: maintainTemp,                
+                customtemp: customTemp,
+                maintaintemp: maintainTemp,                
                 name: typeDropdown?.name || '',                
             }
+
+            console.log('Process type', processType);
 
             const bacteria: Bacteria = {
                 id: bacteriaDropdown?.id || 1,

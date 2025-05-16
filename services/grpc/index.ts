@@ -75,6 +75,7 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
 
   // Create and set ProcessType
   const processType = new Messages.ProcessType();
+  processType.setId(startProcessRequest.processInfo.processType.id);
   processType.setName(startProcessRequest.processInfo.processType.name);
   processType.setType(startProcessRequest.processInfo.processType.type || ''); // Added type field
   processType.setCustomtemp(startProcessRequest.processInfo.processType.customtemp);
