@@ -441,9 +441,7 @@ const DashboardPage = () => {
                 maintaintemp: maintainTemp,                
                 name: typeDropdown?.name || '',                
             }
-
-            console.log('Process type', processType);
-
+            
             const bacteria: Bacteria = {
                 id: bacteriaDropdown?.id || 1,
                 name: bacteriaDropdown?.name || '',
