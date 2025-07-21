@@ -10,7 +10,6 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { useToast } from '@/layout/context/toastcontext';
 import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
-import useTemperatureTiming from '@/hooks/useTemperatureTiming';
 
 interface ProcessTableProps {
     onProcessStart?: () => void;
@@ -27,17 +26,11 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const [selectedRow, setSelectedRow] = useState<ProcessInfoRow | null>(null);
     const toast = useRef<Toast>(null);
 
-    
-    const {        
-        setTargetHeatingTime,
-        setTargetCoolingTime,        
-      } = useTemperatureTiming();
-
     const deleteProcessRow = async (id: string) => {
         try {
             setDeleteLoadingId(id);
-            await deleteProcessAction({id: parseInt(id)});
-            
+            await deleteProcessAction({ id: parseInt(id) });
+
             setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
             showSuccess('Proces', 'Proces je uspješno izbrisan');
         } catch (error) {
@@ -51,7 +44,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const fetchProcesses = async () => {
         try {
             setLoading(true);
-            const response = await getUniqueProcessesAction();            
+            const response = await getUniqueProcessesAction();
             setConfig(response.processesList);
         } catch (error) {
             showError('Proces', 'Došlo je do greške prilikom učitavanja procesa');
@@ -71,7 +64,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
 
         try {
             setProceedLoadingId(selectedRow.id.toString());
-            
+
             const bacteria: Bacteria = {
                 id: selectedRow.bacteria.id,
                 name: selectedRow.bacteria.name,
@@ -85,15 +78,15 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                 customTemp: 121.11,
                 mantainTemp: 116,
                 d0: 0.2,
-                z: 10,                
+                z: 10,
                 name: "Sterilizacija",
                 description: "Sterilizacija",
             }
 
-            const request: StartProcessRequest = {                
-                processConfig: {                                                        
-                    heatingType: HeatingType.STEAM,                    
-                    mode: ProcessConfigMode.TIME,                    
+            const request: StartProcessRequest = {
+                processConfig: {
+                    heatingType: HeatingType.STEAM,
+                    mode: ProcessConfigMode.TIME,
                 },
                 processInfo: {
                     productName: selectedRow.productname,
@@ -109,13 +102,10 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                     finishTemp: '',
                 },
             };
-        
-            setTargetHeatingTime(request.processInfo.targetHeatingTime);
-            setTargetCoolingTime(request.processInfo.targetCoolingTime);
-            
+
             await startProcessAction(request);
             showSuccess('Proces', 'Proces je uspješno pokrenut');
-            
+
             if (onProcessStart) {
                 onProcessStart();
             }
@@ -130,26 +120,26 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
         }
     };
 
-    useEffect(() => {        
-        fetchProcesses();        
+    useEffect(() => {
+        fetchProcesses();
     }, []);
 
     const columns = [
         { field: 'productname', header: 'Ime' },
         { field: 'productquantity', header: 'Količina' },
         { field: 'targetheatingtime', header: 'Vrijeme grijanja (min)' },
-        { field: 'targetcoolingtime', header: 'Vrijeme hlađenja (min)' },        
+        { field: 'targetcoolingtime', header: 'Vrijeme hlađenja (min)' },
         { field: 'processtype.customtemp', header: 'Prilagođena temperatura' },
-        { field: 'processtype.name', header: 'Ime tipa' },        
+        { field: 'processtype.name', header: 'Ime tipa' },
         { field: 'processtype.maintaintemp', header: 'Temperatura održavanja' },
         { field: 'bacteria.name', header: 'Bakterija' },
-    ];   
+    ];
 
     const deleteButton = (rowData: ProcessInfoRow) => {
         return (
-            <Button 
-                icon="pi pi-trash" 
-                className="p-button-rounded p-button-danger" 
+            <Button
+                icon="pi pi-trash"
+                className="p-button-rounded p-button-danger"
                 onClick={() => deleteProcessRow(rowData.id.toString())}
                 loading={deleteLoadingId === rowData.id.toString()}
                 disabled={!!deleteLoadingId}
@@ -159,8 +149,8 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
 
     const proceedButton = (rowData: ProcessInfoRow) => {
         return (
-            <Button 
-                icon="pi pi-arrow-right" 
+            <Button
+                icon="pi pi-arrow-right"
                 className="p-button-rounded p-button-primary"
                 onClick={() => handleProceedClick(rowData)}
                 loading={proceedLoadingId === rowData.id.toString()}
@@ -179,41 +169,41 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             <Button label="Pokreni" icon="pi pi-check" onClick={startProcessButton} autoFocus />
         </div>
     );
-    
+
     return (
         <div className="card p-fluid">
             <Toast ref={toast} />
-            <DataTable 
-                dataKey="id" 
-                value={config}                 
+            <DataTable
+                dataKey="id"
+                value={config}
                 loading={loading}
-                tableStyle={{ minWidth: '50rem' }}                
-                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} 
+                tableStyle={{ minWidth: '50rem' }}
+                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
             >
                 {columns.map(({ field, header }) => (
-                    <Column 
-                        key={field} 
-                        field={field} 
-                        header={header} 
-                        style={{ width: '10%', textAlign: 'left' as CSSProperties['textAlign'] }} 
+                    <Column
+                        key={field}
+                        field={field}
+                        header={header}
+                        style={{ width: '10%', textAlign: 'left' as CSSProperties['textAlign'] }}
                     />
                 ))}
-                <Column 
-                    body={deleteButton} 
-                    headerStyle={{ width: '5%', minWidth: '2rem' }} 
-                    bodyStyle={{ textAlign: 'center' }} 
+                <Column
+                    body={deleteButton}
+                    headerStyle={{ width: '5%', minWidth: '2rem' }}
+                    bodyStyle={{ textAlign: 'center' }}
                 />
-                <Column 
-                    body={proceedButton} 
-                    headerStyle={{ width: '5%', minWidth: '2rem' }} 
-                    bodyStyle={{ textAlign: 'center' }} 
+                <Column
+                    body={proceedButton}
+                    headerStyle={{ width: '5%', minWidth: '2rem' }}
+                    bodyStyle={{ textAlign: 'center' }}
                 />
             </DataTable>
 
-            <Dialog 
-                header="Unesite broj šarže" 
-                visible={showBatchDialog} 
-                style={{ width: '30vw' }} 
+            <Dialog
+                header="Unesite broj šarže"
+                visible={showBatchDialog}
+                style={{ width: '30vw' }}
                 onHide={() => {
                     setShowBatchDialog(false);
                     setBatchLTO('');
@@ -224,7 +214,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                 <div className="p-fluid">
                     <div className="field">
                         <label htmlFor="batchLTO">Broj šarže (opcionalno)</label>
-                        <InputText 
+                        <InputText
                             id="batchLTO"
                             value={batchLTO}
                             onChange={(e) => setBatchLTO(e.target.value)}

@@ -22,17 +22,16 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
 import ProcessTable from '@/demo/components/Tables/ProcessTable';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
-import useTemperatureTiming from '@/hooks/useTemperatureTiming';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-box', headerName: 'TEMP. GRIJACA', value: '', unit: '°C', color: 'red' },    
-    { icon: 'pi-box', headerName: 'TEMP. SRED.', value: '', unit: '°C', color: 'red' },    
+    { icon: 'pi-box', headerName: 'TEMP. GRIJACA', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-box', headerName: 'TEMP. SRED.', value: '', unit: '°C', color: 'red' },
     { icon: 'pi-gauge', headerName: 'TLAK AK.', value: '', unit: 'bar', color: 'blue' },
-    { icon: 'pi-box', headerName: 'TEMP. SPREM.', value: '', unit: '°C', color: 'red' },    
-    { icon: 'pi-cloud', headerName: 'NIVO. SPREM.', value: '', unit: '%', color: 'black' },    
-    { icon: 'pi-box', headerName: 'TEMP. CIJEV PROŠ.', value: '', unit: '°C', color: 'red' },    
-    { icon: 'pi-cloud', headerName: 'TLAK PARE', value: '', unit: 'bar', color: 'blue' },        
+    { icon: 'pi-box', headerName: 'TEMP. SPREM.', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-cloud', headerName: 'NIVO. SPREM.', value: '', unit: '%', color: 'black' },
+    { icon: 'pi-box', headerName: 'TEMP. CIJEV PROŠ.', value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-cloud', headerName: 'TLAK PARE', value: '', unit: 'bar', color: 'blue' },
 ];
 
 const stateValues = [
@@ -57,75 +56,63 @@ const relayMapper = [
 
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
-    const [isModalVisible, setModalVisibility] = useState(false);  
-    const refetchStateMachineIntervals = 1000; 
-    const refetchIntervalRelay = 1000;   
+    const [isModalVisible, setModalVisibility] = useState(false);
+    const refetchStateMachineIntervals = 1000;
+    const refetchIntervalRelay = 1000;
     const debounceInterval = 2000;
-
-    const {        
-        startHeating,
-        startCooling,       
-        setTargetCoolingTime,
-        setTargetHeatingTime,
-      } = useTemperatureTiming();
-
-    // Used for calculation of ending heating time
-    const hasHeatingStartedRef = useRef<boolean>(false);
-    const hasCoolingStartedRef = useRef<boolean>(false);
-    const prevStateRef = useRef<number>(0);
 
     const modeDropdownValues: ProcessType[] = [
         { id: 0, name: 'Ciljni F' },
         { id: 1, name: 'Na Vrijeme' },
     ];
-        
+
     // Sterilizacija / Pasterizacija
     const [typeDropdown, setTypeDropdown] = useState<ProcessType>();
     // Meta f / Meta t
     const [modeDropdown, setModeDropdown] = useState<ProcessType>(modeDropdownValues[1]);
     const [bacteriaDropdown, setBacteriaDropdown] = useState<Bacteria>();
-    
+
     //#region  Modal inputs    
     const [productName, setProductName] = useState('');
     const [productQuantity, setProductQuantity] = useState('');
-        
-    const [customTemp, setCustomTemp] = useState<number>(121.11);    
+
+    const [customTemp, setCustomTemp] = useState<number>(121.11);
     const [finishTemp, setFinishTemp] = useState<number>(0);
-    
+
     const [maintainTemp, setMaintainTemp] = useState<number>(116);
-    
+
     const [d0, setD0] = useState<number>(0);
     const [z, setZ] = useState<number>(0);
 
     const targetF = React.useRef<number>(0);
-    
+
     const targetHeatingTime = React.useRef<number>(0);
     const targetCoolingTime = React.useRef<number>(0);
     const batchLTO = React.useRef<string>('');
-        
+
     const fetchedTypes = useRef<ProcessType[]>();
     const fetchedBacteria = useRef<Bacteria[]>();
 
     //#endregion
-    
+
     const resetInputs = () => {
-        
+
         setProductQuantity('');
-        setProductName('');        
-        
+        setProductName('');
+
         //#region modeDropdown        
-        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);        
+        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);
         setFinishTemp(0);
         setMaintainTemp(fetchedTypes.current?.[0]?.customtemp || 116);
         setTypeDropdown(fetchedTypes.current?.[0]);
-        
+
         //#endregion
-        
+
         //#region typeDropdown
         targetF.current = 0;
-        
+
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
-        setZ(fetchedBacteria.current?.[0]?.z || 0);        
+        setZ(fetchedBacteria.current?.[0]?.z || 0);
 
         setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);
         setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 116);
@@ -135,7 +122,7 @@ const DashboardPage = () => {
         batchLTO.current = '';
 
         //#endregion
-        
+
     }
 
     const { mutate: stopProcess } = useMutation({
@@ -143,36 +130,35 @@ const DashboardPage = () => {
         onError: (error) => {
             console.log('Error stopping process:', error);
             console.error('Error stopping process:', error);
-            showError('Proces','Greška prilikom zaustavljanja procesa');
+            showError('Proces', 'Greška prilikom zaustavljanja procesa');
         },
-        onSuccess: (data) => 
-        {
-            if(checkForErrors(data)){
-                showError('Proces','Greška prilikom dohvaćanja podataka');
+        onSuccess: (data) => {
+            if (checkForErrors(data)) {
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;
             }
 
-            showSuccess('Proces','Proces se zaustavlja');
+            showSuccess('Proces', 'Proces se zaustavlja');
         },
     });
 
     const { data: stateMachineValues } = useQuery(
-        { 
+        {
             queryKey: ['stateMachineValues'],
-            queryFn: () => getStateMachineValuesAction(),            
+            queryFn: () => getStateMachineValuesAction(),
             refetchInterval: refetchStateMachineIntervals,
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
-                showError('Proces','Greška prilikom dohvaćanja podataka', 5000);
+                showError('Proces', 'Greška prilikom dohvaćanja podataka', 5000);
             },
-            onSuccess: (data) => {                
-                if(checkForErrors(data)){
-                    showError('Proces','Greška prilikom pokretanja procesa', 500);
+            onSuccess: (data) => {
+                if (checkForErrors(data)) {
+                    showError('Proces', 'Greška prilikom pokretanja procesa', 500);
                     fetchedTypes.current = [];
                     return;
                 }
             },
-        },        
+        },
     );
 
     const { mutate: startProcess } = useMutation({
@@ -181,18 +167,18 @@ const DashboardPage = () => {
             console.error('Error stopping process:', error);
         },
         onSuccess: (data) => {
-            if(checkForErrors(data)){
-                showError('Proces','Greška prilikom dohvaćanja podataka');
+            if (checkForErrors(data)) {
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;
             }
 
-            const errors = responseParserUtil(data.errorsstring);            
+            const errors = responseParserUtil(data.errorsstring);
             if (errors[0] !== '') {
                 errors.forEach(error => showError('Proces', error, 5000));
                 return;
             }
 
-            showSuccess('Proces','Proces je uspješno pokrenut');
+            showSuccess('Proces', 'Proces je uspješno pokrenut');
         },
     });
 
@@ -203,31 +189,30 @@ const DashboardPage = () => {
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
         },
         onSuccess: (data) => {
-            if(checkForErrors(data)){
+            if (checkForErrors(data)) {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
-                return;                
+                return;
             }
-            
-            if(data?.processlengthvaluesList?.length > 0)
-            {
+
+            if (data?.processlengthvaluesList?.length > 0) {
                 // Array can contain strings, convert to numbers and filter out NaN values
-                const latestValidNumber = data?.processlengthvaluesList 
+                const latestValidNumber = data?.processlengthvaluesList
                     .map(val => Number(val))
                     .filter(val => !isNaN(val))
-                    [0]; // Pick first most updated element from list
-                
+                [0]; // Pick first most updated element from list
+
             }
-            
-            if(data?.targetfvaluesList?.length > 0){
+
+            if (data?.targetfvaluesList?.length > 0) {
                 const value = Number(data?.targetfvaluesList[0]);
                 targetF.current = isNaN(value) ? 0 : value;
             }
-            else{
+            else {
                 targetF.current = 0;
             }
         },
     });
-    
+
     const { mutate: processTypes } = useMutation({
         mutationFn: getProcessTypesAction,
         onError: (error) => {
@@ -235,17 +220,17 @@ const DashboardPage = () => {
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
         },
         onSuccess: (data) => {
-            if(checkForErrors(data)){
+            if (checkForErrors(data)) {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
-                return;                
+                return;
             }
-                        
-            fetchedTypes.current = data.processtypesList;                                    
+
+            fetchedTypes.current = data.processtypesList;
             setTypeDropdown(data?.processtypesList?.[0]);
-            setCustomTemp(data?.processtypesList?.[0]?.customtemp || 0);            
+            setCustomTemp(data?.processtypesList?.[0]?.customtemp || 0);
             setMaintainTemp(data?.processtypesList?.[0]?.maintaintemp || 0);
         },
-    });    
+    });
 
     const { mutate: getBacteria } = useMutation({
         mutationFn: getBacteriaAction,
@@ -254,31 +239,31 @@ const DashboardPage = () => {
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
         },
         onSuccess: (data) => {
-            if(checkForErrors(data)){
+            if (checkForErrors(data)) {
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
-                return;                
-            }            
-            
-            fetchedBacteria.current = data.bacteriaList;            
+                return;
+            }
+
+            fetchedBacteria.current = data.bacteriaList;
             setBacteriaDropdown(data?.bacteriaList?.[0]);
             setD0(data?.bacteriaList?.[0]?.d0);
             setZ(data?.bacteriaList?.[0]?.z);
         },
     });
-   
+
     // Fetch process types on component mount
     useEffect(() => {
         processTypes();
         getBacteria();
-    }, [processTypes, getBacteria]);    
-    
+    }, [processTypes, getBacteria]);
+
     // Debounce the name and quantity filter mode after changed
     useEffect(() => {
         const handler = setTimeout(() => {
             nameAndQuantityFilterMode({
                 productName: productName,
                 productQuantity: productQuantity
-            });            
+            });
         }, debounceInterval); // 3 seconds debounce
 
         // Cleanup the timeout if productName or productQuantity changes before the timeout completes
@@ -292,15 +277,14 @@ const DashboardPage = () => {
         if (bacteriaDropdown) {
             setD0(bacteriaDropdown.d0 ?? 0);
             setZ(bacteriaDropdown.z ?? 0);
-        }        
+        }
     }, [bacteriaDropdown]); // Runs whenever bacteriaDropdown changes
-    
+
     // Set default values for custom process types    
     useEffect(() => {
-        if(typeDropdown)
-        {   
-            setCustomTemp(typeDropdown.customtemp ?? 0);                        
-            setMaintainTemp(typeDropdown.maintaintemp ?? 0);            
+        if (typeDropdown) {
+            setCustomTemp(typeDropdown.customtemp ?? 0);
+            setMaintainTemp(typeDropdown.maintaintemp ?? 0);
         }
     }, [typeDropdown]);
 
@@ -321,16 +305,16 @@ const DashboardPage = () => {
                 getDistinctProcessValues(ProcessInfoFields.Bacteria),
                 getDistinctProcessValues(ProcessInfoFields.Description),
             ]);
-    
-             // Map results to corresponding keys
+
+            // Map results to corresponding keys
             const structuredResults: ProcessSuggestions = {
                 productName: results[0]?.valuesList ?? [],
                 productQuantity: results[1]?.valuesList ?? [],
                 bacteria: results[2]?.valuesList ?? [],
                 description: results[3]?.valuesList ?? [],
             };
-            
-            setProcessSuggestions(structuredResults);            
+
+            setProcessSuggestions(structuredResults);
         } catch (error) {
             console.error('An error occurred during the process:', error);
             showError('Proces', 'Greška prilikom dohvaćanja podataka');
@@ -338,18 +322,18 @@ const DashboardPage = () => {
     }
 
     const { data: relaySensorValues } = useQuery(
-        { 
+        {
             queryKey: ['relaySensorValues'],
             queryFn: () => getSensorRelayValuesAction(),
             refetchInterval: refetchIntervalRelay,
             onError: (error) => {
                 console.error('Error getting relay sensor values:', error);
-                showError('Relej','Greška prilikom dohvaćanja podataka');
+                showError('Relej', 'Greška prilikom dohvaćanja podataka');
             },
             onSuccess: (data) => {
-                if(checkForErrors(data)){
-                    showError('Relej','Greška prilikom dohvaćanja releja', 500);
-                    return;                    
+                if (checkForErrors(data)) {
+                    showError('Relej', 'Greška prilikom dohvaćanja releja', 500);
+                    return;
                 }
             },
         },
@@ -357,19 +341,19 @@ const DashboardPage = () => {
 
     temperatures[0].value = stateMachineValues?.sensorvalues?.temp?.toString() || 'N/A';
     temperatures[1].value = stateMachineValues?.sensorvalues?.heatertemp?.toString() || 'N/A';
-    temperatures[2].value = stateMachineValues?.sensorvalues?.tempk ?.toString() || 'N/A';
-    temperatures[3].value = stateMachineValues?.sensorvalues?.pressure ?.toString() || 'N/A';
+    temperatures[2].value = stateMachineValues?.sensorvalues?.tempk?.toString() || 'N/A';
+    temperatures[3].value = stateMachineValues?.sensorvalues?.pressure?.toString() || 'N/A';
     temperatures[4].value = stateMachineValues?.sensorvalues?.tanktemp?.toString() || 'N/A';
     temperatures[5].value = stateMachineValues?.sensorvalues?.tankwaterlevel?.toString() || 'N/A';
     temperatures[6].value = stateMachineValues?.sensorvalues?.expansiontemp?.toString() || 'N/A';
     temperatures[7].value = stateMachineValues?.sensorvalues?.steampressure?.toString() || 'N/A';
-    
+
     stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
     stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
-    
-   const state = stateMachineValues?.state || 0;   
-    
+
+    const state = stateMachineValues?.state || 0;
+
     relayMapper[0].value = relaySensorValues?.filltankwithwater || 0;
     relayMapper[1].value = relaySensorValues?.tankheating || 0;
     relayMapper[2].value = relaySensorValues?.autoklavfill || 0;
@@ -382,66 +366,40 @@ const DashboardPage = () => {
     relayMapper[9].value = relaySensorValues?.increasepressure || 0;
     relayMapper[10].value = relaySensorValues?.alarmsignal || 0;
 
-    // Used for calculation of ending heating time and cooling time
-    useEffect(() => {
-        // Heating logic (state 4)
-        if (state === 4 && prevStateRef.current !== 4 && !hasHeatingStartedRef.current) {
-          startHeating();
-          hasHeatingStartedRef.current = true;
-        }
-        
-        // Cooling logic (state 6)
-        if (state === 6 && prevStateRef.current !== 6 && !hasCoolingStartedRef.current) {
-          startCooling();
-          hasCoolingStartedRef.current = true;
-        }
-        
-        // Update previous state reference
-        prevStateRef.current = state;
-        
-        // Reset flags when state goes below thresholds
-        if (state < 4) {
-          hasHeatingStartedRef.current = false;
-        }
-        if (state < 6) {
-          hasCoolingStartedRef.current = false;
-        }
-      }, [state, startHeating, startCooling]);
+    const handleStartProcess = () => {
 
-    const handleStartProcess = () => {        
-
-        if(productName === '') {
-            showWarn('Proces','Molimo unesite naziv proizvoda');
+        if (productName === '') {
+            showWarn('Proces', 'Molimo unesite naziv proizvoda');
             return;
         }
 
-        if(productQuantity === '') {
-            showWarn('Proces','Molimo unesite količinu proizvoda');
+        if (productQuantity === '') {
+            showWarn('Proces', 'Molimo unesite količinu proizvoda');
             return;
         }
 
-        if(modeDropdown?.id === ProcessConfigMode.TIME) {
-            if(targetHeatingTime.current <= 0){
-                showWarn('Proces','Vrijeme sterilizacije mora biti veće od 0');
+        if (modeDropdown?.id === ProcessConfigMode.TIME) {
+            if (targetHeatingTime.current <= 0) {
+                showWarn('Proces', 'Vrijeme sterilizacije mora biti veće od 0');
                 return;
             }
-    
-            if(targetCoolingTime.current <= 0){
-                showWarn('Proces','Vrijeme hlađenja mora biti veće od 0');
-                return;
-            }
-        }        
 
-        if(state === 0){                        
+            if (targetCoolingTime.current <= 0) {
+                showWarn('Proces', 'Vrijeme hlađenja mora biti veće od 0');
+                return;
+            }
+        }
+
+        if (state === 0) {
             const parsedMode = getProcessConfigModeById(modeDropdown?.id);
 
-            const processType : ProcessType = {
+            const processType: ProcessType = {
                 id: typeDropdown?.id || 0,
                 customtemp: customTemp,
-                maintaintemp: maintainTemp,                
-                name: typeDropdown?.name || '',                
+                maintaintemp: maintainTemp,
+                name: typeDropdown?.name || '',
             }
-            
+
             const bacteria: Bacteria = {
                 id: bacteriaDropdown?.id || 1,
                 name: bacteriaDropdown?.name || '',
@@ -454,10 +412,10 @@ const DashboardPage = () => {
             const finishTempEdited = timeMode ? '' : finishTemp;
             const targetFEdited = isNaN(targetF.current) || timeMode ? '0' : targetF.current.toString()
 
-            const request: StartProcessRequest = {                
-                processConfig: {   
+            const request: StartProcessRequest = {
+                processConfig: {
                     heatingType: HeatingType.STEAM,
-                    mode: parsedMode,                    
+                    mode: parsedMode,
                 },
                 processInfo: {
                     productName: productName,
@@ -467,36 +425,33 @@ const DashboardPage = () => {
                     productQuantity: productQuantity,
                     processStart: new Date().toISOString(),
                     processLength: 'Proces nije završen',
-                    targetCoolingTime: (targetCoolingTime.current*60*1000).toString(),
-                    targetHeatingTime: (targetHeatingTime.current*60*1000).toString(),
+                    targetCoolingTime: (targetCoolingTime.current * 60 * 1000).toString(),
+                    targetHeatingTime: (targetHeatingTime.current * 60 * 1000).toString(),
                     processType: processType,
                     finishTemp: finishTempEdited.toString(),
                 },
             };
-            console.log('Proces request', request);        
-        
-            setTargetHeatingTime(request.processInfo.targetHeatingTime);
-            setTargetCoolingTime(request.processInfo.targetCoolingTime);
+            console.log('Proces request', request);
 
             resetInputs();
             startProcess(request);
-            setModalVisibility(false);           
-            return;
-        }
-        
-        setModalVisibility(false);            
-        showWarn('Proces','Proces je već pokrenut');
-    };
-    
-    const handleOpenDialog = () => {
-        if(state !== 0){
-            showWarn('Proces','Proces je već pokrenut');
+            setModalVisibility(false);
             return;
         }
 
-        if(fetchedTypes.current === undefined || fetchedTypes.current.length === 0){
+        setModalVisibility(false);
+        showWarn('Proces', 'Proces je već pokrenut');
+    };
+
+    const handleOpenDialog = () => {
+        if (state !== 0) {
+            showWarn('Proces', 'Proces je već pokrenut');
+            return;
+        }
+
+        if (fetchedTypes.current === undefined || fetchedTypes.current.length === 0) {
             processTypes();
-            showWarn('Proces','Nema dostupnih tipova procesa, molimo pokušajte ponovno');
+            showWarn('Proces', 'Nema dostupnih tipova procesa, molimo pokušajte ponovno');
             return;
         }
 
@@ -524,142 +479,142 @@ const DashboardPage = () => {
         </div>
     );
 
-    return (        
+    return (
         <div className="grid p-2">
             <ConfirmDialog />
             <div className="m-0">
-            <div className="grid p-2">                
-                <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '90vw' }} onHide={() => {if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
-                <TabView>
-                <TabPanel header="Jednostavni unos">
-                <div className="flex flex-col items-center">      
-                    <ProcessTable onProcessStart={() => setModalVisibility(false)} />
-    </div>
-                </TabPanel>
-                <TabPanel header="Napredni unos"> 
-                    <div className="grid">
-                        <div className="col-4">                                    
-                            <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName}/>                                                        
-                            <GeneralStringInput headerName="Broj šarže" placeholder='LOT003576' inputValue={batchLTO} suggestions={[]} />                            
-                        </div>                
-                        <div className="col-4">
-                            <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity}/>                            
-                        </div>                        
-                        <div className="col-4">
-                            <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
-                            {modeDropdown?.id === ProcessConfigMode.TARGETF ?
-                            <>
-                                <GeneralNumberInput headerName="Ciljni F" inputValue={targetF} />
-                                <GeneralNumberInput headerName="Završna temperatura" inputValue={[finishTemp, setFinishTemp]} />
-                            </>
-                            :
-                            <>
-                            <GeneralNumberInput headerName="Vrijeme sterilizacije (min)" inputValue={targetHeatingTime} />                            
-                            <GeneralNumberInput headerName="Vrijeme hlađenja (min)" inputValue={targetCoolingTime} />
-                            </>
+                <div className="grid p-2">
+                    <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '90vw' }} onHide={() => { if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                        <TabView>
+                            <TabPanel header="Jednostavni unos">
+                                <div className="flex flex-col items-center">
+                                    <ProcessTable onProcessStart={() => setModalVisibility(false)} />
+                                </div>
+                            </TabPanel>
+                            <TabPanel header="Napredni unos">
+                                <div className="grid">
+                                    <div className="col-4">
+                                        <GeneralStringInput headerName="Naziv produkta" placeholder='Pašteta' inputValue={[productName, setProductName]} suggestions={processSuggestions?.productName} />
+                                        <GeneralStringInput headerName="Broj šarže" placeholder='LOT003576' inputValue={batchLTO} suggestions={[]} />
+                                    </div>
+                                    <div className="col-4">
+                                        <GeneralStringInput headerName="Količina" placeholder='500g' inputValue={[productQuantity, setProductQuantity]} suggestions={processSuggestions?.productQuantity} />
+                                    </div>
+                                    <div className="col-4">
+                                        <StartProcessDropdown label='Mod' getter={modeDropdown} setter={setModeDropdown} values={modeDropdownValues} />
+                                        {modeDropdown?.id === ProcessConfigMode.TARGETF ?
+                                            <>
+                                                <GeneralNumberInput headerName="Ciljni F" inputValue={targetF} />
+                                                <GeneralNumberInput headerName="Završna temperatura" inputValue={[finishTemp, setFinishTemp]} />
+                                            </>
+                                            :
+                                            <>
+                                                <GeneralNumberInput headerName="Vrijeme sterilizacije (min)" inputValue={targetHeatingTime} />
+                                                <GeneralNumberInput headerName="Vrijeme hlađenja (min)" inputValue={targetCoolingTime} />
+                                            </>
+                                        }
+                                    </div>
+                                    <div className="col-12">
+                                        <hr />
+                                    </div>
+                                    <div className="col-4">
+                                        <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
+                                    </div>
+                                    <div className="col-4">
+                                        <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
+                                        <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />
+                                    </div>
+                                    <div className="col-12">
+                                        <hr />
+                                    </div>
+                                    <div className="col-4">
+                                        <StartBacteriaDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={fetchedBacteria.current} />
+                                    </div>
+                                    <div className="col-4">
+                                        <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[d0, setD0]} />
+                                        <GeneralNumberInput headerName="Z" disabled={disabledInput} inputValue={[z, setZ]} />
+                                    </div>
+                                </div>
+                            </TabPanel>
+                        </TabView>
+                    </Dialog>
+
+                </div>
+            </div>
+            {/* Display cards */}
+            <div className="col-4">
+                {/* Control Relays */}
+                <div className="card f-height border-green-600">
+                    <div className="grid gap-2">
+                        <div className="col-12">
+                            {RenderState(state)}
+                            {/* Display progress or empty bar */}
+                        </div>
+                        <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">
+                            <Button label="Pokreni proces" onClick={handleOpenDialog} className="p-button-success" />
+                            <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />
+                        </div>
+                        <div className='col-12'>
+                            {state === 0 ?
+                                <ProgressBar className='ml-1' color='green' mode="determinate" style={{ height: '10px' }} /> :
+                                <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }} />
                             }
                         </div>
-                        <div className="col-12">
-                            <hr />
+
+                        <div className="col-6">
+                            <div className='flex flex-column gap-3 ml-2 mr-2'>
+                                {relayMapper.slice(0, 5).map((chip, index) => (
+                                    <ChipStates key={chip.name} {...chip} />
+                                ))}
+                            </div>
                         </div>
-                        <div className="col-4">
-                            <StartProcessDropdown label='Tip' getter={typeDropdown} setter={setTypeDropdown} values={fetchedTypes.current} />
-                        </div>                        
-                        <div className="col-4">
-                            <GeneralNumberInput headerName="Prilagođena temperatura" disabled={disabledInput} inputValue={[customTemp, setCustomTemp]} />
-                            <GeneralNumberInput headerName="Održavanje temperature" disabled={disabledInput} inputValue={[maintainTemp, setMaintainTemp]} />                    
-                        </div>                                                
-                        <div className="col-12">
-                            <hr />
-                        </div>  
-                        <div className="col-4">
-                            <StartBacteriaDropdown label='Bakterija' getter={bacteriaDropdown} setter={setBacteriaDropdown} values={fetchedBacteria.current} />
-                        </div>                        
-                        <div className="col-4">
-                            <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[d0, setD0]} />
-                            <GeneralNumberInput headerName="Z" disabled={disabledInput} inputValue={[z, setZ]} />                    
-                        </div>              
+                        <div className="col-5">
+                            <div className='flex flex-column gap-3 -ml-2 -mr-2 '>
+                                {relayMapper.slice(5, relayMapper.length).map((chip, index) => (
+                                    <ChipStates key={chip.name} {...chip} />
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    </TabPanel>                
-                </TabView>
-                </Dialog>
-                
+                </div>
             </div>
-        </div>            
-        {/* Display cards */}
-        <div className="col-4">
-            {/* Control Relays */}            
-            <div className="card f-height border-green-600">
-            <div className="grid gap-2">            
-            <div className="col-12">
-                {RenderState(state)}
-                {/* Display progress or empty bar */}                
-            </div>
-            <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">
-            <Button label="Pokreni proces" onClick={handleOpenDialog} className="p-button-success" />
-            <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />                        
-            </div>
-            <div className='col-12'>
-                {state === 0 ?
-                        <ProgressBar className='ml-1' color='green' mode="determinate" style={{ height: '10px' }}/> :
-                        <ProgressBar color='green' mode="indeterminate" style={{ height: '10px' }}/>
-                    }
-            </div>
-            
-            <div className="col-6">
-                    <div className='flex flex-column gap-3 ml-2 mr-2'>
-                        {relayMapper.slice(0,5) .map((chip, index) => (
-                                <ChipStates key={chip.name} {...chip} />
-                        ))}
-                    </div>                    
-            </div>
-            <div className="col-5">
-            <div className='flex flex-column gap-3 -ml-2 -mr-2 '>
-                        {relayMapper.slice(5,relayMapper.length) .map((chip, index) => (
-                                <ChipStates key={chip.name} {...chip} />
-                        ))}
-            </div>
-            </div>
-            </div>
-            </div>
-        </div>
-        
-        {/* Display first column */}
-        <div className="col-4">            
+
+            {/* Display first column */}
+            <div className="col-4">
                 <div className="card border-red-700">
                     <ul className="list-none p-0 m-0">
-                        {temperatures.slice(0,4).map((item, index) => (
+                        {temperatures.slice(0, 4).map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>                    
+                    </ul>
                 </div>
                 <div className="card border-cyan-700">
                     <ul className="list-none p-0 m-0">
-                        {stateValues.slice(0,2).map((item, index) => (
+                        {stateValues.slice(0, 2).map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
-                    </ul>                                        
+                    </ul>
                 </div>
+            </div>
+
+            {/* Display second column */}
+            <div className="col-4">
+                <div className="card border-red-700">
+                    <ul className="list-none p-0 m-0">
+                        {temperatures.slice(4, 8).map((item, index) => (
+                            <DataCard key={item.headerName} {...item} />
+                        ))}
+                    </ul>
+                </div>
+                <div className="card border-cyan-700">
+                    <ul className="list-none p-0 m-0">
+                        {stateValues.slice(2, 3).map((item, index) => (
+                            <DataCard key={item.headerName} {...item} />
+                        ))}
+                    </ul>
+                </div>
+            </div>
         </div>
-            
-        {/* Display second column */}
-        <div className="col-4">
-            <div className="card border-red-700">                                                                
-                <ul className="list-none p-0 m-0">
-                    {temperatures.slice(4,8).map((item, index) => (
-                        <DataCard key={item.headerName} {...item} />
-                    ))}
-                </ul>                
-            </div>
-            <div className="card border-cyan-700">
-                <ul className="list-none p-0 m-0">
-                    {stateValues.slice(2,3).map((item, index) => (
-                        <DataCard key={item.headerName} {...item} />
-                    ))}
-                </ul>                                        
-            </div>
-        </div>    
-    </div>
     );
 };
 
