@@ -22,6 +22,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacteriaDropdown';
 import ProcessTable from '@/demo/components/Tables/ProcessTable';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import { formatTime } from '@/utils/dateUtil';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -353,6 +354,8 @@ const DashboardPage = () => {
     stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
 
     const state = stateMachineValues?.state || 0;
+    const heatingEnd = formatTime(stateMachineValues?.heatingend) || '';
+    const coolingEnd = formatTime(stateMachineValues?.coolingend) || '';
 
     relayMapper[0].value = relaySensorValues?.filltankwithwater || 0;
     relayMapper[1].value = relaySensorValues?.tankheating || 0;
@@ -547,7 +550,7 @@ const DashboardPage = () => {
                 <div className="card f-height border-green-600">
                     <div className="grid gap-2">
                         <div className="col-12">
-                            {RenderState(state)}
+                            {RenderState(state, heatingEnd, coolingEnd)}
                             {/* Display progress or empty bar */}
                         </div>
                         <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">

@@ -39,22 +39,30 @@ export const formatDateTime = (dateString: string) => {
  * @param dateString - The date string to be formatted.
  * @returns The formatted time string in the format "HH:mm".
  */
-export const formatTime = (dateString: string) => {
+export const formatTime = (dateString: string | undefined | null) => {
+    // Handle undefined/null/empty input
+    if (!dateString) {
+        return '--:--'; // or return an empty string '' if preferred
+    }
+
     const date = new Date(dateString);
+
+    // Check if the date is invalid
+    if (isNaN(date.getTime())) {
+        return '--:--:--'; // or return an empty string '' if preferred
+    }
 
     const timeOptions: Intl.DateTimeFormatOptions = {
         hour: '2-digit',
-        minute: '2-digit', 
-        second: '2-digit',       
+        minute: '2-digit',
         hour12: false, // Ensure 24-hour format
     };
 
     return date.toLocaleTimeString('en-GB', timeOptions);
 };
-
 // create method that will convert mseconds to hh:mm format
 export const secondsToHms = (input: number) => {
-    if(isNaN(input)) return '0h:0min';
+    if (isNaN(input)) return '0h:0min';
 
     input = Number(input) / 1000;
     const h = Math.floor(input / 3600);

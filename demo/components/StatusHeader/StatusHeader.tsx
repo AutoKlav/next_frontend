@@ -2,71 +2,72 @@
 
 export enum Severity {
     Success = 0,
-    Info = 0,    
+    Info = 0,
     WarningFilling = 2,
     WarningHeating = 3,
-    WarningCooling = 4,    
+    WarningCooling = 4,
     Danger = -1,
 }
 
-const firstColumn = (name:string, state: number) => {
+const firstColumn = (name: string, state: number, heatingEnd: string, coolingEnd: string) => {
     return <div className="col-4">
-    <div className="card mb-0">
-        <div className="flex justify-content-between mb-3">
-            <div>                            
-                {RenderState(state)}
-                <div className="text-900 font-medium text-xl">{name}</div>
-            </div>                        
-        </div>                    
-        <span className="text-500">Ime konzerve</span>
-    </div>
-</div>;
+        <div className="card mb-0">
+            <div className="flex justify-content-between mb-3">
+                <div>
+                    {RenderState(state, heatingEnd, coolingEnd)}
+                    <div className="text-900 font-medium text-xl">{name}</div>
+                </div>
+            </div>
+            <span className="text-500">Ime konzerve</span>
+        </div>
+    </div>;
 }
 
-const secondColumn = (time:string, state: number) => {
+const secondColumn = (time: string, state: number) => {
     let subHeader = "Završeno vrijeme";
-    if(state === 2) {
+    if (state === 2) {
         subHeader = "Vrijeme rada";
-    }else if(state === 5 || state === 6) {
+    } else if (state === 5 || state === 6) {
         subHeader = "Vrijeme";
-    }else if(state === -1) {
+    } else if (state === -1) {
         subHeader = "Vrijeme";
     }
-    return  <div className="col-4">
-                <div className="card mb-0 h-full">
-                    <div className="mb-3 mt-5">
-                        <div>
-                            <div className="text-900 font-medium text-xl">{time}</div>
-                        </div>
-                    </div>
-                    <span className="text-500">{subHeader}</span>
+    return <div className="col-4">
+        <div className="card mb-0 h-full">
+            <div className="mb-3 mt-5">
+                <div>
+                    <div className="text-900 font-medium text-xl">{time}</div>
                 </div>
-            </div>;
+            </div>
+            <span className="text-500">{subHeader}</span>
+        </div>
+    </div>;
 }
 
-const thirdColumn = (time:string, state: number) => {
+const thirdColumn = (time: string, state: number) => {
     let subHeader = "(Procjena) Preostalog vremena";
-    if(state === 5 || state === 6) {
+    if (state === 5 || state === 6) {
         subHeader = "Total F";
     }
     return <div className="col-4">
-                <div className="card mb-0 h-full">                        
-                    <div className="mb-3 mt-5">
-                        <div>                            
-                            <div className="text-900 font-medium text-xl">{time}</div>
-                        </div>                        
-                    </div>                    
-                    <span className="text-500">{subHeader}</span>
+        <div className="card mb-0 h-full">
+            <div className="mb-3 mt-5">
+                <div>
+                    <div className="text-900 font-medium text-xl">{time}</div>
                 </div>
-            </div>;
+            </div>
+            <span className="text-500">{subHeader}</span>
+        </div>
+    </div>;
 }
 
-export const RenderState = (state: number) => {
+export const RenderState = (state: number, heatingEnd: string, coolingEnd: string) => {
     const baseClass =
         "text-lg font-medium mb-3 pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-center";
     const iconClassMultipleRows = "text-2xl mr-3 ml-1 mt-2";
     const iconClassOneRow = "text-2xl";
     const spanClass = "text-xl";
+    const timeInfoClass = "text-xl mt-1 text-left"; // Centered and smaller text
 
     switch (state) {
         case 0:
@@ -127,7 +128,18 @@ export const RenderState = (state: number) => {
                     className={`bg-blue-500 text-900 ${baseClass}`}
                     style={{ borderRadius: "12px" }}
                 >
-                    <span className={spanClass}>Proces je u izvođenju (Sterilizacija)</span>
+                    <div className="flex flex-col">
+                        <span className={spanClass}>
+                            Proces je u izvođenju (Sterilizacija)
+                            <br />
+                            <br />
+                            {heatingEnd && (
+                                <span>
+                                    Kraj sterilizacije: {heatingEnd}
+                                </span>
+                            )}
+                        </span>
+                    </div>
                     <div className="flex items-center flex-col">
                         <i className={`pi pi-cog ${iconClassMultipleRows}`}></i>
                     </div>
@@ -140,19 +152,33 @@ export const RenderState = (state: number) => {
                     className={`bg-blue-500 text-900 ${baseClass}`}
                     style={{ borderRadius: "12px" }}
                 >
-                    <span className={spanClass}>Proces je u izvođenju (Hlađenje - Punjenje spremnika)</span>
+                    <span className={spanClass}>Proces je u izvođenju
+                        <br />
+                        (Punjenje spremnika: pred-hlađenje)</span>
                     <div className="flex items-center flex-col">
                         <i className={`pi pi-refresh ${iconClassMultipleRows}`}></i>
                     </div>
                 </div>
             );
+
         case 6:
             return (
                 <div
                     className={`bg-blue-500 text-900 ${baseClass}`}
                     style={{ borderRadius: "12px" }}
                 >
-                    <span className={spanClass}>Proces je u izvođenju (Hlađenje)</span>
+                    <div className="flex flex-col">
+                        <span className={spanClass}>
+                            Proces je u izvođenju (Hlađenje)
+                            <br />
+                            <br />
+                            {coolingEnd && (
+                                <span>
+                                    Kraj hlađenja: {coolingEnd}
+                                </span>
+                            )}
+                        </span>
+                    </div>
                     <div className="flex items-center flex-col">
                         <i className={`pi pi-refresh ${iconClassMultipleRows}`}></i>
                     </div>
@@ -222,10 +248,10 @@ const StatusHeader = () => {
     const timeThird = "00:30:00";
     return (
         <div className="grid">
-            {firstColumn(name, severity)}            
+            {firstColumn(name, severity, "2023-10-01 12:00:00", "2023-10-01 12:30:00")}
             {secondColumn(timeSecond, severity)}
-            {thirdColumn(timeThird, severity)}            
-        </div>        
+            {thirdColumn(timeThird, severity)}
+        </div>
     );
 };
 

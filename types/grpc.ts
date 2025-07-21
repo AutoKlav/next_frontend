@@ -6,7 +6,7 @@ export interface GrpcError {
 }
 
 // Empty message
-export interface Empty {}
+export interface Empty { }
 
 // Status message
 export interface Status {
@@ -86,6 +86,8 @@ export interface StateMachineValues {
   sumfr: number;
   sumr: number;
   timestamp: string;
+  heatingend: string;
+  coolingend: string;
   errorsstring: string | undefined;
 }
 
@@ -112,8 +114,8 @@ export interface ProcessType {
   id: number;
   name: string;
   type?: string;
-  customtemp?: number;  
-  maintaintemp?: number;  
+  customtemp?: number;
+  maintaintemp?: number;
 }
 
 export interface ProcessTypesResponse {
@@ -128,7 +130,7 @@ export interface Bacteria {
   z: number;
 }
 
-export interface BacteriaRequest {  
+export interface BacteriaRequest {
   name: string;
   description: string;
   d0: number;
@@ -165,8 +167,8 @@ export enum HeatingType {
 
 // ProcessConfig message
 export interface ProcessConfig {
-  heatingType: HeatingType;  
-  mode: ProcessConfigMode;    
+  heatingType: HeatingType;
+  mode: ProcessConfigMode;
 }
 
 // ProcessInfo message
@@ -174,12 +176,12 @@ export interface ProcessInfo {
   productName: string;
   productQuantity: string;
   batchLTO: string;
-  bacteria: Bacteria;  
+  bacteria: Bacteria;
   processStart: string;
   targetF: string;
   processLength: string;
   targetHeatingTime: string;
-  targetCoolingTime: string;   
+  targetCoolingTime: string;
   processType: ProcessType;
   finishTemp: string;
 }
@@ -213,7 +215,7 @@ export interface ProcessInfoRow {
   bacteria: Bacteria;
   description: string;
   processstart: string;
-  processlength: string;  
+  processlength: string;
   targetf: string;
   targetheatingtime: string;
   targetcoolingtime: string;
@@ -230,7 +232,7 @@ export interface ProcessList {
 }
 
 export interface ProcessTypeRequest {
-  customTemp: number;  
+  customTemp: number;
   name: string;
   pressure: number;
   type: string;

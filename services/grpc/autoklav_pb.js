@@ -3718,7 +3718,9 @@ proto.autoklav.StateMachineValues.toObject = function(includeInstance, msg) {
     r: jspb.Message.getFloatingPointFieldWithDefault(msg, 8, 0.0),
     sumfr: jspb.Message.getFloatingPointFieldWithDefault(msg, 9, 0.0),
     sumr: jspb.Message.getFloatingPointFieldWithDefault(msg, 10, 0.0),
-    timestamp: jspb.Message.getFieldWithDefault(msg, 11, "")
+    timestamp: jspb.Message.getFieldWithDefault(msg, 11, ""),
+    heatingend: jspb.Message.getFieldWithDefault(msg, 12, ""),
+    coolingend: jspb.Message.getFieldWithDefault(msg, 13, "")
   };
 
   if (includeInstance) {
@@ -3799,6 +3801,14 @@ proto.autoklav.StateMachineValues.deserializeBinaryFromReader = function(msg, re
     case 11:
       var value = /** @type {string} */ (reader.readString());
       msg.setTimestamp(value);
+      break;
+    case 12:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setHeatingend(value);
+      break;
+    case 13:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCoolingend(value);
       break;
     default:
       reader.skipField();
@@ -3904,6 +3914,20 @@ proto.autoklav.StateMachineValues.serializeBinaryToWriter = function(message, wr
   if (f.length > 0) {
     writer.writeString(
       11,
+      f
+    );
+  }
+  f = message.getHeatingend();
+  if (f.length > 0) {
+    writer.writeString(
+      12,
+      f
+    );
+  }
+  f = message.getCoolingend();
+  if (f.length > 0) {
+    writer.writeString(
+      13,
       f
     );
   }
@@ -4124,6 +4148,42 @@ proto.autoklav.StateMachineValues.prototype.getTimestamp = function() {
  */
 proto.autoklav.StateMachineValues.prototype.setTimestamp = function(value) {
   return jspb.Message.setProto3StringField(this, 11, value);
+};
+
+
+/**
+ * optional string heatingEnd = 12;
+ * @return {string}
+ */
+proto.autoklav.StateMachineValues.prototype.getHeatingend = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 12, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.autoklav.StateMachineValues} returns this
+ */
+proto.autoklav.StateMachineValues.prototype.setHeatingend = function(value) {
+  return jspb.Message.setProto3StringField(this, 12, value);
+};
+
+
+/**
+ * optional string coolingEnd = 13;
+ * @return {string}
+ */
+proto.autoklav.StateMachineValues.prototype.getCoolingend = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 13, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.autoklav.StateMachineValues} returns this
+ */
+proto.autoklav.StateMachineValues.prototype.setCoolingend = function(value) {
+  return jspb.Message.setProto3StringField(this, 13, value);
 };
 
 
