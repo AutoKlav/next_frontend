@@ -17,6 +17,10 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     // Set proper font encoding
     doc.setFont('times'); // Standard font that supports special characters
 
+    // Calculate sums
+    const sumF = data?.processlogsList.reduce((acc, row) => acc + (row.fr || 0), 0) || 0;
+    const sumR = data?.processlogsList.reduce((acc, row) => acc + (row.r || 0), 0) || 0;
+
     // Title with proper encoding
     doc.setFontSize(headerFontSize);
     doc.setFont('times', 'normal');
@@ -27,17 +31,12 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     doc.setFont('times', 'normal');
     doc.text(chartInfo?.subtitle || '', margin, margin + lineHeight, { align: 'left' });
 
-
-    // Subtitle
+    // Display sums
     doc.setFontSize(headerFontSize);
     doc.setFont('times', 'normal');
-    doc.text('Sum F', margin, margin + lineHeight + lineHeight, { align: 'left' });
-
-
-    // Subtitle
-    doc.setFontSize(headerFontSize);
-    doc.setFont('times', 'normal');
-    doc.text('Sum r', margin, margin + lineHeight + lineHeight + lineHeight, { align: 'left' });
+    doc.text(`Povelja  uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
+    doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
+    doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
 
     // Safe value formatter
     const formatValue = (value: number | undefined) => {
@@ -49,11 +48,11 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     const columns = [
         "Vrijeme",
         "Temp. sonde",
-        "ΔT",  // Using Δ instead of Delta
-        "D₅",  // D with subscript 5
-        "F₅",  // F with subscript 5
-        "r₅",  // r with subscript 5
-        "Hlađenje"  // Fixed đ character
+        "ΔT",
+        "D₅",
+        "F₅",
+        "r₅",
+        "Hlađenje"
     ];
 
     const rows = data?.processlogsList
