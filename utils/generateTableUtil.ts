@@ -2,6 +2,7 @@ import { ProcessLogList } from '@/types/grpc';
 import jsPDF from 'jspdf';
 import { formatTime } from './dateUtil';
 import { ChartInfo } from './chartOptionsUtil';
+import '../public/fonts/DejaVuSans-normal';
 
 export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => {
     const doc = new jsPDF();
@@ -13,9 +14,10 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     const headerFontSize = 8;
     const bodyFontSize = 8;
     const pageWidth = doc.internal.pageSize.getWidth();
+    const fontName = 'DejaVuSans';
 
     // Set proper font encoding
-    doc.setFont('times'); // Standard font that supports special characters
+    doc.setFont(fontName); // Standard font that supports special characters
 
     // Calculate sums
     const sumF = data?.processlogsList.reduce((acc, row) => acc + (row.fr || 0), 0) || 0;
@@ -23,17 +25,17 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
 
     // Title with proper encoding
     doc.setFontSize(headerFontSize);
-    doc.setFont('times', 'normal');
+    doc.setFont(fontName, 'normal');
     doc.text(chartInfo?.title || '', margin, margin, { align: 'left' });
 
     // Subtitle
     doc.setFontSize(headerFontSize);
-    doc.setFont('times', 'normal');
+    doc.setFont(fontName, 'normal');
     doc.text(chartInfo?.subtitle || '', margin, margin + lineHeight, { align: 'left' });
 
     // Display sums
     doc.setFontSize(headerFontSize);
-    doc.setFont('times', 'normal');
+    doc.setFont(fontName, 'normal');
     doc.text(`Povelja  uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
     doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
     doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
@@ -52,7 +54,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
         "D₅",
         "F₅",
         "r₅",
-        "Hlađenje"
+        "Stanje",
     ];
 
     const rows = data?.processlogsList
@@ -64,7 +66,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
             formatValue(row.dr),
             formatValue(row.fr),
             formatValue(row.r),
-            row.state === 6 ? "*Hlađenje*" : row.state === 7 ? "*Hlađenje završeno*" : "-",
+            row.state === 6 ? "Hlađenje" : "-",
         ]) || [];
 
     // Calculate column widths
@@ -73,7 +75,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
 
     // Table header with special characters
     doc.setFontSize(headerFontSize);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont(fontName, 'normal');
     let yPos = margin + 5 * lineHeight;
 
     columns.forEach((col, i) => {
@@ -94,7 +96,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
 
     // Table rows
     doc.setFontSize(bodyFontSize);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont(fontName, 'normal');
 
     rows.forEach((row, rowIndex) => {
         // Check if we need a new page
@@ -103,7 +105,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
             yPos = margin;
             // Redraw header on new page
             doc.setFontSize(headerFontSize);
-            doc.setFont('helvetica', 'bold');
+            doc.setFont(fontName, 'bold');
             columns.forEach((col, i) => {
                 doc.text(
                     col,
@@ -114,7 +116,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
             });
             yPos += lineHeight * 1.5;
             doc.setFontSize(bodyFontSize);
-            doc.setFont('helvetica', 'normal');
+            doc.setFont(fontName, 'normal');
         }
 
         // Draw centered row cells
