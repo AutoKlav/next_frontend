@@ -16,7 +16,7 @@ import {
   StateMachineValues,
   Status,
   TypeRequest,
-  UpdateSensorRequest,
+  UpdateSensorRequest as UpdateInputPinRequest,
   Variables,
 } from "@/types/grpc";
 import { gRpcCall } from "./client";
@@ -55,7 +55,7 @@ export const setRelayStatus = (setVariable: SetVariable) => {
 
 export const setState = (state: string) => {
   const data = new Messages.SetState();
-  data.setState(state);  
+  data.setState(state);
 
   return gRpcCall<Status>("setStateMachineState", data);
 }
@@ -98,11 +98,11 @@ export const startProcess = (startProcessRequest: StartProcessRequest) => {
   data.setProcessinfo(processInfo);
 
 
-  const processConfig = new Messages.ProcessConfig(); 
-  
+  const processConfig = new Messages.ProcessConfig();
+
   processConfig.setHeatingtype(startProcessRequest.processConfig.heatingType);
   processConfig.setMode(startProcessRequest.processConfig.mode);
-  
+
   data.setProcessconfig(processConfig);
 
   return gRpcCall<Status>("startProcess", data);
@@ -132,11 +132,11 @@ export const relayTest = () => {
   return gRpcCall<Status>("relayTest", data);
 };
 
-export const updateSensor = (updateSensorRequest: UpdateSensorRequest) => {
-  const data = new Messages.UpdateSensorRequest();
-  data.setName(updateSensorRequest.name);
-  data.setMinvalue(updateSensorRequest.minValue);
-  data.setMaxvalue(updateSensorRequest.maxValue);
+export const updateSensor = (updateInputPinRequest: UpdateInputPinRequest) => {
+  const data = new Messages.UpdateInputPinRequest();
+  data.setId(updateInputPinRequest.name);
+  data.setMinvalue(updateInputPinRequest.minValue);
+  data.setMaxvalue(updateInputPinRequest.maxValue);
 
   return gRpcCall<Status>("updateInputPin", data);
 }
@@ -145,7 +145,7 @@ export const createProcessType = (processRequest: ProcessTypeRequest) => {
   const data = new Messages.ProcessTypeRequest();
   data.setName(processRequest.name);
   data.setType(processRequest.type);
-  data.setCustomtemp(processRequest.customTemp);  
+  data.setCustomtemp(processRequest.customTemp);
   data.setPressure(processRequest.pressure);
 
   return gRpcCall<Status>("createProcessType", data);
@@ -194,7 +194,7 @@ export const getUniqueProcesses = () => {
   return gRpcCall<ProcessList>("getUniqueProcesses", data);
 };
 
-export const getDistinctProcessValues = (columnName: string) =>{
+export const getDistinctProcessValues = (columnName: string) => {
   const data = new Messages.ProcessFilterRequest();
   data.setColumnname(columnName);
 
@@ -223,7 +223,7 @@ export const getFilteredModeValues = (filterModeRequest: ProcessFilterRequest) =
 }
 
 export const getAllProcessLogs = (ids: number[]) => {
-  const data = new Messages.ProcessLogRequest();  
+  const data = new Messages.ProcessLogRequest();
   data.setIdsList(ids);
 
   return gRpcCall<ProcessLogList>("getProcessLogs", data);

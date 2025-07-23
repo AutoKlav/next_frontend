@@ -23,6 +23,7 @@
     "grpc-tools": "^1.12.4",
     "jspdf": "^3.0.0",
     "jspdf-autotable": "^5.0.2",
+    "jspdf-customfonts": "^0.0.4-rc.4",
     "next": "14.2.17",
     "next-auth": "^4.24.10",
     "primeflex": "^3.3.1",

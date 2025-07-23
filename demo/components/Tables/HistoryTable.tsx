@@ -25,15 +25,15 @@ const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
     const chartRef = useRef<any>(null);
-    
+
     const router = useRouter()
     const { showError } = useToast();
-    
+
     const { data: processesDataQuery, isLoading: loading } = useQuery({
         queryKey: ["processesDataQuery"],
         queryFn: async () => {
-            const response =  await getProcessesAction();
-            
+            const response = await getProcessesAction();
+
             return response?.processesList?.map((process) => ({
                 ...process,
                 processstart: new Date(process.processstart!), // Ensure it's a Date object
@@ -47,27 +47,30 @@ const HistoryTable = () => {
             console.log(err);
         },
     });
-    
+
     const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
-        onSuccess: async ({data, source}) => {
-            if (source === "print") {                             
-                const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf.toString());  
+        onSuccess: async ({ data, source }) => {
+            if (source === "print") {
+                const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf.toString());
 
                 updateChartData(transformData({ processlogsList: data?.processlogsList }), hideFSumFRBool, setChartData);
-                
+
                 // Wait for 3 seconds before moving to the next iteration until Chart 
                 // loads animation is complete
-                await delay(3000); 
+                await delay(3000);
 
-                const chartInfo = getChartInfo(selectedProcesses[0]);                
+                const chartInfo = getChartInfo(selectedProcesses[0]);
                 handleExportToPDF(chartRef, chartOptions, chartInfo);
-            } else if (source === "graph") {                
+            } else if (source === "graph") {
                 router.push(`/chart/${data?.processlogsList[0]?.id}`);
             } else if (source === "modularGraph") {
                 router.push(`/values_chart/${data?.processlogsList[0]?.id}`);
+            } else if (source === "handleTableExport") {
+                const chartInfo = getChartInfo(selectedProcesses[0], true);
+                generateTablePDF(chartInfo, data);
             }
         },
-    }); 
+    });
 
     const [globalFilterValue, setGlobalFilterValue] = useState("");
     const [filters, setFilters] = useState<DataTableFilterMeta | undefined>(undefined);
@@ -79,7 +82,7 @@ const HistoryTable = () => {
 
     const initFilters = () => {
         setFilters({
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },            
+            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
         });
     };
 
@@ -108,29 +111,29 @@ const HistoryTable = () => {
                 <div className="flex justify-content-between gap-3">
                     {selectedProcesses.length === 1 && (
                         <Button
-                        icon="pi pi-star"
-                        className="p-button-text p-button-plain"
-                        size="large"
-                        onClick={handleGraph}
-                    />
+                            icon="pi pi-star"
+                            className="p-button-text p-button-plain"
+                            size="large"
+                            onClick={handleGraph}
+                        />
                     )}
                     {selectedProcesses.length === 1 && (
                         <Button
-                        icon="pi pi-chart-bar"
-                        className="p-button-text p-button-plain"
-                        size="large"
-                        onClick={handleModularGraph} 
-                    />
+                            icon="pi pi-chart-bar"
+                            className="p-button-text p-button-plain"
+                            size="large"
+                            onClick={handleModularGraph}
+                        />
                     )}
                     {selectedProcesses.length === 1 && (
                         <Button
-                        icon="pi pi-file-excel"
-                        className="p-button-text p-button-plain"
-                        size="large"
-                        onClick={handleTableExport} 
-                    />
+                            icon="pi pi-file-excel"
+                            className="p-button-text p-button-plain"
+                            size="large"
+                            onClick={handleTableExport}
+                        />
                     )}
-                    {selectedProcesses.length > 0 && (                        
+                    {selectedProcesses.length > 0 && (
                         <Button
                             icon="pi pi-print"
                             className="p-button-text p-button-plain"
@@ -153,9 +156,9 @@ const HistoryTable = () => {
             </div>
         );
     };
-    
-    const handlePrint = () => {        
-        fetchAndDisplaySequential();    
+
+    const handlePrint = () => {
+        fetchAndDisplaySequential();
     };
 
     const handleGraph = () => {
@@ -168,8 +171,13 @@ const HistoryTable = () => {
         getProcessLogMutation({ id: ids[0], source: "modularGraph" });
     }
 
-    const handleTableExport = () => {
-        generateTablePDF();
+    const handleTableExport = async () => {
+
+        const ids = selectedProcesses.map((process) => process.id);
+
+        for (const id of ids) {
+            await getProcessLogMutation({ id, source: "handleTableExport" });
+        }
     }
 
     const handleDateFilterApply = () => {
@@ -204,29 +212,29 @@ const HistoryTable = () => {
         setShowDateFilterDialog(false);
     };
 
-    const formatDate = (date: Date) => {        
+    const formatDate = (date: Date) => {
         return formatDateTime(date.toString());
     };
 
     const header = renderHeader();
 
     // Set 
-    useEffect(() => {        
-        setChartOptions(updateChartOptions("white", "white", {id:1, title:'', subtitle:''})); // Initial white theme
+    useEffect(() => {
+        setChartOptions(updateChartOptions("white", "white", { id: 1, title: '', subtitle: '' })); // Initial white theme
     }, []);
 
     useEffect(() => {
         //fetchAndDisplaySequential();
     }, [selectedProcesses]);
-    
-    const fetchAndDisplaySequential= async () => {        
-        const ids = selectedProcesses.map((process) => process.id);                
-        
+
+    const fetchAndDisplaySequential = async () => {
+        const ids = selectedProcesses.map((process) => process.id);
+
         for (const id of ids) {
             await getProcessLogMutation({ id, source: "print" });
         }
     }
-    
+
     return (
         <div className="card">
             <h2>Povijest procesa</h2>
@@ -235,7 +243,7 @@ const HistoryTable = () => {
                 showGridlines
                 value={processesDataQuery || []}
                 loading={loading || isLogLoading}
-                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} 
+                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
                 dataKey="id"
                 filters={filters}
                 selection={selectedProcesses}
@@ -248,15 +256,15 @@ const HistoryTable = () => {
                 <Column selectionMode="multiple" headerStyle={{ width: "3em" }} />
                 <Column field="productname" header="Naziv procesa" />
                 <Column field="productquantity" header="Količina" />
-                <Column 
-                    field="processstart" 
-                    header="Datum početka" 
+                <Column
+                    field="processstart"
+                    header="Datum početka"
                     body={(rowData) => formatDate(rowData.processstart)} // Format date before displaying
                 />
-                <Column 
-                    field="processlength" 
-                    header="Duljina procesa (s)"  
-                    body={(rowData) => secondsToHms(rowData.processlength)} 
+                <Column
+                    field="processlength"
+                    header="Duljina procesa (s)"
+                    body={(rowData) => secondsToHms(rowData.processlength)}
                 />
             </DataTable>
 
@@ -271,7 +279,7 @@ const HistoryTable = () => {
                 setDateFilterOption={setDateFilterOption}
             />
             <Chart ref={chartRef} type="line" data={chartData} options={chartOptions} />
-                        
+
         </div>
     );
 };

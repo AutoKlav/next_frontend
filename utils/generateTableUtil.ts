@@ -1,55 +1,137 @@
+import { ProcessLogList } from '@/types/grpc';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { formatTime } from './dateUtil';
+import { ChartInfo } from './chartOptionsUtil';
+import '../public/fonts/DejaVuSans-normal';
 
-export const generateTablePDF = () => {
+export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => {
     const doc = new jsPDF();
 
-    // Sample data
-    const data = Array.from({ length: 40 }, (_, i) => ({
-        tempK: 300 + i * 40,
-        dTemp: 5 + i,
-        D5: 10 + i,
-        F5: 15 + i,
-        R5: 20 + i,
-    }));
+    // Constants for layout
+    const margin = 10;
+    const lineHeight = 5;
+    const cellPadding = 0;
+    const headerFontSize = 8;
+    const bodyFontSize = 8;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const fontName = 'DejaVuSans';
 
-    // Define columns and rows
-    const columns = ["Temperatura konzerve", "Delta T", "D5", "F5", "r5"];
-    const rows = data.map(row => [row.tempK, row.dTemp, row.D5, row.F5, row.R5]);
+    // Set proper font encoding
+    doc.setFont(fontName); // Standard font that supports special characters
 
-    // Add a title row spanning all columns
-    autoTable(doc, {
-        theme: "grid",
-        head: [["Ime: Testni podaci | Kolicina: sint aliqua do laborum | Pocetak: 17:28:53, 28/11/2024 | Trajanje: 15656h:33m | Kraj: 03:02:47, 12/0912026"]], // Single title spanning all columns
-        styles: { halign: "center", fontSize: 14, fontStyle: "bold", textColor: [0, 0, 0] },
-        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], fontStyle: 'normal', fontSize: 11 }, // White background, black text, center align title        
+    // Calculate sums
+    const sumF = data?.processlogsList.reduce((acc, row) => acc + (row.fr || 0), 0) || 0;
+    const sumR = data?.processlogsList.reduce((acc, row) => acc + (row.r || 0), 0) || 0;
+
+    // Title with proper encoding
+    doc.setFontSize(headerFontSize);
+    doc.setFont(fontName, 'normal');
+    doc.text(chartInfo?.title || '', margin, margin, { align: 'left' });
+
+    // Subtitle
+    doc.setFontSize(headerFontSize);
+    doc.setFont(fontName, 'normal');
+    doc.text(chartInfo?.subtitle || '', margin, margin + lineHeight, { align: 'left' });
+
+    // Display sums
+    doc.setFontSize(headerFontSize);
+    doc.setFont(fontName, 'normal');
+    doc.text(`Povelja  uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
+    doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
+    doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
+
+    // Safe value formatter
+    const formatValue = (value: number | undefined) => {
+        if (value === undefined || value === null) return '-';
+        return Number(value).toFixed(2);
+    };
+
+    // Prepare data with special characters and subscript 5
+    const columns = [
+        "Vrijeme",
+        "Temp. sonde",
+        "ΔT",
+        "D₅",
+        "F₅",
+        "r₅",
+        "Stanje",
+    ];
+
+    const rows = data?.processlogsList
+        .filter(row => row.sensorvalues?.tempk >= 90)
+        .map((row, index) => [
+            index === 0 ? formatTime(row.timestamp) : `+${index}`,
+            formatValue(row.sensorvalues?.tempk),
+            formatValue(row.dTemp),
+            formatValue(row.dr),
+            formatValue(row.fr),
+            formatValue(row.r),
+            row.state === 6 ? "Hlađenje" : "-",
+        ]) || [];
+
+    // Calculate column widths
+    const colCount = columns.length;
+    const colWidth = (pageWidth - 2 * margin) / colCount;
+
+    // Table header with special characters
+    doc.setFontSize(headerFontSize);
+    doc.setFont(fontName, 'normal');
+    let yPos = margin + 6 * lineHeight;
+
+    columns.forEach((col, i) => {
+        doc.text(
+            col,
+            margin + i * colWidth + colWidth / 2,
+            yPos,
+            { align: 'center' }
+        );
     });
 
-    // Add a title row spanning all columns
-    autoTable(doc, {
-        theme: "grid",
-        head: [["Bakterija: clostridium botulinum | Opis: G pozitivna, anaerobna bakterija | Broj sarze: LT0324325345 | do: 0.2 | z0: 10"]],
-        styles: { halign: "center", fontSize: 14, fontStyle: "bold", textColor: [0, 0, 0] },
-        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], fontStyle: 'normal', fontSize: 9 }, // White background, black text, center align title
-        bodyStyles: { }, // Center align body, normal text font
-    });
+    // Draw header underline
+    yPos += lineHeight / 2;
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.2);
+    doc.line(margin, yPos, pageWidth - margin, yPos);
+    yPos += lineHeight;
 
-    // Add table data below the title
-    autoTable(doc, {
-        theme: "grid",
-        head: [columns],
-        body: rows,
-        styles: { textColor: [0, 0, 0], fontSize: 7 }, // Black text, reduced font size table data
-        headStyles: { fillColor: [255, 255, 255], textColor: [0, 0, 0], halign: 'center', fontSize: 8 }, // White background, black text, center align headers, reduced font size
-        columnStyles: {
-            0: { halign: 'center' }, // Center align Temperature
-            1: { halign: 'center' }, // Center align Delta T
-            2: { halign: 'center' }, // Center align D5
-            3: { halign: 'center' }, // Center align F5
-            4: { halign: 'center' }, // Center align R5
-        },
+    // Table rows
+    doc.setFontSize(bodyFontSize);
+    doc.setFont(fontName, 'normal');
+
+    rows.forEach((row, rowIndex) => {
+        // Check if we need a new page
+        if (yPos > doc.internal.pageSize.getHeight() - 20) {
+            doc.addPage();
+            yPos = margin;
+            // Redraw header on new page
+            doc.setFontSize(headerFontSize);
+            doc.setFont(fontName, 'bold');
+            columns.forEach((col, i) => {
+                doc.text(
+                    col,
+                    margin + i * colWidth + colWidth / 2,
+                    yPos,
+                    { align: 'center' }
+                );
+            });
+            yPos += lineHeight * 1.5;
+            doc.setFontSize(bodyFontSize);
+            doc.setFont(fontName, 'normal');
+        }
+
+        // Draw centered row cells
+        row.forEach((cell, colIndex) => {
+            doc.text(
+                cell.toString(),
+                margin + colIndex * colWidth + colWidth / 2,
+                yPos + lineHeight / 2,
+                { align: 'center' }
+            );
+        });
+
+        yPos += lineHeight + cellPadding * 2;
     });
 
     // Save the PDF
-    doc.save("table.pdf");
+    doc.save("process_report.pdf");
 };

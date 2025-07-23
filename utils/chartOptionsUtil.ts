@@ -16,8 +16,8 @@ export interface TitleInfo {
  * @returns The updated chart options.
  */
 export const updateChartOptions = (
-  textColor: string, 
-  gridColor: string, 
+  textColor: string,
+  gridColor: string,
   titleInfo: TitleInfo
 ): ChartOptions<"line"> => ({
   maintainAspectRatio: true,
@@ -95,57 +95,68 @@ export const updateChartOptions = (
       ticks: { color: textColor, stepSize: 5 },
       grid: { color: gridColor },
       min: 0,
-      max: 130,      
+      max: 130,
     },
     y2: { //TODO revert this
       position: "right",
       ticks: { color: textColor, stepSize: 0.5 },
-      grid: { drawOnChartArea: false },      
+      grid: { drawOnChartArea: false },
     },
   },
 });
 
-type ChartInfo = {
+export type ChartInfo = {
   id: number;
   title: string;
   subtitle: string;
 };
 
+
 /**
- * Retrieves the chart information based on the given process.
- * @param process - The process object.
- * @returns The chart information object.
+ * Retrieves chart information based on the provided process data.
+ *
+ * @param process - The process information to extract data from. It can be null or undefined.
+ * @param reduceBacteriaInfo - A boolean flag to determine whether to include detailed bacteria information. Defaults to false.
+ * @returns An object containing the chart information, including id, title, and subtitle.
+ *
+ * @example
+ * const chartInfo = getChartInfo(processData, true);
+ * console.log(chartInfo.title);
  */
-export const getChartInfo = (process: ProcessInfoGraphView | null | undefined): ChartInfo => {
+export const getChartInfo = (process: ProcessInfoGraphView | null | undefined, reduceBacteriaInfo: boolean = false): ChartInfo => {
   if (!process) {
-      return { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
+    return { id: -1, title: "Nepoznati proces", subtitle: "Nepoznati proces" };
   }
 
   const formattedDate = formatDateTime(process.processstart ?? "");
   const formattedLength = secondsToHms(Number(process.processlength));
   let processEndDate;
-  
+
   if (process.processstart && !isNaN(Number(process.processlength))) {
     const startDate = new Date(process.processstart);
     const processEndTimestamp = startDate.getTime() + Number(process.processlength);
-    processEndDate = formatDateTime(new Date(processEndTimestamp).toISOString()); 
-  } 
+    processEndDate = formatDateTime(new Date(processEndTimestamp).toISOString());
+  }
 
   return {
-      id: process.id,
-      title: [
-          `Ime: ${process.productname ?? "[]"}`,
-          `Količina: ${process.productquantity ?? "[]"}`,
-          `Početak: ${formattedDate ?? "[]"}`,
-          `Trajanje: ${formattedLength ?? "[]"}`,
-          `Kraj: ${processEndDate ?? "[]"}`,
-      ].join(" | "),
-      subtitle: [
-          `Bakterija: ${process.bacteria.name ?? "[Ime bakterije]"}`,
+    id: process.id,
+    title: [
+      `Ime: ${process.productname ?? "[]"}`,
+      `Količina: ${process.productquantity ?? "[]"}`,
+      `Početak: ${formattedDate ?? "[]"}`,
+      `Trajanje: ${formattedLength ?? "[]"}`,
+      `Kraj: ${processEndDate ?? "[]"}`,
+    ].join(" | "),
+    subtitle: [
+      `Bakterija: ${process.bacteria.name ?? "[Ime bakterije]"}`,
+      ...(reduceBacteriaInfo
+        ? []
+        : [
           `Opis: ${process.bacteria.description ?? "[Opis]"}`,
           `Broj sarže: ${process.batchlto ?? "[LTO01]"}`,
-          `d0: ${process.bacteria.d0 ?? "[0]"}`,
-          `z0: ${process.bacteria.z ?? "[1]"}`,
-      ].join(" | "),
+        ]),
+      `d0: ${process.bacteria.d0 ?? "[0]"}`,
+      `z0: ${process.bacteria.z ?? "[1]"}`,
+    ].join(" | "),
   };
 };
