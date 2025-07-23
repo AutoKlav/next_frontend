@@ -76,7 +76,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     // Table header with special characters
     doc.setFontSize(headerFontSize);
     doc.setFont(fontName, 'normal');
-    let yPos = margin + 5 * lineHeight;
+    let yPos = margin + 6 * lineHeight;
 
     columns.forEach((col, i) => {
         doc.text(
