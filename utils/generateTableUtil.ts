@@ -16,8 +16,8 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     const pageWidth = doc.internal.pageSize.getWidth();
     const fontName = 'DejaVuSans';
 
-    // Set proper font encoding
-    doc.setFont(fontName); // Standard font that supports special characters
+    // Set initial font
+    doc.setFont(fontName, 'normal');
 
     // Calculate sums
     const sumF = data?.processlogsList.reduce((acc, row) => acc + (row.fr || 0), 0) || 0;
@@ -25,17 +25,14 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
 
     // Title with proper encoding
     doc.setFontSize(headerFontSize);
-    doc.setFont(fontName, 'normal');
     doc.text(chartInfo?.title || '', margin, margin, { align: 'left' });
 
     // Subtitle
     doc.setFontSize(headerFontSize);
-    doc.setFont(fontName, 'normal');
     doc.text(chartInfo?.subtitle || '', margin, margin + lineHeight, { align: 'left' });
 
     // Display sums
     doc.setFontSize(headerFontSize);
-    doc.setFont(fontName, 'normal');
     doc.text(`Krivulja uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
     doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
     doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
@@ -73,26 +70,31 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     const colCount = columns.length;
     const colWidth = (pageWidth - 2 * margin) / colCount;
 
-    // Table header with special characters
-    doc.setFontSize(headerFontSize);
-    doc.setFont(fontName, 'normal');
-    let yPos = margin + 6 * lineHeight;
+    // Function to draw table header
+    const drawTableHeader = (y: number) => {
+        doc.setFontSize(headerFontSize);
+        doc.setFont(fontName, 'normal');
 
-    columns.forEach((col, i) => {
-        doc.text(
-            col,
-            margin + i * colWidth + colWidth / 2,
-            yPos,
-            { align: 'center' }
-        );
-    });
+        columns.forEach((col, i) => {
+            doc.text(
+                col,
+                margin + i * colWidth + colWidth / 2,
+                y,
+                { align: 'center' }
+            );
+        });
 
-    // Draw header underline
-    yPos += lineHeight / 2;
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.2);
-    doc.line(margin, yPos, pageWidth - margin, yPos);
-    yPos += lineHeight;
+        // Draw header underline
+        const underlineY = y + lineHeight / 2;
+        doc.setDrawColor(0);
+        doc.setLineWidth(0.2);
+        doc.line(margin, underlineY, pageWidth - margin, underlineY);
+
+        return underlineY + lineHeight;
+    };
+
+    // Initial table header
+    let yPos = drawTableHeader(margin + 6 * lineHeight);
 
     // Table rows
     doc.setFontSize(bodyFontSize);
@@ -102,21 +104,10 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
         // Check if we need a new page
         if (yPos > doc.internal.pageSize.getHeight() - 20) {
             doc.addPage();
-            yPos = margin;
-            // Redraw header on new page
-            doc.setFontSize(headerFontSize);
-            doc.setFont(fontName, 'bold');
-            columns.forEach((col, i) => {
-                doc.text(
-                    col,
-                    margin + i * colWidth + colWidth / 2,
-                    yPos,
-                    { align: 'center' }
-                );
-            });
-            yPos += lineHeight * 1.5;
-            doc.setFontSize(bodyFontSize);
+            // Reset font settings for new page
             doc.setFont(fontName, 'normal');
+            yPos = drawTableHeader(margin); // Draw header at top of new page
+            doc.setFontSize(bodyFontSize);
         }
 
         // Draw centered row cells
