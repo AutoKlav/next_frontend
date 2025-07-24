@@ -99,7 +99,8 @@ const HistoryTable = () => {
 
     const clearFilter = () => {
         initFilters();
-        dt.current?.reset(); // clears filters, sorting, pagination, and selection :contentReference[oaicite:2]{index=2}
+        dt.current?.reset(); // clears filters, sorting, pagination
+        setSelectedProcesses([]); // Clear selected processes
     };
 
     const renderHeader = () => {
