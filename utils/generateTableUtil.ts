@@ -33,8 +33,8 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     // Display sums
     doc.setFontSize(bodyFontSize);
     doc.text(`Krivulja uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
-    doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
-    doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
+    doc.text(`\u2211 F = ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
+    doc.text(`\u2211 r = ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
 
     // Safe value formatter
     const formatValue = (value: number | undefined) => {
