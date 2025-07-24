@@ -234,7 +234,7 @@ const HistoryTable = () => {
             await getProcessLogMutation({ id, source: "print" });
         }
     }
-
+    console.log("Data query:", processesDataQuery);
     return (
         <div className="card">
             <h2>Povijest procesa</h2>
@@ -260,6 +260,11 @@ const HistoryTable = () => {
                     field="processstart"
                     header="Datum početka"
                     body={(rowData) => formatDate(rowData.processstart)} // Format date before displaying
+                />
+                <Column
+                    field="processType"
+                    header="Tip procesa"
+                    body={(rowData) => Number(rowData?.targetf) ? 'F vrijednost' : 'Vrijeme'}
                 />
                 <Column
                     field="processlength"
