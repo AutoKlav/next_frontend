@@ -11,8 +11,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     const margin = 10;
     const lineHeight = 5;
     const cellPadding = 0;
-    const headerFontSize = 8;
-    const bodyFontSize = 8;
+    const bodyFontSize = 7;
     const pageWidth = doc.internal.pageSize.getWidth();
     const fontName = 'DejaVuSans';
 
@@ -24,15 +23,15 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     const sumR = data?.processlogsList.reduce((acc, row) => acc + (row.r || 0), 0) || 0;
 
     // Title with proper encoding
-    doc.setFontSize(headerFontSize);
+    doc.setFontSize(bodyFontSize);
     doc.text(chartInfo?.title || '', margin, margin, { align: 'left' });
 
     // Subtitle
-    doc.setFontSize(headerFontSize);
+    doc.setFontSize(bodyFontSize);
     doc.text(chartInfo?.subtitle || '', margin, margin + lineHeight, { align: 'left' });
 
     // Display sums
-    doc.setFontSize(headerFontSize);
+    doc.setFontSize(bodyFontSize);
     doc.text(`Krivulja uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
     doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
     doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
@@ -72,7 +71,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
 
     // Function to draw table header
     const drawTableHeader = (y: number) => {
-        doc.setFontSize(headerFontSize);
+        doc.setFontSize(bodyFontSize);
         doc.setFont(fontName, 'normal');
 
         columns.forEach((col, i) => {
