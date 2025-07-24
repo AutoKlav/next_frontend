@@ -36,7 +36,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     // Display sums
     doc.setFontSize(headerFontSize);
     doc.setFont(fontName, 'normal');
-    doc.text(`Povelja  uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
+    doc.text(`Krivulja uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
     doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
     doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
 
