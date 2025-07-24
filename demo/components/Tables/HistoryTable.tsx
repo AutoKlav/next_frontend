@@ -20,11 +20,13 @@ import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
 import { delay } from "@/utils/delayUtil";
 import { generateTablePDF } from "@/utils/generateTableUtil";
 import { hideFSumFR } from "@/utils/targetTimeOrFevaulator";
+import { ProcessInfoList } from "@/types/grpc";
 
 const HistoryTable = () => {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState<ChartOptions<"line">>({});
     const chartRef = useRef<any>(null);
+    const dt = useRef<DataTable<ProcessInfoList[]>>(null);
 
     const router = useRouter()
     const { showError } = useToast();
@@ -37,6 +39,7 @@ const HistoryTable = () => {
             return response?.processesList?.map((process) => ({
                 ...process,
                 processstart: new Date(process.processstart!), // Ensure it's a Date object
+                processType: Number(process.targetf) ? 'F vrijednost' : 'Vrijeme' // Add computed field
             }));
         },
         onError(err) {
@@ -96,6 +99,8 @@ const HistoryTable = () => {
 
     const clearFilter = () => {
         initFilters();
+        dt.current?.reset(); // clears filters, sorting, pagination
+        setSelectedProcesses([]); // Clear selected processes
     };
 
     const renderHeader = () => {
@@ -104,7 +109,7 @@ const HistoryTable = () => {
                 <Button
                     type="button"
                     icon="pi pi-filter-slash"
-                    label="Obriši filtere"
+                    label="Očisti filtere i sortiranje"
                     outlined
                     onClick={clearFilter}
                 />
@@ -125,7 +130,7 @@ const HistoryTable = () => {
                             onClick={handleModularGraph}
                         />
                     )}
-                    {selectedProcesses.length === 1 && (
+                    {selectedProcesses.length === 1 && selectedProcesses?.[0].targetf > 0 && (
                         <Button
                             icon="pi pi-file-excel"
                             className="p-button-text p-button-plain"
@@ -239,13 +244,17 @@ const HistoryTable = () => {
         <div className="card">
             <h2>Povijest procesa</h2>
             <DataTable
+                ref={dt}
                 className="p-datatable-gridlines"
                 showGridlines
                 value={processesDataQuery || []}
                 loading={loading || isLogLoading}
-                paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}
+                paginator
+                rows={5}
+                rowsPerPageOptions={[5, 10, 25, 50]}
                 dataKey="id"
                 filters={filters}
+                selectionMode="multiple" // Add this required prop
                 selection={selectedProcesses}
                 onSelectionChange={(e) => setSelectedProcesses(e.value)}
                 filterDisplay="menu"
@@ -260,6 +269,12 @@ const HistoryTable = () => {
                     field="processstart"
                     header="Datum početka"
                     body={(rowData) => formatDate(rowData.processstart)} // Format date before displaying
+                />
+                <Column
+                    field="processType"
+                    header="Tip procesa"
+                    sortable
+                    body={(rowData) => rowData?.processType || "N/A"}
                 />
                 <Column
                     field="processlength"

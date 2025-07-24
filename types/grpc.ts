@@ -194,6 +194,9 @@ export interface ProcessInfoGraphView {
   productquantity?: string;
   processstart?: string;
   processlength?: string;
+  targetheatingtime?: string;
+  targetcoolingtime?: string;
+  finishtemp?: string;
   targetf?: string;
 };
 
