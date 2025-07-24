@@ -37,6 +37,7 @@ const HistoryTable = () => {
             return response?.processesList?.map((process) => ({
                 ...process,
                 processstart: new Date(process.processstart!), // Ensure it's a Date object
+                processType: Number(process.targetf) ? 'F vrijednost' : 'Vrijeme' // Add computed field
             }));
         },
         onError(err) {
@@ -264,7 +265,8 @@ const HistoryTable = () => {
                 <Column
                     field="processType"
                     header="Tip procesa"
-                    body={(rowData) => Number(rowData?.targetf) ? 'F vrijednost' : 'Vrijeme'}
+                    sortable
+                    body={(rowData) => rowData?.processType || "N/A"}
                 />
                 <Column
                     field="processlength"
