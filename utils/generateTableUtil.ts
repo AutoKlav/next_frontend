@@ -1,6 +1,6 @@
 import { ProcessLogList } from '@/types/grpc';
 import jsPDF from 'jspdf';
-import { formatTime } from './dateUtil';
+import { formatDateTime, formatTime } from './dateUtil';
 import { ChartInfo } from './chartOptionsUtil';
 import '../public/fonts/DejaVuSans-normal';
 
@@ -122,6 +122,6 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
         yPos += lineHeight + cellPadding * 2;
     });
 
-    // Save the PDF
-    doc.save("process_report.pdf");
+    const currentDate = formatDateTime(new Date().toISOString());
+    doc.save(`tablica_f_vrijednosti_${currentDate}.pdf`);
 };

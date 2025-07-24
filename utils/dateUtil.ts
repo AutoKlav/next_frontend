@@ -1,3 +1,9 @@
+/**
+ * Gets the current date and time formatted as a string.
+ * The format of the returned string is "YYYY-MM-DD-HH-MM-SS".
+ *
+ * @returns {string} The current date and time as a formatted string.
+ */
 export const getCurrentDateTime = (): string => {
     const now = new Date();
     const year = now.getFullYear();
