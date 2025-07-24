@@ -1,6 +1,6 @@
 import { ProcessLogList } from '@/types/grpc';
 import jsPDF from 'jspdf';
-import { formatTime } from './dateUtil';
+import { formatDateTime, formatTime } from './dateUtil';
 import { ChartInfo } from './chartOptionsUtil';
 import '../public/fonts/DejaVuSans-normal';
 
@@ -33,8 +33,8 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     // Display sums
     doc.setFontSize(bodyFontSize);
     doc.text(`Krivulja uginuća je k=5`, margin, margin + 2 * lineHeight, { align: 'left' });
-    doc.text(`Sum F: ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
-    doc.text(`Sum r: ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
+    doc.text(`\u2211 F = ${sumF.toFixed(2)}`, margin, margin + 3 * lineHeight, { align: 'left' });
+    doc.text(`\u2211 r = ${sumR.toFixed(2)}`, margin, margin + 4 * lineHeight, { align: 'left' });
 
     // Safe value formatter
     const formatValue = (value: number | undefined) => {
@@ -122,6 +122,6 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
         yPos += lineHeight + cellPadding * 2;
     });
 
-    // Save the PDF
-    doc.save("process_report.pdf");
+    const currentDate = formatDateTime(new Date().toISOString());
+    doc.save(`tablica_f_vrijednosti_${currentDate}.pdf`);
 };
