@@ -9,49 +9,27 @@ export enum Severity {
     Danger = -1,
 }
 
-const firstColumn = (name: string, state: number, heatingEnd: string, coolingEnd: string) => {
-    return <div className="col-4">
+const firstColumn = (name: string, quantity: string, state: number, heatingEnd: string, coolingEnd: string) => {
+    return <div className="col-6">
         <div className="card mb-0">
             <div className="flex justify-content-between mb-3">
                 <div>
-                    {RenderState(state, heatingEnd, coolingEnd)}
-                    <div className="text-900 font-medium text-xl">{name}</div>
+                    <div className="text-900 font-medium text-xl">{name} {quantity}</div>
                 </div>
             </div>
-            <span className="text-500">Ime konzerve</span>
+            <span className="text-500">Ime</span>
         </div>
     </div>;
 }
 
 const secondColumn = (time: string, state: number) => {
     let subHeader = "Završeno vrijeme";
-    if (state === 2) {
-        subHeader = "Vrijeme rada";
-    } else if (state === 5 || state === 6) {
-        subHeader = "Vrijeme";
-    } else if (state === -1) {
-        subHeader = "Vrijeme";
+    if (state === 0 || state === 1 || state === 2 || state === 3 || state === 4 || state === 7 || state === 8) {
+        subHeader = "Prošlo vrijeme";
     }
-    return <div className="col-4">
+    return <div className="col-6">
         <div className="card mb-0 h-full">
-            <div className="mb-3 mt-5">
-                <div>
-                    <div className="text-900 font-medium text-xl">{time}</div>
-                </div>
-            </div>
-            <span className="text-500">{subHeader}</span>
-        </div>
-    </div>;
-}
-
-const thirdColumn = (time: string, state: number) => {
-    let subHeader = "(Procjena) Preostalog vremena";
-    if (state === 5 || state === 6) {
-        subHeader = "Total F";
-    }
-    return <div className="col-4">
-        <div className="card mb-0 h-full">
-            <div className="mb-3 mt-5">
+            <div className="flex justify-content-between mb-3">
                 <div>
                     <div className="text-900 font-medium text-xl">{time}</div>
                 </div>
@@ -63,194 +41,120 @@ const thirdColumn = (time: string, state: number) => {
 
 export const RenderState = (state: number, heatingEnd: string, coolingEnd: string) => {
     const baseClass =
-        "text-lg font-medium mb-3 pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-center";
-    const iconClassMultipleRows = "text-2xl mr-3 ml-1 mt-2";
-    const iconClassOneRow = "text-2xl";
+        "text-lg font-medium mb-3 pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-between";
     const spanClass = "text-xl";
-    const timeInfoClass = "text-xl mt-1 text-left"; // Centered and smaller text
 
     switch (state) {
         case 0:
             return (
-                <div
-                    className={`bg-blue-500 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-blue-500 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <span className={spanClass}>Proces je spreman za početak</span>
-                    <div className="flex items-center">
-                        <i className={`pi pi-info-circle ${iconClassMultipleRows}`}></i>
-                    </div>
                 </div>
             );
 
         case 1:
             return (
-                <div
-                    className={`bg-blue-500 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-blue-500 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <span className={spanClass}>Proces je pokrenut za izvođenje</span>
-                    <div className="flex items-center">
-                        <i className={`pi pi-spinner ${iconClassMultipleRows}`}></i>
-                    </div>
                 </div>
             );
 
         case 2:
             return (
-                <div
-                    className={`bg-yellow-800 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-yellow-800 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <span className={spanClass}>Proces je u izvođenju (Punjenje)</span>
-                    <div className="flex items-center">
-                        <i className={`pi pi-exclamation-triangle ${iconClassMultipleRows}`}></i>
-                    </div>
                 </div>
             );
 
         case 3:
             return (
-                <div
-                    className={`bg-yellow-800 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-yellow-800 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <span className={spanClass}>Proces je u izvođenju (Zagrijavanje)</span>
-                    <div className="flex items-center flex-col">
-                        <i className={`pi pi-exclamation-triangle ${iconClassMultipleRows}`}></i>
-                    </div>
                 </div>
             );
 
         case 4:
             return (
-                <div
-                    className={`bg-blue-500 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-blue-500 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <div className="flex flex-col">
                         <span className={spanClass}>
                             Proces je u izvođenju (Sterilizacija)
                             <br />
                             <br />
-                            {heatingEnd && (
-                                <span>
-                                    Kraj sterilizacije: {heatingEnd}
-                                </span>
-                            )}
+                            {heatingEnd && <span>Kraj sterilizacije: {heatingEnd}</span>}
                         </span>
-                    </div>
-                    <div className="flex items-center flex-col">
-                        <i className={`pi pi-cog ${iconClassMultipleRows}`}></i>
                     </div>
                 </div>
             );
 
         case 5:
             return (
-                <div
-                    className={`bg-blue-500 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
-                    <span className={spanClass}>Proces je u izvođenju
+                <div className={`bg-blue-500 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
+                    <span className={spanClass}>
+                        Proces je u izvođenju
                         <br />
-                        (Punjenje spremnika: pred-hlađenje)</span>
-                    <div className="flex items-center flex-col">
-                        <i className={`pi pi-refresh ${iconClassMultipleRows}`}></i>
-                    </div>
+                        (Punjenje spremnika: pred-hlađenje)
+                    </span>
                 </div>
             );
 
         case 6:
             return (
-                <div
-                    className={`bg-blue-500 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-blue-500 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <div className="flex flex-col">
                         <span className={spanClass}>
                             Proces je u izvođenju (Hlađenje)
                             <br />
                             <br />
-                            {coolingEnd && (
-                                <span>
-                                    Kraj hlađenja: {coolingEnd}
-                                </span>
-                            )}
+                            {coolingEnd && <span>Kraj hlađenja: {coolingEnd}</span>}
                         </span>
-                    </div>
-                    <div className="flex items-center flex-col">
-                        <i className={`pi pi-refresh ${iconClassMultipleRows}`}></i>
                     </div>
                 </div>
             );
 
         case 7:
             return (
-                <div
-                    className={`bg-green-700 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
-                    <div className="flex items-center justify-between w-full">
-                        <span className={spanClass}>Proces je pri kraju</span>
-                        <i className={`pi pi-check ml-7 ${iconClassOneRow}`}></i>
-                    </div>
+                <div className={`bg-green-700 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
+                    <span className={spanClass}>Proces je pri kraju</span>
                 </div>
             );
 
         case 8:
             return (
-                <div
-                    className={`bg-green-800 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-green-800 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <span className={spanClass}>Proces je završio</span>
-                    <div className="flex items-center flex-col">
-                        <i className={`pi pi-check-circle ml-8 ${iconClassOneRow}`}></i>
-                    </div>
                 </div>
             );
 
         case -1:
             return (
-                <div
-                    className={`bg-red-700 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-red-700 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <span className={spanClass}>Greška u izvođenju</span>
-                    <div className="flex items-center flex-col">
-                        <i className={`pi pi-times ml-7 ${iconClassOneRow}`}></i>
-                    </div>
                 </div>
             );
 
         default:
             return (
-                <div
-                    className={`bg-gray-500 text-900 ${baseClass}`}
-                    style={{ borderRadius: "12px" }}
-                >
+                <div className={`bg-gray-500 text-900 ${baseClass}`} style={{ borderRadius: "12px" }}>
                     <span className={spanClass}>Nepoznat status</span>
-                    <div className="flex items-center flex-col">
-                        <i className={`pi pi-question-circle ml-7 ${iconClassOneRow}`}></i>
-                    </div>
                 </div>
             );
     }
 };
 
-
 const StatusHeader = () => {
 
-    const severity = -1;
-    const name = "Grah 500g";
-    const timeSecond = "00:30:00";
-    const timeThird = "00:30:00";
+    const severity = 6;
+    const name = "Grah";
+    const quantity = "500g";
+    const timeSecond = "00:32:00"
     return (
         <div className="grid">
-            {firstColumn(name, severity, "2023-10-01 12:00:00", "2023-10-01 12:30:00")}
+            {firstColumn(name, quantity, severity, "2023-10-01 12:00:00", "2023-10-01 12:30:00")}
             {secondColumn(timeSecond, severity)}
-            {thirdColumn(timeThird, severity)}
+            <div className="classname col-12">
+                {RenderState(severity, 'a', 'b')}
+            </div>
         </div>
     );
 };
