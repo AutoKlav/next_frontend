@@ -56,8 +56,8 @@ const Dashboard = () => {
 
     return (
         <StatusHeader
-            name={config?.productname || 'Nepoznati proces'}
-            quantity={config?.productquantity || '0'}
+            name={config?.productname || ''}
+            quantity={config?.productquantity || ''}
             severity={state}
             elapsedTime={elapsedTimeDisplay}
             heatingEnd={heatingEnd}
