@@ -52,7 +52,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         fetchProcesses();
-    }, [config]);
+    }, []);
 
     return (
         <StatusHeader
