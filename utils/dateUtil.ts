@@ -86,7 +86,7 @@ export const secondsToHms = (input: number | undefined): string => {
         return '00h:00min'; // Default string for undefined/NaN
     }
 
-    const seconds = Number(input) / 1000; // Convert ms to seconds
+    const seconds = Number(input); // seconds
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
 

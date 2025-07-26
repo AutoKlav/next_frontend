@@ -17,6 +17,7 @@ const Dashboard = () => {
     const fetchProcesses = async () => {
         try {
             const response = await getUniqueProcessesAction();
+            console.log('Fetched processes:', response.processesList[0]);
             setConfig(response.processesList[0]); // Assuming you want the first process
         } catch (error) {
             showError('Proces', 'Došlo je do greške prilikom učitavanja procesa');
@@ -59,7 +60,7 @@ const Dashboard = () => {
             name={config?.productname || ''}
             quantity={config?.productquantity || ''}
             severity={state}
-            elapsedTime={elapsedTimeDisplay}
+            elapsedTime={state == 0 ? secondsToHms(Number(config?.processlength)) : elapsedTimeDisplay}
             heatingEnd={heatingEnd}
             coolingEnd={coolingEnd}
         />
