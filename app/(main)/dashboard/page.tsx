@@ -23,6 +23,7 @@ import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacter
 import ProcessTable from '@/demo/components/Tables/ProcessTable';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { formatTime } from '@/utils/dateUtil';
+import { refetchStateMachineIntervals } from '@/constants';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -54,7 +55,6 @@ const relayMapper = [
     { name: 'increasePressure', label: 'DIZ. TL. AK', value: 0 },
     { name: 'alarmSignal', label: 'ALARM', value: 0 },
 ];
-export const refetchStateMachineIntervals = 1000;
 
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();

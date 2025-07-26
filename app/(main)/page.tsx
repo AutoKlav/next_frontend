@@ -4,11 +4,11 @@ import { StatusHeader } from '@/demo/components/StatusHeader/StatusHeader';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { getStateMachineValuesAction, getUniqueProcessesAction } from './api/actions';
-import { refetchStateMachineIntervals } from './dashboard/page';
 import { checkForErrors } from '@/utils/errorUtil';
 import { formatTime, secondsToHms } from '@/utils/dateUtil';
 import { useToast } from '@/layout/context/toastcontext';
 import { ProcessInfoRow } from '@/types/grpc';
+import { refetchStateMachineIntervals } from '@/constants';
 
 const Dashboard = () => {
     const { showSuccess, showError, showWarn } = useToast();
