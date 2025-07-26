@@ -66,18 +66,32 @@ export const formatTime = (dateString: string | undefined | null) => {
 
     return date.toLocaleTimeString('en-GB', timeOptions);
 };
-// create method that will convert mseconds to hh:mm format
-export const secondsToHms = (input: number) => {
-    if (isNaN(input)) return '0h:0min';
 
-    input = Number(input) / 1000;
-    const h = Math.floor(input / 3600);
-    const m = Math.floor(input % 3600 / 60);
-    const s = Math.floor(input % 3600 % 60);
+/**
+ * Converts a time duration from seconds to a string formatted as "hh:mm".
+ *
+ * @param input - The time duration in milliseconds. If the input is NaN, it returns '0h:0min'.
+ * @returns A string representing the time in hours and minutes.
+ *
+ * @example
+ * // returns "01h:30min"
+ * secondsToHms(5400000);
+ *
+ * @example
+ * // returns "00h:00min"
+ * secondsToHms(NaN);
+ */
+export const secondsToHms = (input: number | undefined): string => {
+    if (input === undefined || isNaN(input)) {
+        return '00h:00min'; // Default string for undefined/NaN
+    }
 
-    const hDisplay = h > 0 ? String(h).padStart(2, '0') : '00';
-    const mDisplay = m > 0 ? String(m).padStart(2, '0') : '00';
-    //const sDisplay = s > 0 ? String(s).padStart(2, '0') : '00';
+    const seconds = Number(input) / 1000; // Convert ms to seconds
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+
+    const hDisplay = String(h).padStart(2, '0');
+    const mDisplay = String(m).padStart(2, '0');
 
     return `${hDisplay}h:${mDisplay}min`;
 };

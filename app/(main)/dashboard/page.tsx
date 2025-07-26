@@ -54,11 +54,11 @@ const relayMapper = [
     { name: 'increasePressure', label: 'DIZ. TL. AK', value: 0 },
     { name: 'alarmSignal', label: 'ALARM', value: 0 },
 ];
+export const refetchStateMachineIntervals = 1000;
 
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);
-    const refetchStateMachineIntervals = 1000;
     const refetchIntervalRelay = 1000;
     const debounceInterval = 2000;
 

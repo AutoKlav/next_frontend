@@ -9,6 +9,15 @@ export enum Severity {
     Danger = -1,
 }
 
+interface StatusHeaderProps {
+    name: string;
+    quantity: string;
+    severity: Severity;
+    elapsedTime: string;
+    heatingEnd: string;
+    coolingEnd: string;
+}
+
 const firstColumn = (name: string, quantity: string, state: number, heatingEnd: string, coolingEnd: string) => {
     return <div className="col-6">
         <div className="card mb-0">
@@ -22,11 +31,8 @@ const firstColumn = (name: string, quantity: string, state: number, heatingEnd: 
     </div>;
 }
 
-const secondColumn = (time: string, state: number) => {
-    let subHeader = "Završeno vrijeme";
-    if (state === 0 || state === 1 || state === 2 || state === 3 || state === 4 || state === 7 || state === 8) {
-        subHeader = "Prošlo vrijeme";
-    }
+const secondColumn = (time: string) => {
+
     return <div className="col-6">
         <div className="card mb-0 h-full">
             <div className="flex justify-content-between mb-3">
@@ -34,7 +40,7 @@ const secondColumn = (time: string, state: number) => {
                     <div className="text-900 font-medium text-xl">{time}</div>
                 </div>
             </div>
-            <span className="text-500">{subHeader}</span>
+            <span className="text-500">Prošlo vrijeme</span>
         </div>
     </div>;
 }
@@ -142,21 +148,21 @@ export const RenderState = (state: number, heatingEnd: string, coolingEnd: strin
     }
 };
 
-const StatusHeader = () => {
-
-    const severity = 6;
-    const name = "Grah";
-    const quantity = "500g";
-    const timeSecond = "00:32:00"
+export const StatusHeader: React.FC<StatusHeaderProps> = ({
+    name,
+    quantity,
+    severity,
+    elapsedTime,
+    heatingEnd,
+    coolingEnd,
+}) => {
     return (
         <div className="grid">
             {firstColumn(name, quantity, severity, "2023-10-01 12:00:00", "2023-10-01 12:30:00")}
-            {secondColumn(timeSecond, severity)}
+            {secondColumn(elapsedTime)}
             <div className="classname col-12">
-                {RenderState(severity, 'a', 'b')}
+                {RenderState(severity, heatingEnd, coolingEnd)}
             </div>
         </div>
     );
 };
-
-export default StatusHeader;
