@@ -34,12 +34,12 @@ const Tooltip: React.FC<{ x: number; y: number; values: SensorValues }> = ({ x, 
 };
 
 const CanvasOverlay: React.FC<Props> = ({ points, dataValues }) => {
-    const [image] = useImage('./autoklav.png');
+    const [image] = useImage('/autoklav.png');
     const [hovered, setHovered] = useState<{ point: DataPoint; x: number; y: number } | null>(null);
 
     return (
         <div style={{ position: 'relative' }}>
-            <Stage width={600} height={400}>
+            <Stage width={1200} height={380}>
                 <Layer>
                     {image && <KonvaImage image={image} x={0} y={0} width={600} height={400} />}
                     {points.map((p) => (
