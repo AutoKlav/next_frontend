@@ -18,7 +18,7 @@ interface StatusHeaderProps {
     coolingEnd: string;
 }
 
-const firstColumn = (name: string, quantity: string, state: number, heatingEnd: string, coolingEnd: string) => {
+const firstColumn = (name: string, quantity: string) => {
     return <div className="col-6">
         <div className="card mb-0">
             <div className="flex justify-content-between mb-3">
@@ -158,7 +158,7 @@ export const StatusHeader: React.FC<StatusHeaderProps> = ({
 }) => {
     return (
         <div className="grid">
-            {firstColumn(name, quantity, severity, "2023-10-01 12:00:00", "2023-10-01 12:30:00")}
+            {firstColumn(name, quantity)}
             {secondColumn(elapsedTime)}
             <div className="classname col-12">
                 {RenderState(severity, heatingEnd, coolingEnd)}
