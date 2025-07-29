@@ -78,7 +78,8 @@ const Home = () => {
                 heatingEnd={heatingEnd}
                 coolingEnd={coolingEnd}
             />
-            {stateMachineValues && <CanvasOverlay points={points} dataValues={stateMachineValues} />}        </>
+            {stateMachineValues && <CanvasOverlay points={points} dataValues={stateMachineValues} />}
+        </>
     );
 };
 
