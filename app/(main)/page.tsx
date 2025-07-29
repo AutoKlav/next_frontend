@@ -64,7 +64,6 @@ const Home = () => {
     // Example: define static or computed points
     const points: DataPoint[] = [
         { id: 1, x: 100, y: 80 },
-        { id: 2, x: 200, y: 150 },
         // add more as needed
     ];
 
