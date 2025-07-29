@@ -73,11 +73,12 @@ const Home = () => {
                 name={config?.productname || '-//-'}
                 quantity={config?.productquantity || ''}
                 severity={state}
-                elapsedTime={state == 0 ? secondsToHms(Number(config?.processlength)) : elapsedTimeDisplay}
+                elapsedTime={state === 0 ? secondsToHms(Number(config?.processlength)) : elapsedTimeDisplay}
                 heatingEnd={heatingEnd}
                 coolingEnd={coolingEnd}
             />
-            {stateMachineValues && <CanvasOverlay points={points} dataValues={stateMachineValues} />}        </>
+            {stateMachineValues && <CanvasOverlay points={points} dataValues={stateMachineValues} />}
+        </>
     );
 };
 

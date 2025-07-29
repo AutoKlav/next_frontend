@@ -70,12 +70,12 @@ export const formatTime = (dateString: string | undefined | null) => {
 /**
  * Converts a time duration from seconds to a string formatted as "hh:mm".
  *
- * @param input - The time duration in milliseconds. If the input is NaN, it returns '0h:0min'.
+ * @param input - The time duration in seconds. If the input is NaN, it returns '00h:00min'.
  * @returns A string representing the time in hours and minutes.
  *
  * @example
  * // returns "01h:30min"
- * secondsToHms(5400000);
+ * secondsToHms(5400);
  *
  * @example
  * // returns "00h:00min"
