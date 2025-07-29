@@ -1,0 +1,1 @@
+export const refetchStateMachineIntervals = 1000;

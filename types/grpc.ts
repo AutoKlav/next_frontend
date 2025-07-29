@@ -256,3 +256,9 @@ export interface UpdateSensorRequest {
   minValue: number;
   maxValue: number;
 }
+
+export type DataPoint = {
+  x: number;
+  y: number;
+  id: number;
+};

@@ -23,6 +23,7 @@ import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacter
 import ProcessTable from '@/demo/components/Tables/ProcessTable';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { formatTime } from '@/utils/dateUtil';
+import { refetchStateMachineIntervals } from '@/constants';
 
 const temperatures = [
     { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
@@ -58,7 +59,6 @@ const relayMapper = [
 const DashboardPage = () => {
     const { showSuccess, showError, showWarn } = useToast();
     const [isModalVisible, setModalVisibility] = useState(false);
-    const refetchStateMachineIntervals = 1000;
     const refetchIntervalRelay = 1000;
     const debounceInterval = 2000;
 
