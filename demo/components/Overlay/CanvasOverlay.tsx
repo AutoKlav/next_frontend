@@ -17,12 +17,12 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
         if (stateMachineValues?.sensorvalues) {
             setSensorData({
                 // Temperature sensors
-                [TEMP_AK]: `${stateMachineValues.sensorvalues.temp.toFixed(1)}°C`,
-                [TEMP_SPREM]: `${stateMachineValues.sensorvalues.tanktemp.toFixed(1)}°C`,
-                [TEMP_SRED]: `${stateMachineValues.sensorvalues.tempk.toFixed(1)}°C`,
+                [TEMP_AK]: `${stateMachineValues.sensorvalues.temp.toFixed(2)}°C`,
+                [TEMP_SPREM]: `${stateMachineValues.sensorvalues.tanktemp.toFixed(2)}°C`,
+                [TEMP_SRED]: `${stateMachineValues.sensorvalues.tempk.toFixed(2)}°C`,
 
                 // Pressure sensors
-                [TLAK_AK]: `${stateMachineValues.sensorvalues.pressure.toFixed(1)} bar`,
+                [TLAK_AK]: `${stateMachineValues.sensorvalues.pressure.toFixed(2)} BAR`,
             });
         }
     }, [stateMachineValues]);
