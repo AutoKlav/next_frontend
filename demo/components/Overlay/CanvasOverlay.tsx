@@ -29,10 +29,10 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
 
     // Positions for each sensor display
     const sensorPositions = [
-        { name: TEMP_AK, x: 50, y: 20 },
-        { name: TEMP_SRED, x: 50, y: 45 },
-        { name: TEMP_SPREM, x: 50, y: 65 },
-        { name: TLAK_AK, x: 250, y: 50 },
+        { name: TEMP_AK, x: 30, y: 20 },
+        { name: TEMP_SRED, x: 30, y: 45 },
+        { name: TEMP_SPREM, x: 30, y: 65 },
+        { name: TLAK_AK, x: 250, y: 20 },
     ];
 
     const getStatusColor = (value: string) => {
@@ -71,11 +71,11 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                     {/* Display any active warnings at the bottom */}
                     {(stateMachineValues?.sensorvalues?.burnerFault ||
                         stateMachineValues?.sensorvalues?.waterShortage ||
-                        !stateMachineValues?.sensorvalues?.doorClosed) && (
+                        stateMachineValues?.sensorvalues?.doorClosed) && (
                             <Group>
                                 <Rect
                                     x={50}
-                                    y={300}
+                                    y={320}
                                     width={500}
                                     height={50}
                                     fill="rgba(255, 200, 200, 0.7)"
@@ -85,17 +85,17 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                                 />
                                 <Text
                                     x={60}
-                                    y={315}
-                                    text="UPOZORENJA:"
+                                    y={335}
+                                    text="UPOZORENJA: "
                                     fontSize={16}
                                     fill="#ff0000"
                                     fontStyle="bold"
                                 />
                                 <Text
-                                    x={150}
-                                    y={315}
+                                    x={180}
+                                    y={335}
                                     text={[
-                                        !stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
+                                        stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
                                         stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
                                         stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
                                     ].filter(Boolean).join(" | ")}
