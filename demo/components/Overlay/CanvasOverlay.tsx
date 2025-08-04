@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Stage, Layer, Image as KonvaImage, Rect, Text, Group } from 'react-konva';
 import useImage from 'use-image';
 import { StateMachineValues } from '@/types/grpc';
+import { TEMP_AK, TEMP_SPREM, TEMP_SRED, TLAK_AK } from '@/constants';
 
 type Props = {
     stateMachineValues: StateMachineValues;
@@ -16,45 +17,22 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
         if (stateMachineValues?.sensorvalues) {
             setSensorData({
                 // Temperature sensors
-                "Temperatura": `${stateMachineValues.sensorvalues.temp.toFixed(1)}°C`,
-                //"Ekspanzijska temp": `${stateMachineValues.sensorvalues.expansiontemp.toFixed(1)}°C`,
-                //"Grijač temp": `${stateMachineValues.sensorvalues.heatertemp.toFixed(1)}°C`,
-                "Spremnik temp": `${stateMachineValues.sensorvalues.tanktemp.toFixed(1)}°C`,
-                "Temp K": `${stateMachineValues.sensorvalues.tempk.toFixed(1)}K`,
+                [TEMP_AK]: `${stateMachineValues.sensorvalues.temp.toFixed(1)}°C`,
+                [TEMP_SPREM]: `${stateMachineValues.sensorvalues.tanktemp.toFixed(1)}°C`,
+                [TEMP_SRED]: `${stateMachineValues.sensorvalues.tempk.toFixed(1)}°C`,
 
                 // Pressure sensors
-                "Tlak": `${stateMachineValues.sensorvalues.pressure.toFixed(1)} bar`,
-                "Tlak pare": `${stateMachineValues.sensorvalues.steampressure.toFixed(1)} bar`,
-
-                // Level sensor
-                "Razina vode": `${stateMachineValues.sensorvalues.tankwaterlevel.toFixed(1)}%`,
-
-                // Digital inputs
-                "Status vrata": stateMachineValues.sensorvalues.doorClosed ? "Zatvorena" : "Otvorena",
-                "Status plamenika": stateMachineValues.sensorvalues.burnerFault ? "Greška" : "OK",
-                "Status vode": stateMachineValues.sensorvalues.waterShortage ? "Niska" : "OK"
+                [TLAK_AK]: `${stateMachineValues.sensorvalues.pressure.toFixed(1)} bar`,
             });
         }
     }, [stateMachineValues]);
 
     // Positions for each sensor display
     const sensorPositions = [
-        // Left column (temperatures)
-        { name: "Temperatura", x: 50, y: 50 },
-        //{ name: "Ekspanzijska temp", x: 50, y: 80 },
-        //{ name: "Grijač temp", x: 50, y: 110 },
-        { name: "Spremnik temp", x: 50, y: 140 },
-        { name: "Temperatura sredine", x: 50, y: 170 },
-
-        // Middle column (pressures and level)
-        { name: "Tlak", x: 250, y: 50 },
-        { name: "Tlak pare", x: 250, y: 80 },
-        { name: "Razina vode", x: 250, y: 110 },
-
-        // Right column (status indicators)
-        { name: "Status vrata", x: 450, y: 50 },
-        { name: "Status plamenika", x: 450, y: 80 },
-        { name: "Status vode", x: 450, y: 110 }
+        { name: TEMP_AK, x: 50, y: 20 },
+        { name: TEMP_SRED, x: 50, y: 45 },
+        { name: TEMP_SPREM, x: 50, y: 65 },
+        { name: TLAK_AK, x: 250, y: 50 },
     ];
 
     const getStatusColor = (value: string) => {
