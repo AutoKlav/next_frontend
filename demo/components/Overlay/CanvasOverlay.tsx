@@ -59,7 +59,7 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                                 fontStyle="bold"
                             />
                             <Text
-                                x={pos.x + 150}
+                                x={pos.x + 120}
                                 y={pos.y}
                                 text={sensorData[pos.name] || "--"}
                                 fontSize={14}
