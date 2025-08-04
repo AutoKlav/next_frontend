@@ -35,12 +35,6 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
         { name: TLAK_AK, x: 250, y: 20 },
     ];
 
-    const getStatusColor = (value: string) => {
-        if (value === "Greška" || value === "Niska" || value === "Otvorena") return "#ff0000";
-        if (value === "OK" || value === "Zatvorena") return "#00aa00";
-        return "#333333";
-    };
-
     return (
         <div style={{ position: 'relative' }}>
             <Stage width={600} height={380}>
@@ -63,7 +57,7 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                                 y={pos.y}
                                 text={sensorData[pos.name] || "--"}
                                 fontSize={14}
-                                fill={getStatusColor(sensorData[pos.name])}
+                                fill={"#333333"}
                             />
                         </Group>
                     ))}
