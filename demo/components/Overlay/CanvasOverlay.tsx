@@ -110,27 +110,29 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                                 y={320}
                                 width={500}
                                 height={50}
-                                fill="rgba(255, 200, 200, 0.7)"
-                                stroke="#ff0000"
+                                fill="rgba(220, 255, 220, 0.8)"  // Light green background with transparency
+                                stroke="#2e7d32"                 // Darker green border (Material Design green 800)
                                 strokeWidth={2}
                                 cornerRadius={5}
                             />
                             <Text
-                                x={60}
+                                x={70}
                                 y={335}
                                 text="STATUS: "
                                 fontSize={16}
-                                fill="#ff0000"
+                                fill="#1b5e20"                   // Dark green text (Material Design green 900)
                                 fontStyle="bold"
                             />
                             <Text
-                                x={180}
+                                x={150}
                                 y={335}
                                 text={"OK"}
                                 fontSize={16}
-                                fill="#ff0000"
+                                fill="#1b5e20"                   // Dark green text to match
+                                fontStyle="bold"                 // Make "OK" bold for emphasis
                             />
-                        </Group>}
+                        </Group>
+                    }
                 </Layer>
             </Stage>
         </div>
