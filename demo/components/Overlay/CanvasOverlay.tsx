@@ -16,23 +16,23 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
         if (stateMachineValues?.sensorvalues) {
             setSensorData({
                 // Temperature sensors
-                "Temperature": `${stateMachineValues.sensorvalues.temp.toFixed(1)}°C`,
-                "Expansion Temp": `${stateMachineValues.sensorvalues.expansiontemp.toFixed(1)}°C`,
-                "Heater Temp": `${stateMachineValues.sensorvalues.heatertemp.toFixed(1)}°C`,
-                "Tank Temp": `${stateMachineValues.sensorvalues.tanktemp.toFixed(1)}°C`,
+                "Temperatura": `${stateMachineValues.sensorvalues.temp.toFixed(1)}°C`,
+                //"Ekspanzijska temp": `${stateMachineValues.sensorvalues.expansiontemp.toFixed(1)}°C`,
+                //"Grijač temp": `${stateMachineValues.sensorvalues.heatertemp.toFixed(1)}°C`,
+                "Spremnik temp": `${stateMachineValues.sensorvalues.tanktemp.toFixed(1)}°C`,
                 "Temp K": `${stateMachineValues.sensorvalues.tempk.toFixed(1)}K`,
 
                 // Pressure sensors
-                "Pressure": `${stateMachineValues.sensorvalues.pressure.toFixed(1)} bar`,
-                "Steam Pressure": `${stateMachineValues.sensorvalues.steampressure.toFixed(1)} bar`,
+                "Tlak": `${stateMachineValues.sensorvalues.pressure.toFixed(1)} bar`,
+                "Tlak pare": `${stateMachineValues.sensorvalues.steampressure.toFixed(1)} bar`,
 
                 // Level sensor
-                "Water Level": `${stateMachineValues.sensorvalues.tankwaterlevel.toFixed(1)}%`,
+                "Razina vode": `${stateMachineValues.sensorvalues.tankwaterlevel.toFixed(1)}%`,
 
                 // Digital inputs
-                "Door Status": stateMachineValues.sensorvalues.doorClosed ? "Closed" : "Open",
-                "Burner Status": stateMachineValues.sensorvalues.burnerFault ? "Fault" : "OK",
-                "Water Status": stateMachineValues.sensorvalues.waterShortage ? "Low" : "OK"
+                "Status vrata": stateMachineValues.sensorvalues.doorClosed ? "Zatvorena" : "Otvorena",
+                "Status plamenika": stateMachineValues.sensorvalues.burnerFault ? "Greška" : "OK",
+                "Status vode": stateMachineValues.sensorvalues.waterShortage ? "Niska" : "OK"
             });
         }
     }, [stateMachineValues]);
@@ -40,26 +40,26 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
     // Positions for each sensor display
     const sensorPositions = [
         // Left column (temperatures)
-        { name: "Temperature", x: 50, y: 50 },
-        { name: "Expansion Temp", x: 50, y: 80 },
-        { name: "Heater Temp", x: 50, y: 110 },
-        { name: "Tank Temp", x: 50, y: 140 },
-        { name: "Temp K", x: 50, y: 170 },
+        { name: "Temperatura", x: 50, y: 50 },
+        //{ name: "Ekspanzijska temp", x: 50, y: 80 },
+        //{ name: "Grijač temp", x: 50, y: 110 },
+        { name: "Spremnik temp", x: 50, y: 140 },
+        { name: "Temperatura sredine", x: 50, y: 170 },
 
         // Middle column (pressures and level)
-        { name: "Pressure", x: 250, y: 50 },
-        { name: "Steam Pressure", x: 250, y: 80 },
-        { name: "Water Level", x: 250, y: 110 },
+        { name: "Tlak", x: 250, y: 50 },
+        { name: "Tlak pare", x: 250, y: 80 },
+        { name: "Razina vode", x: 250, y: 110 },
 
         // Right column (status indicators)
-        { name: "Door Status", x: 450, y: 50 },
-        { name: "Burner Status", x: 450, y: 80 },
-        { name: "Water Status", x: 450, y: 110 }
+        { name: "Status vrata", x: 450, y: 50 },
+        { name: "Status plamenika", x: 450, y: 80 },
+        { name: "Status vode", x: 450, y: 110 }
     ];
 
     const getStatusColor = (value: string) => {
-        if (value === "Fault" || value === "Low" || value === "Open") return "#ff0000";
-        if (value === "OK" || value === "Closed") return "#00aa00";
+        if (value === "Greška" || value === "Niska" || value === "Otvorena") return "#ff0000";
+        if (value === "OK" || value === "Zatvorena") return "#00aa00";
         return "#333333";
     };
 
@@ -67,7 +67,7 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
         <div style={{ position: 'relative' }}>
             <Stage width={600} height={380}>
                 <Layer>
-                    {image && <KonvaImage image={image} x={0} y={0} width={600} height={380} />}
+                    {image && <KonvaImage image={image} x={0} y={0} width={600} height={380} cornerRadius={10} />}
 
                     {/* Display all sensor values */}
                     {sensorPositions.map((pos) => (
@@ -108,7 +108,7 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                                 <Text
                                     x={60}
                                     y={315}
-                                    text="WARNINGS:"
+                                    text="UPOZORENJA:"
                                     fontSize={16}
                                     fill="#ff0000"
                                     fontStyle="bold"
@@ -117,9 +117,9 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                                     x={150}
                                     y={315}
                                     text={[
-                                        !stateMachineValues?.sensorvalues?.doorClosed ? "DOOR OPEN" : "",
-                                        stateMachineValues?.sensorvalues?.burnerFault ? "BURNER FAULT" : "",
-                                        stateMachineValues?.sensorvalues?.waterShortage ? "WATER LOW" : ""
+                                        !stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
+                                        stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
+                                        stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
                                     ].filter(Boolean).join(" | ")}
                                     fontSize={16}
                                     fill="#ff0000"
