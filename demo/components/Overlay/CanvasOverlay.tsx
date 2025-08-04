@@ -5,11 +5,11 @@ import useImage from 'use-image';
 import { DataPoint, SensorValues, StateMachineValues } from '@/types/grpc';
 
 type Props = {
-    dataValues: StateMachineValues;
+    stateMachineValues: StateMachineValues;
     points: DataPoint[];
 };
 
-const CanvasOverlay: React.FC<Props> = ({ points, dataValues }) => {
+const CanvasOverlay: React.FC<Props> = ({ points, stateMachineValues }) => {
     const [image] = useImage('/autoklav.png');
     const [displayValues, setDisplayValues] = useState<Record<string, SensorValues>>({});
 
@@ -17,10 +17,10 @@ const CanvasOverlay: React.FC<Props> = ({ points, dataValues }) => {
     useEffect(() => {
         const newValues: Record<string, SensorValues> = {};
         points.forEach(point => {
-            newValues[point.id] = dataValues.sensorvalues;
+            newValues[point.id] = stateMachineValues.sensorvalues;
         });
         setDisplayValues(newValues);
-    }, [dataValues, points]);
+    }, [stateMachineValues, points]);
 
     // Helper function to generate error string
     const getErrorString = (sensor: SensorValues) => {
@@ -35,17 +35,17 @@ const CanvasOverlay: React.FC<Props> = ({ points, dataValues }) => {
         <div style={{ position: 'relative' }}>
             <Stage width={1200} height={380}>
                 <Layer>
-                    {image && <KonvaImage image={image} x={0} y={0} width={600} height={400} />}
-                    {points.map((p) => {
-                        const sensor = displayValues[p.id];
+                    {image && <KonvaImage image={image} x={0} y={0} width={600} height={380} cornerRadius={10} />}
+                    {points.map((point) => {
+                        const sensor = displayValues[point.id];
                         const hasErrors = sensor && (sensor.doorClosed || sensor.burnerFault || sensor.waterShortage);
 
                         return (
-                            <React.Fragment key={p.id}>
+                            <React.Fragment key={point.id}>
                                 {/* Main temperature rectangle */}
                                 <Rect
-                                    x={p.x - 30}
-                                    y={p.y - 40}
+                                    x={point.x - 30}
+                                    y={point.y - 40}
                                     width={60}
                                     height={80}
                                     fill={hasErrors ? 'rgba(255, 200, 200, 0.8)' : 'rgba(255, 255, 255, 0.7)'}
@@ -56,8 +56,8 @@ const CanvasOverlay: React.FC<Props> = ({ points, dataValues }) => {
 
                                 {/* Temperature in Celsius */}
                                 <Text
-                                    x={p.x - 30}
-                                    y={p.y - 35}
+                                    x={point.x - 30}
+                                    y={point.y - 35}
                                     width={60}
                                     height={20}
                                     text={sensor ? `${sensor.temp.toFixed(1)}°C` : '--°C'}
@@ -68,8 +68,8 @@ const CanvasOverlay: React.FC<Props> = ({ points, dataValues }) => {
 
                                 {/* Error status */}
                                 <Text
-                                    x={p.x - 30}
-                                    y={p.y + 5}
+                                    x={point.x - 30}
+                                    y={point.y + 5}
                                     width={60}
                                     height={20}
                                     text={sensor ? getErrorString(sensor) : '--'}

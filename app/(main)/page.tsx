@@ -67,6 +67,9 @@ const Home = () => {
         // add more as needed
     ];
 
+    console.log('State Machine Values:', stateMachineValues);
+    console.log('points:', points);
+
     return (
         <>
             <StatusHeader
@@ -77,7 +80,7 @@ const Home = () => {
                 heatingEnd={heatingEnd}
                 coolingEnd={coolingEnd}
             />
-            {stateMachineValues && <CanvasOverlay points={points} dataValues={stateMachineValues} />}
+            {stateMachineValues && <CanvasOverlay points={points} stateMachineValues={stateMachineValues} />}
         </>
     );
 };
