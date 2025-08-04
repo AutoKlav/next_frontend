@@ -22,7 +22,7 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                 [TEMP_SRED]: `${stateMachineValues.sensorvalues.tempk.toFixed(2)}°C`,
 
                 // Pressure sensors
-                [TLAK_AK]: `${stateMachineValues.sensorvalues.pressure.toFixed(2)} BAR`,
+                [TLAK_AK]: `${stateMachineValues.sensorvalues.pressure.toFixed(2)} bar`,
             });
         }
     }, [stateMachineValues]);
