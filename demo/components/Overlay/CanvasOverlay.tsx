@@ -11,7 +11,7 @@ type Props = {
 
 const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
     const [image] = useImage('/autoklav.png');
-    const [sensorData, setSensorData] = useState<Record<string, any>>({});
+    const [sensorData, setSensorData] = useState<Record<string, string>>({});
 
     useEffect(() => {
         if (stateMachineValues?.sensorvalues) {
