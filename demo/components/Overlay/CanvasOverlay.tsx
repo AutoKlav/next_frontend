@@ -67,10 +67,10 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
     });
 
     const sensorPositions = [
-        { name: TEMP_AK, ...getRelativePosition(30, 30) },
-        { name: TEMP_SRED, ...getRelativePosition(30, 55) },
-        { name: TEMP_SPREM, ...getRelativePosition(30, 80) },
-        { name: TLAK_AK, ...getRelativePosition(30, 105) },
+        { name: TEMP_AK, ...getRelativePosition(50, 50) },
+        { name: TEMP_SRED, ...getRelativePosition(50, 95) },
+        { name: TEMP_SPREM, ...getRelativePosition(50, 140) },
+        { name: TLAK_AK, ...getRelativePosition(50, 185) },
     ];
 
     return (
