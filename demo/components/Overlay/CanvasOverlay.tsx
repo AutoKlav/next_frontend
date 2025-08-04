@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Stage, Layer, Image as KonvaImage, Rect, Text, Group } from 'react-konva';
 import useImage from 'use-image';
 import { StateMachineValues } from '@/types/grpc';
@@ -9,37 +9,84 @@ type Props = {
     stateMachineValues: StateMachineValues;
 };
 
+const ORIGINAL_IMAGE_WIDTH = 1280; // Replace with your image's original width
+const ORIGINAL_IMAGE_HEIGHT = 720; // Replace with your image's original height
+
 const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
     const [image] = useImage('/autoklav.png');
     const [sensorData, setSensorData] = useState<Record<string, string>>({});
+    const [containerSize, setContainerSize] = useState({ width: 1280, height: 720 });
+    const [imageSize, setImageSize] = useState({ width: 1280, height: 720 });
+
+    // Calculate scaled dimensions while maintaining aspect ratio
+    const calculateImageSize = useCallback((containerWidth: number, containerHeight: number) => {
+        const widthRatio = containerWidth / ORIGINAL_IMAGE_WIDTH;
+        const heightRatio = containerHeight / ORIGINAL_IMAGE_HEIGHT;
+        const scale = Math.min(widthRatio, heightRatio);
+
+        return {
+            width: ORIGINAL_IMAGE_WIDTH * scale,
+            height: ORIGINAL_IMAGE_HEIGHT * scale
+        };
+    }, []);
 
     useEffect(() => {
         if (stateMachineValues?.sensorvalues) {
             setSensorData({
-                // Temperature sensors
                 [TEMP_AK]: `${stateMachineValues.sensorvalues.temp.toFixed(2)}°C`,
                 [TEMP_SPREM]: `${stateMachineValues.sensorvalues.tanktemp.toFixed(2)}°C`,
                 [TEMP_SRED]: `${stateMachineValues.sensorvalues.tempk.toFixed(2)}°C`,
-
-                // Pressure sensors
                 [TLAK_AK]: `${stateMachineValues.sensorvalues.pressure.toFixed(2)} bar`,
             });
         }
     }, [stateMachineValues]);
 
-    // Positions for each sensor display
+    // Handle container resize
+    useEffect(() => {
+        const handleResize = () => {
+            const container = document.getElementById('canvas-container');
+            if (container) {
+                const newContainerSize = {
+                    width: container.clientWidth,
+                    height: container.clientHeight
+                };
+                setContainerSize(newContainerSize);
+                setImageSize(calculateImageSize(newContainerSize.width, newContainerSize.height));
+            }
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [calculateImageSize]);
+
+    // Calculate positions relative to the original image dimensions
+    const getRelativePosition = (x: number, y: number) => ({
+        x: (x / ORIGINAL_IMAGE_WIDTH) * imageSize.width,
+        y: (y / ORIGINAL_IMAGE_HEIGHT) * imageSize.height
+    });
+
     const sensorPositions = [
-        { name: TEMP_AK, x: 30, y: 20 },
-        { name: TEMP_SRED, x: 30, y: 45 },
-        { name: TEMP_SPREM, x: 30, y: 65 },
-        { name: TLAK_AK, x: 250, y: 20 },
+        { name: TEMP_AK, ...getRelativePosition(30, 30) },
+        { name: TEMP_SRED, ...getRelativePosition(30, 55) },
+        { name: TEMP_SPREM, ...getRelativePosition(30, 80) },
+        { name: TLAK_AK, ...getRelativePosition(30, 105) },
     ];
 
     return (
-        <div style={{ position: 'relative' }}>
-            <Stage width={600} height={380}>
+        <div id="canvas-container" style={{ position: 'relative', width: '100%', height: '100vh' }}>
+            <Stage width={containerSize.width} height={containerSize.height}>
                 <Layer>
-                    {image && <KonvaImage image={image} x={0} y={0} width={600} height={380} cornerRadius={10} />}
+                    {image && (
+                        <KonvaImage
+                            image={image}
+                            x={(containerSize.width - imageSize.width) / 2} // Center horizontally
+                            y={(containerSize.height - imageSize.height) / 2} // Center vertically
+                            width={imageSize.width}
+                            height={imageSize.height}
+                            cornerRadius={10}
+                        />
+                    )}
 
                     {/* Display all sensor values */}
                     {sensorPositions.map((pos) => (
@@ -47,17 +94,17 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                             <Text
                                 x={pos.x}
                                 y={pos.y}
-                                text={`${pos.name}:`}
-                                fontSize={14}
+                                text={`${pos.name} `}
+                                fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)} // Scale font size
                                 fill="#333"
                                 fontStyle="bold"
                             />
                             <Text
-                                x={pos.x + 120}
+                                x={pos.x + 170 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
                                 y={pos.y}
                                 text={sensorData[pos.name] || "--"}
-                                fontSize={14}
-                                fill={"#333333"}
+                                fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                fill="#333333"
                             />
                         </Group>
                     ))}
@@ -68,65 +115,65 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                         stateMachineValues?.sensorvalues?.doorClosed) ? (
                         <Group>
                             <Rect
-                                x={50}
-                                y={320}
-                                width={500}
-                                height={50}
+                                x={containerSize.width * 0.05}
+                                y={containerSize.height * 0.85}
+                                width={containerSize.width * 0.9}
+                                height={containerSize.height * 0.1}
                                 fill="rgba(255, 200, 200, 0.7)"
                                 stroke="#ff0000"
-                                strokeWidth={2}
-                                cornerRadius={5}
+                                strokeWidth={2 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                cornerRadius={5 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
                             />
                             <Text
-                                x={60}
-                                y={335}
+                                x={containerSize.width * 0.06}
+                                y={containerSize.height * 0.88}
                                 text="UPOZORENJA: "
-                                fontSize={16}
+                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
                                 fill="#ff0000"
                                 fontStyle="bold"
                             />
                             <Text
-                                x={180}
-                                y={335}
+                                x={containerSize.width * 0.2}
+                                y={containerSize.height * 0.88}
                                 text={[
                                     stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
                                     stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
                                     stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
                                 ].filter(Boolean).join(" | ")}
-                                fontSize={16}
+                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
                                 fill="#ff0000"
                             />
                         </Group>
-                    ) :
+                    ) : (
                         <Group>
                             <Rect
-                                x={50}
-                                y={320}
-                                width={500}
-                                height={50}
-                                fill="rgba(220, 255, 220, 0.8)"  // Light green background with transparency
-                                stroke="#2e7d32"                 // Darker green border (Material Design green 800)
-                                strokeWidth={2}
-                                cornerRadius={5}
+                                x={containerSize.width * 0.05}
+                                y={containerSize.height * 0.85}
+                                width={containerSize.width * 0.9}
+                                height={containerSize.height * 0.1}
+                                fill="rgba(220, 255, 220, 0.8)"
+                                stroke="#2e7d32"
+                                strokeWidth={2 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                cornerRadius={5 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
                             />
                             <Text
-                                x={70}
-                                y={335}
+                                x={containerSize.width * 0.06}
+                                y={containerSize.height * 0.88}
                                 text="STATUS: "
-                                fontSize={16}
-                                fill="#1b5e20"                   // Dark green text (Material Design green 900)
+                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                fill="#1b5e20"
                                 fontStyle="bold"
                             />
                             <Text
-                                x={150}
-                                y={335}
+                                x={containerSize.width * 0.15}
+                                y={containerSize.height * 0.88}
                                 text={"OK"}
-                                fontSize={16}
-                                fill="#1b5e20"                   // Dark green text to match
-                                fontStyle="bold"                 // Make "OK" bold for emphasis
+                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                fill="#1b5e20"
+                                fontStyle="bold"
                             />
                         </Group>
-                    }
+                    )}
                 </Layer>
             </Stage>
         </div>
