@@ -1,86 +1,138 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Stage, Layer, Image as KonvaImage, Rect, Text } from 'react-konva';
+import { Stage, Layer, Image as KonvaImage, Rect, Text, Group } from 'react-konva';
 import useImage from 'use-image';
-import { DataPoint, SensorValues, StateMachineValues } from '@/types/grpc';
+import { StateMachineValues } from '@/types/grpc';
+import { TEMP_AK, TEMP_SPREM, TEMP_SRED, TLAK_AK } from '@/constants';
 
 type Props = {
-    dataValues: StateMachineValues;
-    points: DataPoint[];
+    stateMachineValues: StateMachineValues;
 };
 
-const CanvasOverlay: React.FC<Props> = ({ points, dataValues }) => {
+const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
     const [image] = useImage('/autoklav.png');
-    const [displayValues, setDisplayValues] = useState<Record<string, SensorValues>>({});
+    const [sensorData, setSensorData] = useState<Record<string, string>>({});
 
-    // Update displayed values when data changes
     useEffect(() => {
-        const newValues: Record<string, SensorValues> = {};
-        points.forEach(point => {
-            newValues[point.id] = dataValues.sensorvalues;
-        });
-        setDisplayValues(newValues);
-    }, [dataValues, points]);
+        if (stateMachineValues?.sensorvalues) {
+            setSensorData({
+                // Temperature sensors
+                [TEMP_AK]: `${stateMachineValues.sensorvalues.temp.toFixed(2)}°C`,
+                [TEMP_SPREM]: `${stateMachineValues.sensorvalues.tanktemp.toFixed(2)}°C`,
+                [TEMP_SRED]: `${stateMachineValues.sensorvalues.tempk.toFixed(2)}°C`,
 
-    // Helper function to generate error string
-    const getErrorString = (sensor: SensorValues) => {
-        const errors = [];
-        if (sensor.doorClosed) errors.push('Door');
-        if (sensor.burnerFault) errors.push('Burner');
-        if (sensor.waterShortage) errors.push('Water');
-        return errors.length > 0 ? errors.join(', ') : 'OK';
+                // Pressure sensors
+                [TLAK_AK]: `${stateMachineValues.sensorvalues.pressure.toFixed(2)} bar`,
+            });
+        }
+    }, [stateMachineValues]);
+
+    // Positions for each sensor display
+    const sensorPositions = [
+        { name: TEMP_AK, x: 30, y: 20 },
+        { name: TEMP_SRED, x: 30, y: 45 },
+        { name: TEMP_SPREM, x: 30, y: 65 },
+        { name: TLAK_AK, x: 250, y: 20 },
+    ];
+
+    const getStatusColor = (value: string) => {
+        if (value === "Greška" || value === "Niska" || value === "Otvorena") return "#ff0000";
+        if (value === "OK" || value === "Zatvorena") return "#00aa00";
+        return "#333333";
     };
 
     return (
         <div style={{ position: 'relative' }}>
-            <Stage width={1200} height={380}>
+            <Stage width={600} height={380}>
                 <Layer>
-                    {image && <KonvaImage image={image} x={0} y={0} width={600} height={400} />}
-                    {points.map((p) => {
-                        const sensor = displayValues[p.id];
-                        const hasErrors = sensor && (sensor.doorClosed || sensor.burnerFault || sensor.waterShortage);
+                    {image && <KonvaImage image={image} x={0} y={0} width={600} height={380} cornerRadius={10} />}
 
-                        return (
-                            <React.Fragment key={p.id}>
-                                {/* Main temperature rectangle */}
-                                <Rect
-                                    x={p.x - 30}
-                                    y={p.y - 40}
-                                    width={60}
-                                    height={80}
-                                    fill={hasErrors ? 'rgba(255, 200, 200, 0.8)' : 'rgba(255, 255, 255, 0.7)'}
-                                    stroke={hasErrors ? '#ff0000' : '#333'}
-                                    strokeWidth={hasErrors ? 2 : 1}
-                                    cornerRadius={4}
-                                />
+                    {/* Display all sensor values */}
+                    {sensorPositions.map((pos) => (
+                        <Group key={pos.name}>
+                            <Text
+                                x={pos.x}
+                                y={pos.y}
+                                text={`${pos.name}:`}
+                                fontSize={14}
+                                fill="#333"
+                                fontStyle="bold"
+                            />
+                            <Text
+                                x={pos.x + 120}
+                                y={pos.y}
+                                text={sensorData[pos.name] || "--"}
+                                fontSize={14}
+                                fill={getStatusColor(sensorData[pos.name])}
+                            />
+                        </Group>
+                    ))}
 
-                                {/* Temperature in Celsius */}
-                                <Text
-                                    x={p.x - 30}
-                                    y={p.y - 35}
-                                    width={60}
-                                    height={20}
-                                    text={sensor ? `${sensor.temp.toFixed(1)}°C` : '--°C'}
-                                    fontSize={14}
-                                    align="center"
-                                    fill="#333"
-                                />
-
-                                {/* Error status */}
-                                <Text
-                                    x={p.x - 30}
-                                    y={p.y + 5}
-                                    width={60}
-                                    height={20}
-                                    text={sensor ? getErrorString(sensor) : '--'}
-                                    fontSize={12}
-                                    align="center"
-                                    fill={hasErrors ? '#ff0000' : '#00aa00'}
-                                    fontStyle={hasErrors ? 'bold' : 'normal'}
-                                />
-                            </React.Fragment>
-                        );
-                    })}
+                    {/* Display any active warnings at the bottom */}
+                    {(stateMachineValues?.sensorvalues?.burnerFault ||
+                        stateMachineValues?.sensorvalues?.waterShortage ||
+                        stateMachineValues?.sensorvalues?.doorClosed) ? (
+                        <Group>
+                            <Rect
+                                x={50}
+                                y={320}
+                                width={500}
+                                height={50}
+                                fill="rgba(255, 200, 200, 0.7)"
+                                stroke="#ff0000"
+                                strokeWidth={2}
+                                cornerRadius={5}
+                            />
+                            <Text
+                                x={60}
+                                y={335}
+                                text="UPOZORENJA: "
+                                fontSize={16}
+                                fill="#ff0000"
+                                fontStyle="bold"
+                            />
+                            <Text
+                                x={180}
+                                y={335}
+                                text={[
+                                    stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
+                                    stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
+                                    stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
+                                ].filter(Boolean).join(" | ")}
+                                fontSize={16}
+                                fill="#ff0000"
+                            />
+                        </Group>
+                    ) :
+                        <Group>
+                            <Rect
+                                x={50}
+                                y={320}
+                                width={500}
+                                height={50}
+                                fill="rgba(220, 255, 220, 0.8)"  // Light green background with transparency
+                                stroke="#2e7d32"                 // Darker green border (Material Design green 800)
+                                strokeWidth={2}
+                                cornerRadius={5}
+                            />
+                            <Text
+                                x={70}
+                                y={335}
+                                text="STATUS: "
+                                fontSize={16}
+                                fill="#1b5e20"                   // Dark green text (Material Design green 900)
+                                fontStyle="bold"
+                            />
+                            <Text
+                                x={150}
+                                y={335}
+                                text={"OK"}
+                                fontSize={16}
+                                fill="#1b5e20"                   // Dark green text to match
+                                fontStyle="bold"                 // Make "OK" bold for emphasis
+                            />
+                        </Group>
+                    }
                 </Layer>
             </Stage>
         </div>

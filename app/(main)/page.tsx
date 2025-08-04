@@ -24,12 +24,10 @@ const Home = () => {
         try {
             const response = await getUniqueProcessesAction();
             console.log('Fetched processes:', response.processesList[0]);
-            setConfig(response.processesList[0]); // Assuming you want the first process
+            setConfig(response.processesList[0]);
         } catch (error) {
             showError('Proces', 'Došlo je do greške prilikom učitavanja procesa');
             console.error('Error fetching processes:', error);
-        } finally {
-
         }
     };
 
@@ -52,7 +50,6 @@ const Home = () => {
     );
 
     const state = stateMachineValues?.state || 0;
-    //const elapsedTime = Math.floor(secondsToHms(stateMachineValues?.elapsedtime) / 1000); // Convert to seconds
     const elapsedTimeDisplay = secondsToHms(stateMachineValues?.elapsedtime);
     const heatingEnd = formatTime(stateMachineValues?.heatingend) || '';
     const coolingEnd = formatTime(stateMachineValues?.coolingend) || '';
@@ -60,12 +57,6 @@ const Home = () => {
     useEffect(() => {
         fetchProcesses();
     }, []);
-
-    // Example: define static or computed points
-    const points: DataPoint[] = [
-        { id: 1, x: 100, y: 80 },
-        // add more as needed
-    ];
 
     return (
         <>
@@ -77,11 +68,9 @@ const Home = () => {
                 heatingEnd={heatingEnd}
                 coolingEnd={coolingEnd}
             />
-            {stateMachineValues && <CanvasOverlay points={points} dataValues={stateMachineValues} />}
+            {stateMachineValues && <CanvasOverlay stateMachineValues={stateMachineValues} />}
         </>
     );
 };
 
 export default Home;
-
-

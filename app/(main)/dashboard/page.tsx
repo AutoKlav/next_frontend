@@ -23,17 +23,27 @@ import StartBacteriaDropdown from '@/demo/components/Inputs/Dropdown/StartBacter
 import ProcessTable from '@/demo/components/Tables/ProcessTable';
 import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 import { formatTime } from '@/utils/dateUtil';
-import { refetchStateMachineIntervals } from '@/constants';
+import {
+    TEMP_AK,
+    TEMP_GRIJACA,
+    TEMP_SRED,
+    TLAK_AK,
+    TEMP_SPREM,
+    NIVO_SPREM,
+    TEMP_CIJEV_PROS,
+    TLAK_PARE,
+    refetchStateMachineIntervals
+} from '@/constants';
 
 const temperatures = [
-    { icon: 'pi-sun', headerName: 'TEMP. AK', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-box', headerName: 'TEMP. GRIJACA', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-box', headerName: 'TEMP. SRED.', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-gauge', headerName: 'TLAK AK.', value: '', unit: 'bar', color: 'blue' },
-    { icon: 'pi-box', headerName: 'TEMP. SPREM.', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-cloud', headerName: 'NIVO. SPREM.', value: '', unit: '%', color: 'black' },
-    { icon: 'pi-box', headerName: 'TEMP. CIJEV PROŠ.', value: '', unit: '°C', color: 'red' },
-    { icon: 'pi-cloud', headerName: 'TLAK PARE', value: '', unit: 'bar', color: 'blue' },
+    { icon: 'pi-sun', headerName: TEMP_AK, value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-box', headerName: TEMP_GRIJACA, value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-box', headerName: TEMP_SRED, value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-gauge', headerName: TLAK_AK, value: '', unit: 'bar', color: 'blue' },
+    { icon: 'pi-box', headerName: TEMP_SPREM, value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-cloud', headerName: NIVO_SPREM, value: '', unit: '%', color: 'black' },
+    { icon: 'pi-box', headerName: TEMP_CIJEV_PROS, value: '', unit: '°C', color: 'red' },
+    { icon: 'pi-cloud', headerName: TLAK_PARE, value: '', unit: 'bar', color: 'blue' },
 ];
 
 const stateValues = [
