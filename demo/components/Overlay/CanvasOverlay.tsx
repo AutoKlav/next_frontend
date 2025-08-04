@@ -71,39 +71,66 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                     {/* Display any active warnings at the bottom */}
                     {(stateMachineValues?.sensorvalues?.burnerFault ||
                         stateMachineValues?.sensorvalues?.waterShortage ||
-                        stateMachineValues?.sensorvalues?.doorClosed) && (
-                            <Group>
-                                <Rect
-                                    x={50}
-                                    y={320}
-                                    width={500}
-                                    height={50}
-                                    fill="rgba(255, 200, 200, 0.7)"
-                                    stroke="#ff0000"
-                                    strokeWidth={2}
-                                    cornerRadius={5}
-                                />
-                                <Text
-                                    x={60}
-                                    y={335}
-                                    text="UPOZORENJA: "
-                                    fontSize={16}
-                                    fill="#ff0000"
-                                    fontStyle="bold"
-                                />
-                                <Text
-                                    x={180}
-                                    y={335}
-                                    text={[
-                                        stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
-                                        stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
-                                        stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
-                                    ].filter(Boolean).join(" | ")}
-                                    fontSize={16}
-                                    fill="#ff0000"
-                                />
-                            </Group>
-                        )}
+                        stateMachineValues?.sensorvalues?.doorClosed) ? (
+                        <Group>
+                            <Rect
+                                x={50}
+                                y={320}
+                                width={500}
+                                height={50}
+                                fill="rgba(255, 200, 200, 0.7)"
+                                stroke="#ff0000"
+                                strokeWidth={2}
+                                cornerRadius={5}
+                            />
+                            <Text
+                                x={60}
+                                y={335}
+                                text="UPOZORENJA: "
+                                fontSize={16}
+                                fill="#ff0000"
+                                fontStyle="bold"
+                            />
+                            <Text
+                                x={180}
+                                y={335}
+                                text={[
+                                    stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
+                                    stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
+                                    stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
+                                ].filter(Boolean).join(" | ")}
+                                fontSize={16}
+                                fill="#ff0000"
+                            />
+                        </Group>
+                    ) :
+                        <Group>
+                            <Rect
+                                x={50}
+                                y={320}
+                                width={500}
+                                height={50}
+                                fill="rgba(255, 200, 200, 0.7)"
+                                stroke="#ff0000"
+                                strokeWidth={2}
+                                cornerRadius={5}
+                            />
+                            <Text
+                                x={60}
+                                y={335}
+                                text="STATUS: "
+                                fontSize={16}
+                                fill="#ff0000"
+                                fontStyle="bold"
+                            />
+                            <Text
+                                x={180}
+                                y={335}
+                                text={"OK"}
+                                fontSize={16}
+                                fill="#ff0000"
+                            />
+                        </Group>}
                 </Layer>
             </Stage>
         </div>
