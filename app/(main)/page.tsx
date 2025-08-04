@@ -8,7 +8,7 @@ import { getStateMachineValuesAction, getUniqueProcessesAction } from './api/act
 import { checkForErrors } from '@/utils/errorUtil';
 import { formatTime, secondsToHms } from '@/utils/dateUtil';
 import { useToast } from '@/layout/context/toastcontext';
-import { DataPoint, ProcessInfoRow } from '@/types/grpc';
+import { ProcessInfoRow } from '@/types/grpc';
 import { refetchStateMachineIntervals } from '@/constants';
 
 const CanvasOverlay = dynamic(
