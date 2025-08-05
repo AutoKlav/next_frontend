@@ -5,18 +5,14 @@ import useImage from 'use-image';
 import { StateMachineValues } from '@/types/grpc';
 import { TEMP_AK, TEMP_SPREM, TEMP_SRED, TLAK_AK } from '@/constants';
 
-type Props = {
-    stateMachineValues: StateMachineValues;
-};
+const ORIGINAL_IMAGE_WIDTH = 1280;
+const ORIGINAL_IMAGE_HEIGHT = 720;
 
-const ORIGINAL_IMAGE_WIDTH = 1280; // Replace with your image's original width
-const ORIGINAL_IMAGE_HEIGHT = 720; // Replace with your image's original height
-
-const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
+const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ stateMachineValues }) => {
     const [image] = useImage('/autoklav.png');
     const [sensorData, setSensorData] = useState<Record<string, string>>({});
-    const [containerSize, setContainerSize] = useState({ width: 1280, height: 720 });
-    const [imageSize, setImageSize] = useState({ width: 1280, height: 720 });
+    const [containerSize, setContainerSize] = useState({ width: 600, height: 400 }); // Adjusted for col-6
+    const [imageSize, setImageSize] = useState({ width: 600, height: 337.5 }); // Maintains 16:9 aspect ratio
 
     // Calculate scaled dimensions while maintaining aspect ratio
     const calculateImageSize = useCallback((containerWidth: number, containerHeight: number) => {
@@ -66,22 +62,23 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
         y: (y / ORIGINAL_IMAGE_HEIGHT) * imageSize.height
     });
 
+    // Adjusted sensor positions to fit within the image
     const sensorPositions = [
         { name: TEMP_AK, ...getRelativePosition(50, 50) },
-        { name: TEMP_SRED, ...getRelativePosition(50, 95) },
-        { name: TEMP_SPREM, ...getRelativePosition(50, 140) },
-        { name: TLAK_AK, ...getRelativePosition(50, 185) },
+        { name: TEMP_SRED, ...getRelativePosition(50, 100) },
+        { name: TEMP_SPREM, ...getRelativePosition(50, 150) },
+        { name: TLAK_AK, ...getRelativePosition(50, 200) },
     ];
 
     return (
-        <div id="canvas-container" style={{ position: 'relative', width: '100%', height: '100vh' }}>
+        <div id="canvas-container" style={{ width: '100%', height: '400px' }}>
             <Stage width={containerSize.width} height={containerSize.height}>
                 <Layer>
                     {image && (
                         <KonvaImage
                             image={image}
-                            x={(containerSize.width - imageSize.width) / 2} // Center horizontally
-                            y={(containerSize.height - imageSize.height) / 2} // Center vertically
+                            x={(containerSize.width - imageSize.width) / 2}
+                            y={(containerSize.height - imageSize.height) / 2}
                             width={imageSize.width}
                             height={imageSize.height}
                             cornerRadius={10}
@@ -90,120 +87,92 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
 
                     {/* Display all sensor values */}
                     {sensorPositions.map((pos) => {
-                        // Decide color based on sensor type
-                        let valueColor = "#333"; // default
-                        if (pos.name.includes("TEMP")) {
-                            valueColor = "red"; // red for temperature
-                        } else if (pos.name.includes("TLAK")) {
-                            valueColor = "blue"; // blue for pressure
-                        }
+                        const valueColor = pos.name.includes("TEMP") ? "red" : "blue";
+                        const scaleFactor = imageSize.width / ORIGINAL_IMAGE_WIDTH;
 
                         return (
                             <Group key={pos.name}>
-                                {/* Background box with stronger contrast */}
                                 <Rect
                                     x={pos.x}
                                     y={pos.y}
-                                    width={240 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                    height={40 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    width={200 * scaleFactor}
+                                    height={30 * scaleFactor}
                                     fill="rgba(255, 255, 255, 0.95)"
-                                    cornerRadius={10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                    shadowColor="rgba(0,0,0,0.5)"
-                                    shadowBlur={10}
-                                    shadowOffset={{ x: 3, y: 3 }}
+                                    cornerRadius={5 * scaleFactor}
+                                    shadowColor="rgba(0,0,0,0.2)"
+                                    shadowBlur={5 * scaleFactor}
+                                    shadowOffset={{ x: 2 * scaleFactor, y: 2 * scaleFactor }}
                                     shadowOpacity={0.5}
                                 />
-
-                                {/* Sensor label */}
                                 <Text
-                                    x={pos.x + 12 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                    y={pos.y + 10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    x={pos.x + 10 * scaleFactor}
+                                    y={pos.y + 5 * scaleFactor}
                                     text={`${pos.name}:`}
-                                    fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                    fill="#000" // black for labels
+                                    fontSize={14 * scaleFactor}
+                                    fill="#000"
                                     fontStyle="bold"
                                 />
-
-                                {/* Sensor value */}
                                 <Text
-                                    x={pos.x + 155 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                    y={pos.y + 10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    x={pos.x + 120 * scaleFactor}
+                                    y={pos.y + 5 * scaleFactor}
                                     text={sensorData[pos.name] || "--"}
-                                    fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                    fill={valueColor} // red for temp, blue for tlak
+                                    fontSize={14 * scaleFactor}
+                                    fill={valueColor}
                                     fontStyle="bold"
                                 />
                             </Group>
                         );
                     })}
 
-
-
-                    {/* Display any active warnings at the bottom */}
-                    {(stateMachineValues?.sensorvalues?.burnerFault ||
-                        stateMachineValues?.sensorvalues?.waterShortage ||
-                        stateMachineValues?.sensorvalues?.doorClosed) ? (
-                        <Group>
-                            <Rect
-                                x={containerSize.width * 0.05}
-                                y={containerSize.height * 0.85}
-                                width={containerSize.width * 0.9}
-                                height={containerSize.height * 0.1}
-                                fill="rgba(255, 200, 200, 0.7)"
-                                stroke="#ff0000"
-                                strokeWidth={2 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                cornerRadius={5 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                            />
-                            <Text
-                                x={containerSize.width * 0.06}
-                                y={containerSize.height * 0.88}
-                                text="UPOZORENJA: "
-                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                fill="#ff0000"
-                                fontStyle="bold"
-                            />
-                            <Text
-                                x={containerSize.width * 0.2}
-                                y={containerSize.height * 0.88}
-                                text={[
-                                    stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
-                                    stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
-                                    stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
-                                ].filter(Boolean).join(" | ")}
-                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                fill="#ff0000"
-                            />
-                        </Group>
-                    ) : (
-                        <Group>
-                            <Rect
-                                x={containerSize.width * 0.05}
-                                y={containerSize.height * 0.85}
-                                width={containerSize.width * 0.9}
-                                height={containerSize.height * 0.1}
-                                fill="rgba(220, 255, 220, 0.8)"
-                                stroke="#2e7d32"
-                                strokeWidth={2 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                cornerRadius={5 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                            />
-                            <Text
-                                x={containerSize.width * 0.06}
-                                y={containerSize.height * 0.88}
-                                text="STATUS: "
-                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                fill="#1b5e20"
-                                fontStyle="bold"
-                            />
-                            <Text
-                                x={containerSize.width * 0.15}
-                                y={containerSize.height * 0.88}
-                                text={"OK"}
-                                fontSize={16 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                fill="#1b5e20"
-                                fontStyle="bold"
-                            />
-                        </Group>
-                    )}
+                    {/* Warning/Status bar at the bottom */}
+                    <Group>
+                        <Rect
+                            x={10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                            y={imageSize.height - 40 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                            width={imageSize.width - 20 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                            height={30 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                            fill={
+                                stateMachineValues?.sensorvalues?.burnerFault ||
+                                    stateMachineValues?.sensorvalues?.waterShortage ||
+                                    stateMachineValues?.sensorvalues?.doorClosed
+                                    ? "rgba(255, 200, 200, 0.7)"
+                                    : "rgba(220, 255, 220, 0.8)"
+                            }
+                            stroke={
+                                stateMachineValues?.sensorvalues?.burnerFault ||
+                                    stateMachineValues?.sensorvalues?.waterShortage ||
+                                    stateMachineValues?.sensorvalues?.doorClosed
+                                    ? "#ff0000"
+                                    : "#2e7d32"
+                            }
+                            strokeWidth={1 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                            cornerRadius={5 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                        />
+                        <Text
+                            x={20 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                            y={imageSize.height - 35 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                            text={
+                                stateMachineValues?.sensorvalues?.burnerFault ||
+                                    stateMachineValues?.sensorvalues?.waterShortage ||
+                                    stateMachineValues?.sensorvalues?.doorClosed
+                                    ? "UPOZORENJA: " + [
+                                        stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
+                                        stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
+                                        stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
+                                    ].filter(Boolean).join(" | ")
+                                    : "STATUS: OK"
+                            }
+                            fontSize={14 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                            fill={
+                                stateMachineValues?.sensorvalues?.burnerFault ||
+                                    stateMachineValues?.sensorvalues?.waterShortage ||
+                                    stateMachineValues?.sensorvalues?.doorClosed
+                                    ? "#ff0000"
+                                    : "#1b5e20"
+                            }
+                            fontStyle="bold"
+                        />
+                    </Group>
                 </Layer>
             </Stage>
         </div>
