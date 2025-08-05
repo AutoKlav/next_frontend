@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Stage, Layer, Image as KonvaImage, Rect, Text, Group } from 'react-konva';
 import useImage from 'use-image';
 import { StateMachineValues } from '@/types/grpc';
@@ -12,8 +12,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
     const [image] = useImage('/autoklav.png');
     const [sensorData, setSensorData] = useState<Record<string, string>>({});
     const [containerSize, setContainerSize] = useState({ width: 600, height: 400 });
-    const [imageSize, setImageSize] = useState({ width: 0, height: 0 }); // Initialize as 0
-    const [isReady, setIsReady] = useState(false);
+    const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
     // Calculate scaled dimensions while maintaining aspect ratio
     const calculateImageSize = useCallback((containerWidth: number, containerHeight: number) => {
@@ -26,6 +25,28 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
             height: ORIGINAL_IMAGE_HEIGHT * scale
         };
     }, []);
+
+    // Calculate sensor positions only when imageSize changes
+    const sensorPositions = useMemo(() => {
+        if (imageSize.width === 0 || imageSize.height === 0) return [];
+
+        const getRelativePosition = (x: number, y: number) => ({
+            x: (x / ORIGINAL_IMAGE_WIDTH) * imageSize.width,
+            y: (y / ORIGINAL_IMAGE_HEIGHT) * imageSize.height
+        });
+
+        return [
+            { name: TEMP_AK, ...getRelativePosition(50, 50) },
+            { name: TEMP_SRED, ...getRelativePosition(50, 100) },
+            { name: TEMP_SPREM, ...getRelativePosition(50, 150) },
+            { name: TLAK_AK, ...getRelativePosition(50, 200) },
+        ];
+    }, [imageSize]);
+
+    const scaleFactor = useMemo(() =>
+        imageSize.width > 0 ? imageSize.width / ORIGINAL_IMAGE_WIDTH : 1,
+        [imageSize.width]
+    );
 
     useEffect(() => {
         if (stateMachineValues?.sensorvalues) {
@@ -48,9 +69,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                     height: container.clientHeight
                 };
                 setContainerSize(newContainerSize);
-                const calculatedSize = calculateImageSize(newContainerSize.width, newContainerSize.height);
-                setImageSize(calculatedSize);
-                setIsReady(true);
+                setImageSize(calculateImageSize(newContainerSize.width, newContainerSize.height));
             }
         };
 
@@ -58,28 +77,6 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, [calculateImageSize]);
-
-    // Calculate positions only when we have valid dimensions
-    const getSensorPositions = () => {
-        if (!isReady || imageSize.width === 0 || imageSize.height === 0) {
-            return [];
-        }
-
-        const getRelativePosition = (x: number, y: number) => ({
-            x: (x / ORIGINAL_IMAGE_WIDTH) * imageSize.width,
-            y: (y / ORIGINAL_IMAGE_HEIGHT) * imageSize.height
-        });
-
-        return [
-            { name: TEMP_AK, ...getRelativePosition(50, 50) },
-            { name: TEMP_SRED, ...getRelativePosition(50, 100) },
-            { name: TEMP_SPREM, ...getRelativePosition(50, 150) },
-            { name: TLAK_AK, ...getRelativePosition(50, 200) },
-        ];
-    };
-
-    const sensorPositions = getSensorPositions();
-    const scaleFactor = isReady ? imageSize.width / ORIGINAL_IMAGE_WIDTH : 1;
 
     return (
         <div id="canvas-container" style={{ width: '100%', height: '400px' }}>
@@ -96,7 +93,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                         />
                     )}
 
-                    {isReady && sensorPositions.map((pos) => {
+                    {sensorPositions.map((pos) => {
                         const valueColor = pos.name.includes("TEMP") ? "red" : "blue";
 
                         return (
@@ -133,7 +130,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                         );
                     })}
 
-                    {isReady && (
+                    {imageSize.width > 0 && (
                         <Group>
                             <Rect
                                 x={10 * scaleFactor}
