@@ -1,5 +1,13 @@
 "use client";
 
+import { StateMachineValues } from "@/types/grpc";
+import dynamic from 'next/dynamic';
+
+const CanvasOverlay = dynamic(
+    () => import('@/demo/components/Overlay/CanvasOverlay'),
+    { ssr: false }
+);
+
 export enum Severity {
     Success = 0,
     Info = 0,
@@ -16,6 +24,7 @@ interface StatusHeaderProps {
     elapsedTime: string;
     heatingEnd: string;
     coolingEnd: string;
+    stateMachineValues?: StateMachineValues; // Adjust type as needed
 }
 
 const firstColumn = (name: string, quantity: string) => {
@@ -47,7 +56,7 @@ const secondColumn = (time: string) => {
 
 export const RenderState = (state: number, heatingEnd: string, coolingEnd: string) => {
     const baseClass =
-        "text-lg font-medium mb-3 pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-between";
+        "text-lg font-medium pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-between";
     const spanClass = "text-xl";
 
     switch (state) {
@@ -155,13 +164,17 @@ export const StatusHeader: React.FC<StatusHeaderProps> = ({
     elapsedTime,
     heatingEnd,
     coolingEnd,
+    stateMachineValues,
 }) => {
     return (
         <div className="grid">
             {firstColumn(name, quantity)}
             {secondColumn(elapsedTime)}
-            <div className="classname col-12">
+            <div className="col-12">
                 {RenderState(severity, heatingEnd, coolingEnd)}
+            </div>
+            <div className="col-6">
+                {stateMachineValues && <CanvasOverlay stateMachineValues={stateMachineValues} />}
             </div>
         </div>
     );

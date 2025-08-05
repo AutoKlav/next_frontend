@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import dynamic from 'next/dynamic';
 import { StatusHeader } from '@/demo/components/StatusHeader/StatusHeader';
 import { useQuery } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
@@ -8,13 +7,8 @@ import { getStateMachineValuesAction, getUniqueProcessesAction } from './api/act
 import { checkForErrors } from '@/utils/errorUtil';
 import { formatTime, secondsToHms } from '@/utils/dateUtil';
 import { useToast } from '@/layout/context/toastcontext';
-import { DataPoint, ProcessInfoRow } from '@/types/grpc';
+import { ProcessInfoRow } from '@/types/grpc';
 import { refetchStateMachineIntervals } from '@/constants';
-
-const CanvasOverlay = dynamic(
-    () => import('@/demo/components/Overlay/CanvasOverlay'),
-    { ssr: false }
-);
 
 const Home = () => {
     const { showSuccess, showError, showWarn } = useToast();
@@ -67,8 +61,8 @@ const Home = () => {
                 elapsedTime={state === 0 ? secondsToHms(Number(config?.processlength)) : elapsedTimeDisplay}
                 heatingEnd={heatingEnd}
                 coolingEnd={coolingEnd}
+                stateMachineValues={stateMachineValues}
             />
-            {stateMachineValues && <CanvasOverlay stateMachineValues={stateMachineValues} />}
         </>
     );
 };
