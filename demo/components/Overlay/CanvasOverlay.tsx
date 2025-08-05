@@ -89,25 +89,55 @@ const CanvasOverlay: React.FC<Props> = ({ stateMachineValues }) => {
                     )}
 
                     {/* Display all sensor values */}
-                    {sensorPositions.map((pos) => (
-                        <Group key={pos.name}>
-                            <Text
-                                x={pos.x}
-                                y={pos.y}
-                                text={`${pos.name} `}
-                                fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)} // Scale font size
-                                fill="#333"
-                                fontStyle="bold"
-                            />
-                            <Text
-                                x={pos.x + 170 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                y={pos.y}
-                                text={sensorData[pos.name] || "--"}
-                                fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                                fill="#333333"
-                            />
-                        </Group>
-                    ))}
+                    {sensorPositions.map((pos) => {
+                        // Decide color based on sensor type
+                        let valueColor = "#333"; // default
+                        if (pos.name.includes("TEMP")) {
+                            valueColor = "red"; // red for temperature
+                        } else if (pos.name.includes("TLAK")) {
+                            valueColor = "blue"; // blue for pressure
+                        }
+
+                        return (
+                            <Group key={pos.name}>
+                                {/* Background box with stronger contrast */}
+                                <Rect
+                                    x={pos.x}
+                                    y={pos.y}
+                                    width={240 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    height={40 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    fill="rgba(255, 255, 255, 0.95)"
+                                    cornerRadius={10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    shadowColor="rgba(0,0,0,0.5)"
+                                    shadowBlur={10}
+                                    shadowOffset={{ x: 3, y: 3 }}
+                                    shadowOpacity={0.5}
+                                />
+
+                                {/* Sensor label */}
+                                <Text
+                                    x={pos.x + 12 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    y={pos.y + 10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    text={`${pos.name}:`}
+                                    fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    fill="#000" // black for labels
+                                    fontStyle="bold"
+                                />
+
+                                {/* Sensor value */}
+                                <Text
+                                    x={pos.x + 155 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    y={pos.y + 10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    text={sensorData[pos.name] || "--"}
+                                    fontSize={18 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
+                                    fill={valueColor} // red for temp, blue for tlak
+                                    fontStyle="bold"
+                                />
+                            </Group>
+                        );
+                    })}
+
+
 
                     {/* Display any active warnings at the bottom */}
                     {(stateMachineValues?.sensorvalues?.burnerFault ||

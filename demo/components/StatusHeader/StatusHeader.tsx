@@ -47,7 +47,7 @@ const secondColumn = (time: string) => {
 
 export const RenderState = (state: number, heatingEnd: string, coolingEnd: string) => {
     const baseClass =
-        "text-lg font-medium mb-3 pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-between";
+        "text-lg font-medium pl-3 pt-3 pr-2 pb-3 w-full flex items-center justify-between";
     const spanClass = "text-xl";
 
     switch (state) {
