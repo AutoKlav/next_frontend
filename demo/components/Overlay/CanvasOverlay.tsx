@@ -108,7 +108,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                     shadowColor="rgba(0,0,0,0.2)"
                                     shadowBlur={5}
                                     shadowOffset={{ x: 2, y: 2 }}
-                                    shadowOpacity={0.5}
+                                    shadowOpacity={0.8}
                                 />
                                 <Text
                                     x={pos.x + 10}
