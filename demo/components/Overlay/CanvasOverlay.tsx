@@ -11,8 +11,9 @@ const ORIGINAL_IMAGE_HEIGHT = 720;
 const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ stateMachineValues }) => {
     const [image] = useImage('/autoklav.png');
     const [sensorData, setSensorData] = useState<Record<string, string>>({});
-    const [containerSize, setContainerSize] = useState({ width: 600, height: 400 }); // Adjusted for col-6
-    const [imageSize, setImageSize] = useState({ width: 600, height: 337.5 }); // Maintains 16:9 aspect ratio
+    const [containerSize, setContainerSize] = useState({ width: 600, height: 400 });
+    const [imageSize, setImageSize] = useState({ width: 0, height: 0 }); // Initialize as 0
+    const [isReady, setIsReady] = useState(false);
 
     // Calculate scaled dimensions while maintaining aspect ratio
     const calculateImageSize = useCallback((containerWidth: number, containerHeight: number) => {
@@ -47,7 +48,9 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                     height: container.clientHeight
                 };
                 setContainerSize(newContainerSize);
-                setImageSize(calculateImageSize(newContainerSize.width, newContainerSize.height));
+                const calculatedSize = calculateImageSize(newContainerSize.width, newContainerSize.height);
+                setImageSize(calculatedSize);
+                setIsReady(true);
             }
         };
 
@@ -56,19 +59,27 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
         return () => window.removeEventListener('resize', handleResize);
     }, [calculateImageSize]);
 
-    // Calculate positions relative to the original image dimensions
-    const getRelativePosition = (x: number, y: number) => ({
-        x: (x / ORIGINAL_IMAGE_WIDTH) * imageSize.width,
-        y: (y / ORIGINAL_IMAGE_HEIGHT) * imageSize.height
-    });
+    // Calculate positions only when we have valid dimensions
+    const getSensorPositions = () => {
+        if (!isReady || imageSize.width === 0 || imageSize.height === 0) {
+            return [];
+        }
 
-    // Adjusted sensor positions to fit within the image
-    const sensorPositions = [
-        { name: TEMP_AK, ...getRelativePosition(50, 50) },
-        { name: TEMP_SRED, ...getRelativePosition(50, 100) },
-        { name: TEMP_SPREM, ...getRelativePosition(50, 150) },
-        { name: TLAK_AK, ...getRelativePosition(50, 200) },
-    ];
+        const getRelativePosition = (x: number, y: number) => ({
+            x: (x / ORIGINAL_IMAGE_WIDTH) * imageSize.width,
+            y: (y / ORIGINAL_IMAGE_HEIGHT) * imageSize.height
+        });
+
+        return [
+            { name: TEMP_AK, ...getRelativePosition(50, 50) },
+            { name: TEMP_SRED, ...getRelativePosition(50, 100) },
+            { name: TEMP_SPREM, ...getRelativePosition(50, 150) },
+            { name: TLAK_AK, ...getRelativePosition(50, 200) },
+        ];
+    };
+
+    const sensorPositions = getSensorPositions();
+    const scaleFactor = isReady ? imageSize.width / ORIGINAL_IMAGE_WIDTH : 1;
 
     return (
         <div id="canvas-container" style={{ width: '100%', height: '400px' }}>
@@ -85,10 +96,8 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                         />
                     )}
 
-                    {/* Display all sensor values */}
-                    {sensorPositions.map((pos) => {
+                    {isReady && sensorPositions.map((pos) => {
                         const valueColor = pos.name.includes("TEMP") ? "red" : "blue";
-                        const scaleFactor = imageSize.width / ORIGINAL_IMAGE_WIDTH;
 
                         return (
                             <Group key={pos.name}>
@@ -124,55 +133,56 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                         );
                     })}
 
-                    {/* Warning/Status bar at the bottom */}
-                    <Group>
-                        <Rect
-                            x={10 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                            y={imageSize.height - 40 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
-                            width={imageSize.width - 20 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                            height={30 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
-                            fill={
-                                stateMachineValues?.sensorvalues?.burnerFault ||
-                                    stateMachineValues?.sensorvalues?.waterShortage ||
-                                    stateMachineValues?.sensorvalues?.doorClosed
-                                    ? "rgba(255, 200, 200, 0.7)"
-                                    : "rgba(220, 255, 220, 0.8)"
-                            }
-                            stroke={
-                                stateMachineValues?.sensorvalues?.burnerFault ||
-                                    stateMachineValues?.sensorvalues?.waterShortage ||
-                                    stateMachineValues?.sensorvalues?.doorClosed
-                                    ? "#ff0000"
-                                    : "#2e7d32"
-                            }
-                            strokeWidth={1 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                            cornerRadius={5 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                        />
-                        <Text
-                            x={20 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                            y={imageSize.height - 35 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
-                            text={
-                                stateMachineValues?.sensorvalues?.burnerFault ||
-                                    stateMachineValues?.sensorvalues?.waterShortage ||
-                                    stateMachineValues?.sensorvalues?.doorClosed
-                                    ? "UPOZORENJA: " + [
-                                        stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
-                                        stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
-                                        stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
-                                    ].filter(Boolean).join(" | ")
-                                    : "STATUS: OK"
-                            }
-                            fontSize={14 * (imageSize.width / ORIGINAL_IMAGE_WIDTH)}
-                            fill={
-                                stateMachineValues?.sensorvalues?.burnerFault ||
-                                    stateMachineValues?.sensorvalues?.waterShortage ||
-                                    stateMachineValues?.sensorvalues?.doorClosed
-                                    ? "#ff0000"
-                                    : "#1b5e20"
-                            }
-                            fontStyle="bold"
-                        />
-                    </Group>
+                    {isReady && (
+                        <Group>
+                            <Rect
+                                x={10 * scaleFactor}
+                                y={imageSize.height - 40 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                                width={imageSize.width - 20 * scaleFactor}
+                                height={30 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                                fill={
+                                    stateMachineValues?.sensorvalues?.burnerFault ||
+                                        stateMachineValues?.sensorvalues?.waterShortage ||
+                                        stateMachineValues?.sensorvalues?.doorClosed
+                                        ? "rgba(255, 200, 200, 0.7)"
+                                        : "rgba(220, 255, 220, 0.8)"
+                                }
+                                stroke={
+                                    stateMachineValues?.sensorvalues?.burnerFault ||
+                                        stateMachineValues?.sensorvalues?.waterShortage ||
+                                        stateMachineValues?.sensorvalues?.doorClosed
+                                        ? "#ff0000"
+                                        : "#2e7d32"
+                                }
+                                strokeWidth={1 * scaleFactor}
+                                cornerRadius={5 * scaleFactor}
+                            />
+                            <Text
+                                x={20 * scaleFactor}
+                                y={imageSize.height - 35 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                                text={
+                                    stateMachineValues?.sensorvalues?.burnerFault ||
+                                        stateMachineValues?.sensorvalues?.waterShortage ||
+                                        stateMachineValues?.sensorvalues?.doorClosed
+                                        ? "UPOZORENJA: " + [
+                                            stateMachineValues?.sensorvalues?.doorClosed ? "VRATA OTVORENA" : "",
+                                            stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
+                                            stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
+                                        ].filter(Boolean).join(" | ")
+                                        : "STATUS: OK"
+                                }
+                                fontSize={14 * scaleFactor}
+                                fill={
+                                    stateMachineValues?.sensorvalues?.burnerFault ||
+                                        stateMachineValues?.sensorvalues?.waterShortage ||
+                                        stateMachineValues?.sensorvalues?.doorClosed
+                                        ? "#ff0000"
+                                        : "#1b5e20"
+                                }
+                                fontStyle="bold"
+                            />
+                        </Group>
+                    )}
                 </Layer>
             </Stage>
         </div>
