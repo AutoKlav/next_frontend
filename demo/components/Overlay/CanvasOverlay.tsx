@@ -101,28 +101,28 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                 <Rect
                                     x={pos.x}
                                     y={pos.y}
-                                    width={200 * scaleFactor}
-                                    height={30 * scaleFactor}
+                                    width={250}
+                                    height={30}
                                     fill="rgba(255, 255, 255, 0.95)"
-                                    cornerRadius={5 * scaleFactor}
+                                    cornerRadius={5}
                                     shadowColor="rgba(0,0,0,0.2)"
-                                    shadowBlur={5 * scaleFactor}
-                                    shadowOffset={{ x: 2 * scaleFactor, y: 2 * scaleFactor }}
+                                    shadowBlur={5}
+                                    shadowOffset={{ x: 2, y: 2 }}
                                     shadowOpacity={0.5}
                                 />
                                 <Text
-                                    x={pos.x + 10 * scaleFactor}
-                                    y={pos.y + 5 * scaleFactor}
+                                    x={pos.x + 10}
+                                    y={pos.y + 5}
                                     text={`${pos.name}:`}
-                                    fontSize={14 * scaleFactor}
+                                    fontSize={18}
                                     fill="#000"
                                     fontStyle="bold"
                                 />
                                 <Text
-                                    x={pos.x + 120 * scaleFactor}
-                                    y={pos.y + 5 * scaleFactor}
+                                    x={pos.x + 160}
+                                    y={pos.y + 5}
                                     text={sensorData[pos.name] || "--"}
-                                    fontSize={14 * scaleFactor}
+                                    fontSize={18}
                                     fill={valueColor}
                                     fontStyle="bold"
                                 />
@@ -133,10 +133,10 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                     {imageSize.width > 0 && (
                         <Group>
                             <Rect
-                                x={10 * scaleFactor}
+                                x={10}
                                 y={imageSize.height - 40 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
-                                width={imageSize.width - 20 * scaleFactor}
-                                height={30 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                                width={imageSize.width - 20}
+                                height={50 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
                                 fill={
                                     stateMachineValues?.sensorvalues?.burnerFault ||
                                         stateMachineValues?.sensorvalues?.waterShortage ||
@@ -155,7 +155,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                 cornerRadius={5 * scaleFactor}
                             />
                             <Text
-                                x={20 * scaleFactor}
+                                x={20}
                                 y={imageSize.height - 35 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
                                 text={
                                     stateMachineValues?.sensorvalues?.burnerFault ||
@@ -168,7 +168,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                         ].filter(Boolean).join(" | ")
                                         : "STATUS: OK"
                                 }
-                                fontSize={14 * scaleFactor}
+                                fontSize={18}
                                 fill={
                                     stateMachineValues?.sensorvalues?.burnerFault ||
                                         stateMachineValues?.sensorvalues?.waterShortage ||
