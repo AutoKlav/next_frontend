@@ -485,19 +485,12 @@ const DashboardPage = () => {
 
     const disabledInput = typeDropdown?.id !== 2;
 
-    const footerContent = (
-        <div>
-            <Button label="Odustani" icon="pi pi-times" onClick={() => setModalVisibility(false)} className="p-button-text" />
-            <Button label="Unesi podatke" icon="pi pi-check" onClick={handleStartProcess} autoFocus />
-        </div>
-    );
-
     return (
         <div className="grid p-2">
             <ConfirmDialog />
             <div className="m-0">
                 <div className="grid p-2">
-                    <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '90vw' }} onHide={() => { if (!isModalVisible) return; setModalVisibility(false); }} footer={footerContent}>
+                    <Dialog header="Pokretanje procesa" visible={isModalVisible} style={{ width: '90vw' }} onHide={() => { if (!isModalVisible) return; setModalVisibility(false); }}>
                         <TabView>
                             <TabPanel header="Jednostavni unos">
                                 <div className="flex flex-col items-center">
@@ -546,6 +539,28 @@ const DashboardPage = () => {
                                     <div className="col-4">
                                         <GeneralNumberInput headerName="D0" disabled={disabledInput} inputValue={[d0, setD0]} />
                                         <GeneralNumberInput headerName="Z" disabled={disabledInput} inputValue={[z, setZ]} />
+                                    </div>
+                                    {/* Footer buttons */}
+                                    <div className="col-12" style={{
+                                        position: 'relative',
+                                        bottom: '-2rem',
+                                        right: '0',
+                                        padding: '1rem',
+                                        textAlign: 'right',
+                                    }}>
+                                        <Button
+                                            label="Odustani"
+                                            icon="pi pi-times"
+                                            onClick={() => setModalVisibility(false)}
+                                            className="p-button-text"
+                                            style={{ marginRight: '0.5rem' }}
+                                        />
+                                        <Button
+                                            label="Unesi podatke"
+                                            icon="pi pi-check"
+                                            onClick={handleStartProcess}
+                                            autoFocus
+                                        />
                                     </div>
                                 </div>
                             </TabPanel>
