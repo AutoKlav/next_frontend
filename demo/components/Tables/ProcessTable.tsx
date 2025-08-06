@@ -186,6 +186,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
                         field={field}
                         header={header}
                         style={{ width: '10%', textAlign: 'left' as CSSProperties['textAlign'] }}
+                        sortable={field === 'productname' || field === 'productquantity'} // Enable sorting for these fields
                     />
                 ))}
                 <Column
