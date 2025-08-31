@@ -4,12 +4,12 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { CSSProperties } from 'react';
-import { Bacteria, HeatingType, ProcessConfigMode, ProcessInfoRow, StartProcessRequest } from '@/types/grpc';
+import { Bacteria, HeatingType, ProcessConfigMode, ProcessInfoRow, ProcessType, StartProcessRequest } from '@/types/grpc';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { useToast } from '@/layout/context/toastcontext';
-import { getUniqueProcessesAction, deleteProcessAction, startProcessAction, getBacteriaAction } from '@/app/(main)/api/actions';
+import { getUniqueProcessesAction, deleteProcessAction, startProcessAction, getBacteriaAction, getProcessTypesAction } from '@/app/(main)/api/actions';
 
 interface ProcessTableProps {
     onProcessStart?: () => void;
@@ -18,7 +18,6 @@ interface ProcessTableProps {
 const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const { showSuccess, showError, showWarn } = useToast();
     const [config, setConfig] = useState<ProcessInfoRow[]>([]);
-    const [bacteria, setBacteria] = useState<Bacteria[]>([]);
     const [loading, setLoading] = useState(false);
     const [deleteLoadingId, setDeleteLoadingId] = useState<string | null>(null);
     const [proceedLoadingId, setProceedLoadingId] = useState<string | null>(null);
@@ -26,6 +25,9 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const [batchLTO, setBatchLTO] = useState('');
     const [selectedRow, setSelectedRow] = useState<ProcessInfoRow | null>(null);
     const toast = useRef<Toast>(null);
+    const fetchedTypes = useRef<ProcessType[]>();
+    const fetchedBacteria = useRef<Bacteria[]>();
+
 
     const deleteProcessRow = async (id: string) => {
         try {
@@ -59,7 +61,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
         try {
             setLoading(true);
             const response = await getBacteriaAction();
-            setBacteria(response.bacteriaList);
+            fetchedBacteria.current = response.bacteriaList;
         } catch (error) {
             showError('Bakterija', 'Došlo je do greške prilikom učitavanja bakterija');
             console.error('Error fetching bacteria:', error);
@@ -67,6 +69,19 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             setLoading(false);
         }
     };
+
+    const fetchProcessTypes = async () => {
+        try {
+            setLoading(true);
+            const response = await getProcessTypesAction();
+            fetchedTypes.current = response.processtypesList;
+        } catch (error) {
+            showError('Tip procesa', 'Došlo je do greške prilikom tipova procesa');
+            console.error('Error fetching process types:', error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const handleProceedClick = (rowData: ProcessInfoRow) => {
         setSelectedRow(rowData);
@@ -137,6 +152,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     useEffect(() => {
         fetchProcesses();
         fetchBacteria();
+        fetchProcessTypes();
     }, []);
 
     const columns = [
