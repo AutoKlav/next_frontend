@@ -9,7 +9,7 @@ import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { useToast } from '@/layout/context/toastcontext';
-import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
+import { getUniqueProcessesAction, deleteProcessAction, startProcessAction, getBacteriaAction } from '@/app/(main)/api/actions';
 
 interface ProcessTableProps {
     onProcessStart?: () => void;
@@ -18,6 +18,7 @@ interface ProcessTableProps {
 const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const { showSuccess, showError, showWarn } = useToast();
     const [config, setConfig] = useState<ProcessInfoRow[]>([]);
+    const [bacteria, setBacteria] = useState<Bacteria[]>([]);
     const [loading, setLoading] = useState(false);
     const [deleteLoadingId, setDeleteLoadingId] = useState<string | null>(null);
     const [proceedLoadingId, setProceedLoadingId] = useState<string | null>(null);
@@ -49,6 +50,19 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
         } catch (error) {
             showError('Proces', 'Došlo je do greške prilikom učitavanja procesa');
             console.error('Error fetching processes:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchBacteria = async () => {
+        try {
+            setLoading(true);
+            const response = await getBacteriaAction();
+            setBacteria(response.bacteriaList);
+        } catch (error) {
+            showError('Bakterija', 'Došlo je do greške prilikom učitavanja bakterija');
+            console.error('Error fetching bacteria:', error);
         } finally {
             setLoading(false);
         }
@@ -122,6 +136,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
 
     useEffect(() => {
         fetchProcesses();
+        fetchBacteria();
     }, []);
 
     const columns = [
