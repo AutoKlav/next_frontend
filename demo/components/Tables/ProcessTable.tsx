@@ -61,9 +61,6 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
 
     const startProcessButton = async () => {
         if (!selectedRow) return;
-        console.log(selectedRow);
-        //return;
-
 
         try {
             setProceedLoadingId(selectedRow.id.toString());
@@ -77,12 +74,12 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             };
 
             const processType = {
-                id: selectedRow.processType.id,
-                customTemp: selectedRow.processType.customtemp,
-                mantainTemp: selectedRow.processType.maintaintemp,
+                id: selectedRow.processtype.id,
+                customTemp: selectedRow.processtype.customtemp,
+                mantainTemp: selectedRow.processtype.maintaintemp,
                 d0: bacteria.d0,
                 z: bacteria.z,
-                name: selectedRow.processType.name,
+                name: selectedRow.processtype.name,
                 description: '',
             }
 
