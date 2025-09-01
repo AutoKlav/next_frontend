@@ -122,11 +122,10 @@ const DashboardPage = () => {
         //#region typeDropdown
         targetF.current = 0;
 
+        setModeDropdown(modeDropdownValues?.[1] || modeDropdownValues?.[0]);
+        setBacteriaDropdown(fetchedBacteria.current?.[0]);
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
         setZ(fetchedBacteria.current?.[0]?.z || 0);
-
-        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);
-        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 116);
 
         targetCoolingTime.current = 0;
         targetHeatingTime.current = 0;

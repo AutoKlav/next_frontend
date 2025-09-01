@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { useToast } from '@/layout/context/toastcontext';
 import { getUniqueProcessesAction, deleteProcessAction, startProcessAction } from '@/app/(main)/api/actions';
+import { confirmDialog } from 'primereact/confirmdialog';
 
 interface ProcessTableProps {
     onProcessStart?: () => void;
@@ -26,6 +27,16 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const [selectedRow, setSelectedRow] = useState<ProcessInfoRow | null>(null);
     const toast = useRef<Toast>(null);
 
+    const deleteConfirmation = (id: string) => {
+        confirmDialog({
+            message: 'Jeste li sigurni da želite obrisati proces?',
+            header: 'Potvrda brisanja',
+            icon: 'pi pi-exclamation-triangle',
+            rejectLabel: 'Odustani',
+            acceptLabel: 'Obriši',
+            accept: () => deleteProcessRow(id),
+        });
+    }
     const deleteProcessRow = async (id: string) => {
         try {
             setDeleteLoadingId(id);
@@ -140,7 +151,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             <Button
                 icon="pi pi-trash"
                 className="p-button-rounded p-button-danger"
-                onClick={() => deleteProcessRow(rowData.id.toString())}
+                onClick={() => deleteConfirmation(rowData.id.toString())}
                 loading={deleteLoadingId === rowData.id.toString()}
                 disabled={!!deleteLoadingId}
             />
