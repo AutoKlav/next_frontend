@@ -74,13 +74,13 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
             };
 
             const processType = {
-                id: 0,
-                customTemp: 121.11,
-                mantainTemp: 116,
-                d0: 0.2,
-                z: 10,
-                name: "Sterilizacija",
-                description: "Sterilizacija",
+                id: selectedRow.processtype.id,
+                customTemp: selectedRow.processtype.customtemp,
+                maintainTemp: selectedRow.processtype.maintaintemp,
+                d0: bacteria.d0,
+                z: bacteria.z,
+                name: selectedRow.processtype.name,
+                description: '',
             }
 
             const request: StartProcessRequest = {
