@@ -94,9 +94,14 @@ export const RenderState = (state: number, heatingEnd: string, coolingEnd: strin
                     <div className="flex flex-col">
                         <span className={spanClass}>
                             Proces je u izvođenju (Sterilizacija)
-                            <br />
-                            <br />
-                            {heatingEnd && <span>Kraj sterilizacije: {heatingEnd}</span>}
+                            {heatingEnd !== '--:--' &&
+                                (
+                                    <>
+                                        <br />
+                                        <br />
+                                        <span>Kraj sterilizacije: {heatingEnd}</span>
+                                    </>
+                                )}
                         </span>
                     </div>
                 </div>
@@ -119,9 +124,15 @@ export const RenderState = (state: number, heatingEnd: string, coolingEnd: strin
                     <div className="flex flex-col">
                         <span className={spanClass}>
                             Proces je u izvođenju (Hlađenje)
-                            <br />
-                            <br />
-                            {coolingEnd && <span>Kraj hlađenja: {coolingEnd}</span>}
+                            {coolingEnd !== '--:--' &&
+                                (
+                                    <>
+                                        <br />
+                                        <br />
+                                        <span>Kraj hlađenja: {coolingEnd}</span>
+                                    </>
+                                )
+                            }
                         </span>
                     </div>
                 </div>
