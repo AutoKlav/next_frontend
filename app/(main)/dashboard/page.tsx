@@ -127,9 +127,6 @@ const DashboardPage = () => {
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
         setZ(fetchedBacteria.current?.[0]?.z || 0);
 
-        setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);
-        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 116);
-
         targetCoolingTime.current = 0;
         targetHeatingTime.current = 0;
         batchLTO.current = '';
