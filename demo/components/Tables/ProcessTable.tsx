@@ -27,7 +27,7 @@ const ProcessTable = ({ onProcessStart }: ProcessTableProps) => {
     const [selectedRow, setSelectedRow] = useState<ProcessInfoRow | null>(null);
     const toast = useRef<Toast>(null);
 
-    const deleteConfirmation = async (id: string) => {
+    const deleteConfirmation = (id: string) => {
         confirmDialog({
             message: 'Jeste li sigurni da želite obrisati proces?',
             header: 'Potvrda brisanja',

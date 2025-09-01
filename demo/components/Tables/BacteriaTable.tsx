@@ -11,6 +11,7 @@ import GeneralStringInput from '@/demo/components/Inputs/GeneralInput/GeneralStr
 import GeneralNumberInput from '@/demo/components/Inputs/GeneralInput/GeneralNumberInput';
 import { useToast } from '@/layout/context/toastcontext';
 import { createBacteriaAction, deleteBacteriaAction, getBacteriaAction } from '@/app/(main)/api/actions';
+import { confirmDialog, ConfirmDialog } from 'primereact/confirmdialog'; // Import ConfirmDialog
 
 interface BacteriaTableProps {
     bacteria?: Bacteria[];
@@ -22,21 +23,32 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
     const [loading, setLoading] = useState(false);
     const toast = useRef<Toast>(null);
     const [isModalVisible, setModalVisibility] = useState(false);
-    
+
     // Form state
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const d0 = useRef<number>(0);
     const z = useRef<number>(0);
 
+    const deleteBacteriaConfirmation = async (id: string) => {
+        confirmDialog({
+            message: 'Jeste li sigurni da želite obrisati bakteriju?',
+            header: 'Potvrda brisanja',
+            icon: 'pi pi-exclamation-triangle',
+            rejectLabel: 'Odustani',
+            acceptLabel: 'Obriši',
+            accept: () => deleteBacteriaRow(id),
+        });
+    }
+
     const deleteBacteriaRow = async (id: string) => {
         try {
             setLoading(true);
-            await deleteBacteriaAction({id: parseInt(id)});
-            
+            await deleteBacteriaAction({ id: parseInt(id) });
+
             // Use functional update to ensure we have the latest state
             setConfig(prevConfig => prevConfig.filter(item => item.id.toString() !== id));
-            
+
             showSuccess('Bakterija', 'Bakterija je uspješno izbrisana');
         } catch (error) {
             showError('Bakterija', 'Došlo je do greške prilikom brisanja bakterije');
@@ -59,23 +71,23 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
         }
     };
 
-    useEffect(() => {        
-        fetchBacteria();        
+    useEffect(() => {
+        fetchBacteria();
     }, []);
 
     const columns = [
         { field: 'name', header: 'Ime' },
-        { field: 'description', header: 'Opis'},
+        { field: 'description', header: 'Opis' },
         { field: 'd0', header: 'd0' },
         { field: 'z', header: 'z' }
-    ];   
+    ];
 
     const deleteButton = (rowData: Bacteria) => {
         return (
-            <Button 
-                icon="pi pi-trash" 
-                className="p-button-rounded p-button-danger" 
-                onClick={() => deleteBacteriaRow(rowData.id.toString())}
+            <Button
+                icon="pi pi-trash"
+                className="p-button-rounded p-button-danger"
+                onClick={() => deleteBacteriaConfirmation(rowData.id.toString())}
                 loading={loading}
                 disabled={loading}
             />
@@ -87,7 +99,7 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
             showError('Bakterija', 'Molimo popunite sva obavezna polja');
             return;
         }
-        
+
         try {
             setLoading(true);
             const newId = config.length > 0 ? Math.max(...config.map(b => b.id)) + 1 : 1;
@@ -98,9 +110,9 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
                 d0: d0.current,
                 z: z.current
             };
-            
+
             await createBacteriaAction(bacteria);
-            
+
             // Use functional update
             setConfig(prevConfig => [...prevConfig, bacteria]);
             showSuccess('Bakterija', 'Nova bakterija je uspješno dodana');
@@ -121,17 +133,17 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
 
     const modalFooter = (
         <div>
-            <Button 
-                label="Odustani" 
-                icon="pi pi-times" 
-                onClick={() => setModalVisibility(false)} 
-                className="p-button-text" 
+            <Button
+                label="Odustani"
+                icon="pi pi-times"
+                onClick={() => setModalVisibility(false)}
+                className="p-button-text"
                 disabled={loading}
             />
-            <Button 
-                label="Spremi" 
-                icon="pi pi-check" 
-                onClick={handleAddBacteria} 
+            <Button
+                label="Spremi"
+                icon="pi pi-check"
+                onClick={handleAddBacteria}
                 loading={loading}
                 disabled={loading}
             />
@@ -141,74 +153,76 @@ const BacteriaTable: React.FC<BacteriaTableProps> = ({ bacteria }) => {
     return (
         <div className="card p-fluid">
             <Toast ref={toast} />
+            <ConfirmDialog /> {/* Add this line - it's crucial! */}
+
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
                 <h2 style={{ textAlign: 'left', margin: 0 }}>Bakterije</h2>
                 <div style={{ textAlign: 'right' }}>
-                    <Button 
-                        label="Dodaj bakteriju" 
-                        icon="pi pi-plus" 
+                    <Button
+                        label="Dodaj bakteriju"
+                        icon="pi pi-plus"
                         onClick={() => setModalVisibility(true)}
                         className="p-button-sm"
                         disabled={loading}
                     />
                 </div>
             </div>
-            
-            <DataTable 
-                dataKey="id" 
-                value={config}                 
+
+            <DataTable
+                dataKey="id"
+                value={config}
                 loading={loading}
                 tableStyle={{ minWidth: '50rem' }}
             >
                 {columns.map(({ field, header }) => (
-                    <Column 
-                        key={field} 
-                        field={field} 
-                        header={header} 
-                        style={{ width: '50%', textAlign: 'left' as CSSProperties['textAlign'] }} 
+                    <Column
+                        key={field}
+                        field={field}
+                        header={header}
+                        style={{ width: '50%', textAlign: 'left' as CSSProperties['textAlign'] }}
                     />
                 ))}
-                <Column 
-                    body={deleteButton} 
-                    headerStyle={{ width: '10%', minWidth: '8rem' }} 
-                    bodyStyle={{ textAlign: 'center' }} 
+                <Column
+                    body={deleteButton}
+                    headerStyle={{ width: '10%', minWidth: '8rem' }}
+                    bodyStyle={{ textAlign: 'center' }}
                 />
             </DataTable>
 
-            <Dialog 
-                header="Dodaj novu bakteriju" 
-                visible={isModalVisible} 
-                style={{ width: '50vw' }} 
+            <Dialog
+                header="Dodaj novu bakteriju"
+                visible={isModalVisible}
+                style={{ width: '50vw' }}
                 onHide={() => !loading && setModalVisibility(false)}
                 footer={modalFooter}
             >
                 <div className="grid">
                     <div className="col-6">
-                        <GeneralStringInput 
-                            headerName="Ime*" 
+                        <GeneralStringInput
+                            headerName="Ime*"
                             placeholder="Unesite ime bakterije"
                             inputValue={[name, setName]}
-                            suggestions={[]}                            
+                            suggestions={[]}
                         />
                     </div>
                     <div className="col-6">
-                        <GeneralStringInput 
-                            headerName="Opis" 
+                        <GeneralStringInput
+                            headerName="Opis"
                             placeholder="Unesite opis bakterije"
                             inputValue={[description, setDescription]}
-                            suggestions={[]}                            
+                            suggestions={[]}
                         />
                     </div>
                     <div className="col-6">
-                        <GeneralNumberInput 
-                            headerName="d0*" 
+                        <GeneralNumberInput
+                            headerName="d0*"
                             inputValue={d0}
                             disabled={loading}
                         />
                     </div>
                     <div className="col-6">
-                        <GeneralNumberInput 
-                            headerName="z*" 
+                        <GeneralNumberInput
+                            headerName="z*"
                             inputValue={z}
                             disabled={loading}
                         />
