@@ -15,7 +15,7 @@ const AppMenu = () => {
         {
             queryKey: ['stateMachineValues'],
             queryFn: () => getStateMachineValuesAction(),
-            refetchInterval: 1000,
+            refetchInterval: 5000,
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
             },
