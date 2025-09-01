@@ -122,6 +122,7 @@ const DashboardPage = () => {
         //#region typeDropdown
         targetF.current = 0;
 
+        setModeDropdown(modeDropdownValues[1]);
         setBacteriaDropdown(fetchedBacteria.current?.[0]);
         setD0(fetchedBacteria.current?.[0]?.d0 || 0);
         setZ(fetchedBacteria.current?.[0]?.z || 0);
