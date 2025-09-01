@@ -19,9 +19,6 @@ const AppMenu = () => {
             onError: (error) => {
                 console.error('Error getting state machine values:', error);
             },
-            onSuccess: (data) => {
-
-            },
         },
     );
 
