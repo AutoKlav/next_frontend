@@ -420,6 +420,16 @@ const DashboardPage = () => {
                 z: z,
             };
 
+            if (parseFloat(targetF.current.toString()) <= 0 && modeDropdown?.id === ProcessConfigMode.TARGETF) {
+                showWarn('Proces', 'Ciljni F ne može biti manji od 0 ili jednak nuli');
+                return;
+            }
+
+            if (parseFloat(finishTemp.toString()) <= 0 && modeDropdown?.id === ProcessConfigMode.TARGETF) {
+                showWarn('Proces', 'Završna temperatura ne može biti manja od 0 ili jednaka nuli');
+                return;
+            }
+
             const timeMode = modeDropdown?.id === ProcessConfigMode.TIME;
             const finishTempEdited = timeMode ? '' : finishTemp;
             const targetFEdited = isNaN(targetF.current) || timeMode ? '0' : targetF.current.toString()
