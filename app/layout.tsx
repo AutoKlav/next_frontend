@@ -5,7 +5,7 @@ import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 
-import "primereact/resources/themes/saga-blue/theme.css"; 
+import "primereact/resources/themes/saga-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 
 import '../styles/layout/layout.scss';
@@ -22,7 +22,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     const queryClient = new QueryClient();
 
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang="hr" suppressHydrationWarning>
             <head>
                 <meta name="apple-mobile-web-app-title" content="Autoklav" />
                 <link id="theme-css" href={`/themes/lara-dark-purple/theme.css`} rel="stylesheet"></link>
