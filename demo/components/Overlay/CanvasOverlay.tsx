@@ -7,6 +7,8 @@ import { TEMP_AK, TEMP_SPREM, TEMP_SRED, TLAK_AK } from '@/constants';
 
 const ORIGINAL_IMAGE_WIDTH = 1280;
 const ORIGINAL_IMAGE_HEIGHT = 720;
+const SENSOR_LABEL_HEIGHT = 30;
+const SENSOR_LABEL_SPACING = 10;
 
 const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ stateMachineValues }) => {
     const [image] = useImage('/autoklav.png');
@@ -26,27 +28,20 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
         };
     }, []);
 
-    // Calculate sensor positions only when imageSize changes
+    // Calculate sensor positions with fixed spacing
     const sensorPositions = useMemo(() => {
         if (imageSize.width === 0 || imageSize.height === 0) return [];
 
-        const getRelativePosition = (x: number, y: number) => ({
-            x: (x / ORIGINAL_IMAGE_WIDTH) * imageSize.width,
-            y: (y / ORIGINAL_IMAGE_HEIGHT) * imageSize.height
-        });
+        const baseX = 20;
+        const baseY = 5;
 
         return [
-            { name: TEMP_AK, ...getRelativePosition(50, 50) },
-            { name: TEMP_SRED, ...getRelativePosition(50, 100) },
-            { name: TEMP_SPREM, ...getRelativePosition(50, 150) },
-            { name: TLAK_AK, ...getRelativePosition(50, 200) },
+            { name: TEMP_AK, x: baseX, y: baseY },
+            { name: TEMP_SRED, x: baseX, y: baseY + (SENSOR_LABEL_HEIGHT + SENSOR_LABEL_SPACING) },
+            { name: TEMP_SPREM, x: baseX, y: baseY + 2 * (SENSOR_LABEL_HEIGHT + SENSOR_LABEL_SPACING) },
+            { name: TLAK_AK, x: baseX, y: baseY + 3 * (SENSOR_LABEL_HEIGHT + SENSOR_LABEL_SPACING) },
         ];
     }, [imageSize]);
-
-    const scaleFactor = useMemo(() =>
-        imageSize.width > 0 ? imageSize.width / ORIGINAL_IMAGE_WIDTH : 1,
-        [imageSize.width]
-    );
 
     useEffect(() => {
         if (stateMachineValues?.sensorvalues) {
@@ -79,7 +74,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
     }, [calculateImageSize]);
 
     return (
-        <div id="canvas-container" style={{ width: '100%', height: '400px' }}>
+        <div id="canvas-container" style={{ width: '100%', height: '500px', minHeight: '400px' }}>
             <Stage width={containerSize.width} height={containerSize.height}>
                 <Layer>
                     {image && (
@@ -102,7 +97,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                     x={pos.x}
                                     y={pos.y}
                                     width={250}
-                                    height={30}
+                                    height={SENSOR_LABEL_HEIGHT}
                                     fill="rgba(255, 255, 255, 0.95)"
                                     cornerRadius={5}
                                     shadowColor="rgba(0,0,0,0.2)"
@@ -114,7 +109,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                     x={pos.x + 10}
                                     y={pos.y + 5}
                                     text={`${pos.name}:`}
-                                    fontSize={18}
+                                    fontSize={14}
                                     fill="#000"
                                     fontStyle="bold"
                                 />
@@ -122,7 +117,7 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                     x={pos.x + 160}
                                     y={pos.y + 5}
                                     text={sensorData[pos.name] || "--"}
-                                    fontSize={18}
+                                    fontSize={14}
                                     fill={valueColor}
                                     fontStyle="bold"
                                 />
@@ -133,10 +128,10 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                     {imageSize.width > 0 && (
                         <Group>
                             <Rect
-                                x={10}
-                                y={imageSize.height - 40 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
-                                width={imageSize.width - 20}
-                                height={50 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                                x={containerSize.width / 3}
+                                y={5}
+                                width={containerSize.width / 2 - 200}
+                                height={40}
                                 fill={
                                     stateMachineValues?.sensorvalues?.burnerFault ||
                                         stateMachineValues?.sensorvalues?.waterShortage ||
@@ -151,12 +146,13 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                         ? "#ff0000"
                                         : "#2e7d32"
                                 }
-                                strokeWidth={1 * scaleFactor}
-                                cornerRadius={5 * scaleFactor}
+                                strokeWidth={1}
+                                cornerRadius={5}
                             />
                             <Text
-                                x={20}
-                                y={imageSize.height - 35 * (imageSize.height / ORIGINAL_IMAGE_HEIGHT)}
+                                x={containerSize.width / 3 + 10}
+                                y={20}
+
                                 text={
                                     stateMachineValues?.sensorvalues?.burnerFault ||
                                         stateMachineValues?.sensorvalues?.waterShortage ||
@@ -166,9 +162,9 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                             stateMachineValues?.sensorvalues?.burnerFault ? "GREŠKA PLAMENIKA" : "",
                                             stateMachineValues?.sensorvalues?.waterShortage ? "NISKA RAZINA VODE" : ""
                                         ].filter(Boolean).join(" | ")
-                                        : "STATUS: OK"
+                                        : "STATUS: Spremno za rad"
                                 }
-                                fontSize={18}
+                                fontSize={14}
                                 fill={
                                     stateMachineValues?.sensorvalues?.burnerFault ||
                                         stateMachineValues?.sensorvalues?.waterShortage ||
@@ -177,6 +173,8 @@ const CanvasOverlay: React.FC<{ stateMachineValues: StateMachineValues }> = ({ s
                                         : "#1b5e20"
                                 }
                                 fontStyle="bold"
+                                width={containerSize.width - 40}
+                                wrap="word"
                             />
                         </Group>
                     )}
