@@ -52,16 +52,22 @@ const HistoryTable = () => {
     });
 
     const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
-        onSuccess: async ({ data, source }) => {
+        onSuccess: async (result, variables) => {
+            const { data, source } = result;
+            const { id: processId } = variables; // Get the process ID from the variables
+
             if (source === "print") {
-                const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf.toString());
+                // Find the correct process from selectedProcesses
+                const process = selectedProcesses.find(p => p.id === processId);
+                if (!process) return;
+
+                const hideFSumFRBool = hideFSumFR(process.targetf.toString());
                 updateChartData(transformData({ processlogsList: data?.processlogsList }), hideFSumFRBool, setChartData);
 
                 await delay(3000);
 
-                // Add null check for chart canvas
                 if (chartRef.current && chartRef.current.getCanvas()) {
-                    const chartInfo = getChartInfo(selectedProcesses[0]);
+                    const chartInfo = getChartInfo(process); // Use the correct process
                     handleExportToPDF(chartRef, chartOptions, chartInfo);
                 } else {
                     console.error("Chart canvas is not available");
@@ -71,11 +77,15 @@ const HistoryTable = () => {
             } else if (source === "modularGraph") {
                 router.push(`/values_chart/${data?.processlogsList[0]?.id}`);
             } else if (source === "handleTableExport") {
-                const chartInfo = getChartInfo(selectedProcesses[0], true);
+                // Find the correct process for table export too
+                const process = selectedProcesses.find(p => p.id === processId);
+                if (!process) return;
+                const chartInfo = getChartInfo(process, true);
                 generateTablePDF(chartInfo, data);
             }
         },
     });
+
 
     const [globalFilterValue, setGlobalFilterValue] = useState("");
     const [filters, setFilters] = useState<DataTableFilterMeta | undefined>(undefined);
