@@ -55,15 +55,17 @@ const HistoryTable = () => {
         onSuccess: async ({ data, source }) => {
             if (source === "print") {
                 const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf.toString());
-
                 updateChartData(transformData({ processlogsList: data?.processlogsList }), hideFSumFRBool, setChartData);
 
-                // Wait for 3 seconds before moving to the next iteration until Chart 
-                // loads animation is complete
                 await delay(3000);
 
-                const chartInfo = getChartInfo(selectedProcesses[0]);
-                handleExportToPDF(chartRef, chartOptions, chartInfo);
+                // Add null check for chart canvas
+                if (chartRef.current && chartRef.current.getCanvas()) {
+                    const chartInfo = getChartInfo(selectedProcesses[0]);
+                    handleExportToPDF(chartRef, chartOptions, chartInfo);
+                } else {
+                    console.error("Chart canvas is not available");
+                }
             } else if (source === "graph") {
                 router.push(`/chart/${data?.processlogsList[0]?.id}`);
             } else if (source === "modularGraph") {
@@ -237,8 +239,10 @@ const HistoryTable = () => {
 
         for (const id of ids) {
             await getProcessLogMutation({ id, source: "print" });
+            // Add a small delay between iterations to ensure chart updates
+            await delay(1000);
         }
-    }
+    };
 
     return (
         <div className="card">
