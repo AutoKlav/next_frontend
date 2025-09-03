@@ -181,11 +181,11 @@ export const StatusHeader: React.FC<StatusHeaderProps> = ({
         <div className="grid">
             {firstColumn(name, quantity)}
             {secondColumn(elapsedTime)}
-            <div className="col-6">
-                {stateMachineValues && <CanvasOverlay stateMachineValues={stateMachineValues} />}
-            </div>
-            <div className="col-6">
+            <div className="col-12">
                 {RenderState(severity, heatingEnd, coolingEnd)}
+            </div>
+            <div className="col-12">
+                {stateMachineValues && <CanvasOverlay stateMachineValues={stateMachineValues} />}
             </div>
         </div>
     );

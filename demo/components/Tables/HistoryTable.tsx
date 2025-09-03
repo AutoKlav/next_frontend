@@ -52,28 +52,40 @@ const HistoryTable = () => {
     });
 
     const { isLoading: isLogLoading, mutateAsync: getProcessLogMutation } = useMutation(getProcessLogsAction, {
-        onSuccess: async ({ data, source }) => {
-            if (source === "print") {
-                const hideFSumFRBool = hideFSumFR(selectedProcesses[0].targetf.toString());
+        onSuccess: async (result, variables) => {
+            const { data, source } = result;
+            const { id: processId } = variables; // Get the process ID from the variables
 
+            if (source === "print") {
+                // Find the correct process from selectedProcesses
+                const process = selectedProcesses.find(p => p.id === processId);
+                if (!process) return;
+
+                const hideFSumFRBool = hideFSumFR(process.targetf.toString());
                 updateChartData(transformData({ processlogsList: data?.processlogsList }), hideFSumFRBool, setChartData);
 
-                // Wait for 3 seconds before moving to the next iteration until Chart 
-                // loads animation is complete
                 await delay(3000);
 
-                const chartInfo = getChartInfo(selectedProcesses[0]);
-                handleExportToPDF(chartRef, chartOptions, chartInfo);
+                if (chartRef.current && chartRef.current.getCanvas()) {
+                    const chartInfo = getChartInfo(process); // Use the correct process
+                    handleExportToPDF(chartRef, chartOptions, chartInfo);
+                } else {
+                    console.error("Chart canvas is not available");
+                }
             } else if (source === "graph") {
                 router.push(`/chart/${data?.processlogsList[0]?.id}`);
             } else if (source === "modularGraph") {
                 router.push(`/values_chart/${data?.processlogsList[0]?.id}`);
             } else if (source === "handleTableExport") {
-                const chartInfo = getChartInfo(selectedProcesses[0], true);
+                // Find the correct process for table export too
+                const process = selectedProcesses.find(p => p.id === processId);
+                if (!process) return;
+                const chartInfo = getChartInfo(process, true);
                 generateTablePDF(chartInfo, data);
             }
         },
     });
+
 
     const [globalFilterValue, setGlobalFilterValue] = useState("");
     const [filters, setFilters] = useState<DataTableFilterMeta | undefined>(undefined);
@@ -237,8 +249,10 @@ const HistoryTable = () => {
 
         for (const id of ids) {
             await getProcessLogMutation({ id, source: "print" });
+            // Add a small delay between iterations to ensure chart updates
+            await delay(1000);
         }
-    }
+    };
 
     return (
         <div className="card">
