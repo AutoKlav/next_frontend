@@ -46,7 +46,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     const columns = [
         "Vrijeme",
         "Temp. sonde",
-        "\u0394t",  // Δ
+        "\u0394t[\u00B0C]",  // Δt [°C]
         "D\u2085 (min)",  // ₅
         "F\u2085",
         "R\u2085",
