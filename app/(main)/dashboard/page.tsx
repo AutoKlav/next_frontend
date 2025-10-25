@@ -73,7 +73,7 @@ const DashboardPage = () => {
     const debounceInterval = 2000;
 
     const modeDropdownValues: ProcessType[] = [
-        { id: 0, name: 'Ciljni F' },
+        { id: 0, name: 'Suma F' },
         { id: 1, name: 'Na Vrijeme' },
     ];
 
@@ -421,7 +421,7 @@ const DashboardPage = () => {
             };
 
             if (parseFloat(targetF.current.toString()) <= 0 && modeDropdown?.id === ProcessConfigMode.TARGETF) {
-                showWarn('Proces', 'Ciljni F ne može biti manji od 0 ili jednak nuli');
+                showWarn('Proces', 'Suma F ne može biti manji od 0 ili jednak nuli');
                 return;
             }
 
