@@ -134,7 +134,8 @@ export const getChartInfo = (process: ProcessInfoGraphView | null | undefined, r
 
   if (process.processstart && !isNaN(Number(process.processlength))) {
     const startDate = new Date(process.processstart);
-    const processEndTimestamp = startDate.getTime() + Number(process.processlength);
+    
+    const processEndTimestamp = startDate.getTime() + (Number(process.processlength) * 1000);
     processEndDate = formatDateTime(new Date(processEndTimestamp).toISOString());
   }
 
