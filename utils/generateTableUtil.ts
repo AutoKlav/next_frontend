@@ -4,6 +4,21 @@ import { formatDateTime, formatTime } from './dateUtil';
 import { ChartInfo } from './chartOptionsUtil';
 import '../public/fonts/DejaVuSans-normal';
 
+const STATE_LABELS: Record<number, string> = {
+    0: 'Spreman',
+    1: 'Pokretanje',
+    2: 'Punjenje',
+    3: 'Zagrijavanje',
+    4: 'Sterilizacija',
+    5: 'Pred-hlađenje',
+    6: 'Hlađenje',
+    7: 'Završavanje',
+    8: 'Završeno',
+};
+
+const stateLabel = (state: number | undefined): string =>
+    state === undefined ? '-' : STATE_LABELS[state] ?? '-';
+
 export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => {
     const doc = new jsPDF();
 
@@ -19,8 +34,9 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     doc.setFont(fontName, 'normal');
 
     // Calculate sums
-    const sumF = data?.processlogsList.reduce((acc, row) => acc + (row.fr || 0), 0) || 0;
-    const sumR = data?.processlogsList.reduce((acc, row) => acc + (row.r || 0), 0) || 0;
+    const lastRow = data?.processlogsList[data.processlogsList.length - 1];
+    const sumF = lastRow?.sumfr || 0;
+    const sumR = lastRow?.sumr || 0;
 
     // Title with proper encoding
     doc.setFontSize(bodyFontSize);
@@ -45,11 +61,13 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
     // Prepare data with special characters and subscript 5
     const columns = [
         "Vrijeme",
-        "Temp. sonde",
-        "\u0394t[\u00B0C]",  // Δt [°C]
-        "D\u2085 (min)",  // ₅
+        "Temp. sonde [\u00B0C]",
+        "\u0394t [\u00B0C]",
+        "D\u2085 (min)",
         "F\u2085",
+        "\u2211 F\u2085",
         "R\u2085",
+        "\u2211 R\u2085",
         "Stanje",
     ];
 
@@ -61,8 +79,10 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
             formatValue(row.dTemp),
             formatValue(row.dr),
             formatValue(row.fr),
+            formatValue(row.sumfr),
             formatValue(row.r),
-            row.state === 6 ? "Hlađenje" : "-",
+            formatValue(row.sumr),
+            stateLabel(row.state),
         ]) || [];
 
     // Calculate column widths
