@@ -78,7 +78,7 @@ export interface StateMachineValues {
   id: number;
   elapsedtime: number;
   sensorvalues: SensorValues;
-  dTemp: number;
+  dtemp: number;
   state: number;
   dr: number;
   fr: number;

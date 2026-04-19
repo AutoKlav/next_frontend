@@ -76,7 +76,7 @@ export const generateTablePDF = (chartInfo: ChartInfo, data: ProcessLogList) => 
         .map((row, index) => [
             index === 0 ? formatTime(row.timestamp) : `+${index}`,
             formatValue(row.sensorvalues?.tempk),
-            formatValue(row.dTemp),
+            formatValue(row.dtemp),
             formatValue(row.dr),
             formatValue(row.fr),
             formatValue(row.sumfr),
