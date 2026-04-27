@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { RenderState } from '@/demo/components/StatusHeader/StatusHeader';
 
-import { getBacteriaAction, getDistinctProcessValuesAction, getFilteredModeValuesAction, getProcessTypesAction, getSensorRelayValuesAction, getStateMachineValuesAction, startProcessAction, stopProcessAction } from '../api/actions';
+import { getBacteriaAction, getDistinctProcessValuesAction, getFilteredModeValuesAction, getProcessTypesAction, getSensorRelayValuesAction, getStateMachineValuesAction, skipToCoolingAction, startProcessAction, stopProcessAction } from '../api/actions';
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { DataCard } from '@/demo/components/Cards/DataCard';
@@ -149,6 +149,28 @@ const DashboardPage = () => {
             }
 
             showSuccess('Proces', 'Proces se zaustavlja');
+        },
+    });
+
+    const { mutate: skipToCooling } = useMutation({
+        mutationFn: skipToCoolingAction,
+        onError: (error) => {
+            console.error('Error skipping to cooling:', error);
+            showError('Proces', 'Greška prilikom preskakanja na hlađenje');
+        },
+        onSuccess: (data) => {
+            if (checkForErrors(data)) {
+                showError('Proces', 'Greška prilikom dohvaćanja podataka');
+                return;
+            }
+
+            const errors = responseParserUtil(data.errorsstring);
+            if (errors[0] !== '') {
+                errors.forEach(error => showError('Proces', error, 5000));
+                return;
+            }
+
+            showSuccess('Proces', 'Preskakanje na hlađenje');
         },
     });
 
@@ -492,6 +514,17 @@ const DashboardPage = () => {
         });
     }
 
+    const handleSkipToCooling = () => {
+        confirmDialog({
+            message: 'Jeste li sigurni da želite preskočiti na hlađenje? Sterilizacija će biti prekinuta i započet će kontrolirano hlađenje.',
+            header: 'Potvrda preskakanja',
+            icon: 'pi pi-exclamation-triangle',
+            rejectLabel: 'Odustani',
+            acceptLabel: 'Preskoči',
+            accept: () => skipToCooling(),
+        });
+    }
+
     const disabledInput = typeDropdown?.id !== 2;
 
     return (
@@ -588,7 +621,16 @@ const DashboardPage = () => {
                             {/* Display progress or empty bar */}
                         </div>
                         <div className="flex flex-row justify-content-between gap-3 ml-3 mr-3">
-                            <Button label="Pokreni proces" onClick={handleOpenDialog} className="p-button-success" />
+                            {state === 0 ? (
+                                <Button label="Pokreni proces" onClick={handleOpenDialog} className="p-button-success" />
+                            ) : (
+                                <Button
+                                    label="Preskoči na hlađenje"
+                                    onClick={handleSkipToCooling}
+                                    disabled={state !== 4 /* STERILIZING */}
+                                    className="p-button-warning"
+                                />
+                            )}
                             <Button label="Zaustavi proces" onClick={handleStopProcess} className="p-button-danger" />
                         </div>
                         <div className='col-12'>

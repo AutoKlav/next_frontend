@@ -114,6 +114,12 @@ export const stopProcess = () => {
   return gRpcCall<Status>("stopProcess", data);
 };
 
+export const skipToCooling = () => {
+  const data = new Messages.Empty();
+
+  return gRpcCall<Status>("skipToCooling", data);
+};
+
 export const startManualProcess = () => {
   const data = new Messages.StartProcessRequest();
 

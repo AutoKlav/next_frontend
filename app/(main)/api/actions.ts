@@ -1,6 +1,6 @@
 "use server"
 
-import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, updateSensor, getBacteria, setState, getUniqueProcesses, deleteProcess, deleteBacteria, createBacteria } from "@/services/grpc";
+import { createProcessType, deleteProcessType, getAllProcessLogs, getAllProcessTypes, getAllProcesses, getDistinctProcessValues, getFilteredModeValues, getSensorPinValues, getSensorRelayValues, getStateMachineValues, getStatus, getVariables, setVariable, startProcess, stopProcess, skipToCooling, updateSensor, getBacteria, setState, getUniqueProcesses, deleteProcess, deleteBacteria, createBacteria } from "@/services/grpc";
 import { ProcessInfoFields } from "@/types/app";
 import { BacteriaRequest, ProcessFilterRequest, ProcessTypeRequest, SetVariable, StartProcessRequest, TypeRequest, UpdateSensorRequest } from "@/types/grpc";
 
@@ -105,6 +105,11 @@ export const startProcessAction = async (request: StartProcessRequest) => {
 
 export const stopProcessAction = async () => {
     const response = await stopProcess();
+    return response;
+}
+
+export const skipToCoolingAction = async () => {
+    const response = await skipToCooling();
     return response;
 }
 
