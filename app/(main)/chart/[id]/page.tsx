@@ -8,7 +8,6 @@ import { getProcessesAction } from '../../api/actions';
 import { useToast } from '@/layout/context/toastcontext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { getChartInfo } from '@/utils/chartOptionsUtil';
-import { hideFSumFR } from '@/utils/targetTimeOrFevaulator';
 
 const ChartPage = () => {
     const { showError } = useToast();
@@ -48,7 +47,6 @@ const ChartPage = () => {
     const process = filteredProcessQuery?.[0]; // Get the first matching process
     console.log(process);
     const chartInfo = getChartInfo(process);
-    const hideFSumFRBool = hideFSumFR(process?.targetf || "0");
 
     return (
         <div className="grid">            
@@ -58,7 +56,7 @@ const ChartPage = () => {
                     <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
                 </div>
             ) : 
-                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval} hideFSumFR={hideFSumFRBool}/>
+                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval}/>
             }
             </div>
         </div>

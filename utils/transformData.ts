@@ -34,8 +34,7 @@ export const transformData = (data: { processlogsList: StateMachineValues[] }): 
  * @param setChartData - The function to set the chart data.
  */
 
-export const updateChartData = (data: TransformedData, hideFSumFR: boolean | undefined, setChartData: (data: any) => void) => {    
-    
+export const updateChartData = (data: TransformedData, setChartData: (data: any) => void) => {
     const datasets = [
         {
             label: "Temperatura autoklava ",
@@ -74,12 +73,11 @@ export const updateChartData = (data: TransformedData, hideFSumFR: boolean | und
             pointStyle: "circle",
             pointBorderColor: "rgba(153, 102, 255, 1)",
             pointBackgroundColor: "#9966ff2a",
-            pointRadius: 0, 
+            pointRadius: 0,
             tension: 1,
             yAxisID: "y",
         },
-        //TODO revert this        
-        ...(!hideFSumFR ? [{
+        {
             label: "Fr  ",
             data: data.fr,
             fill: false,
@@ -92,9 +90,8 @@ export const updateChartData = (data: TransformedData, hideFSumFR: boolean | und
             pointRadius: 0,
             tension: 1,
             yAxisID: "y2",
-        }] : []),
-        // Conditionally include sumfr dataset
-        ...(!hideFSumFR ? [{
+        },
+        {
             label: "sumFr",
             data: data.sumfr,
             fill: false,
@@ -107,9 +104,9 @@ export const updateChartData = (data: TransformedData, hideFSumFR: boolean | und
             pointRadius: 0,
             tension: 1,
             yAxisID: "y2",
-        }] : [])
-    ];        
-    
+        },
+    ];
+
     setChartData({
         labels: data.timestamp,
         datasets: datasets

@@ -19,7 +19,6 @@ import { handleExportToPDF } from "@/utils/exportUtil";
 import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
 import { delay } from "@/utils/delayUtil";
 import { generateTablePDF } from "@/utils/generateTableUtil";
-import { hideFSumFR } from "@/utils/targetTimeOrFevaulator";
 import { ProcessInfoList } from "@/types/grpc";
 
 const HistoryTable = () => {
@@ -61,8 +60,7 @@ const HistoryTable = () => {
                 const process = selectedProcesses.find(p => p.id === processId);
                 if (!process) return;
 
-                const hideFSumFRBool = hideFSumFR(process.targetf.toString());
-                updateChartData(transformData({ processlogsList: data?.processlogsList }), hideFSumFRBool, setChartData);
+                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
 
                 await delay(3000);
 
