@@ -115,7 +115,7 @@ const DashboardPage = () => {
         //#region modeDropdown        
         setCustomTemp(fetchedTypes.current?.[0]?.customtemp || 121.11);
         setFinishTemp(0);
-        setMaintainTemp(fetchedTypes.current?.[0]?.customtemp || 116);
+        setMaintainTemp(fetchedTypes.current?.[0]?.maintaintemp || 116);
         setTypeDropdown(fetchedTypes.current?.[0]);
 
         //#endregion
