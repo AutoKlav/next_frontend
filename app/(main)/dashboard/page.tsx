@@ -47,8 +47,9 @@ const temperatures = [
 ];
 
 const stateValues = [
-    { icon: 'pi-chart-line', headerName: 'D₅', value: '', unit: '', color: 'cyan' },
     { icon: 'pi-chart-bar', headerName: 'F₅', value: '', unit: '', color: 'cyan', decimal: 5 },
+    { icon: 'pi-chart-bar', headerName: 'ΣF₅', value: '', unit: '', color: 'cyan', decimal: 5 },
+    { icon: 'pi-chart-line', headerName: 'D₅', value: '', unit: '', color: 'cyan' },
     { icon: 'pi-chart-pie', headerName: 'r₅', value: '', unit: '', color: 'cyan', decimal: 5 },
 ];
 
@@ -380,9 +381,10 @@ const DashboardPage = () => {
     temperatures[6].value = stateMachineValues?.sensorvalues?.expansiontemp?.toString() || 'N/A';
     temperatures[7].value = stateMachineValues?.sensorvalues?.steampressure?.toString() || 'N/A';
 
-    stateValues[0].value = stateMachineValues?.dr?.toString() || 'N/A';
-    stateValues[1].value = stateMachineValues?.fr?.toString() || 'N/A';
-    stateValues[2].value = stateMachineValues?.r?.toString() || 'N/A';
+    stateValues[0].value = stateMachineValues?.fr?.toString() || 'N/A';
+    stateValues[1].value = stateMachineValues?.sumfr?.toString() || 'N/A';
+    stateValues[2].value = stateMachineValues?.dr?.toString() || 'N/A';
+    stateValues[3].value = stateMachineValues?.r?.toString() || 'N/A';
 
     const state = stateMachineValues?.state || 0;
     const heatingEnd = formatTime(stateMachineValues?.heatingend) || '';
@@ -687,7 +689,7 @@ const DashboardPage = () => {
                 </div>
                 <div className="card border-cyan-700">
                     <ul className="list-none p-0 m-0">
-                        {stateValues.slice(2, 3).map((item, index) => (
+                        {stateValues.slice(2, 4).map((item, index) => (
                             <DataCard key={item.headerName} {...item} />
                         ))}
                     </ul>
