@@ -140,7 +140,7 @@ const HistoryTable = () => {
                             onClick={handleModularGraph}
                         />
                     )}
-                    {selectedProcesses.length === 1 && selectedProcesses?.[0].targetf > 0 && (
+                    {selectedProcesses.length === 1 && (
                         <Button
                             icon="pi pi-file-excel"
                             className="p-button-text p-button-plain"

@@ -48,7 +48,7 @@ const temperatures = [
 
 const stateValues = [
     { icon: 'pi-chart-bar', headerName: 'F₅', value: '', unit: '', color: 'cyan', decimal: 5 },
-    { icon: 'pi-chart-bar', headerName: 'ΣF₅', value: '', unit: '', color: 'cyan', decimal: 5 },
+    { icon: 'pi-chart-bar', headerName: 'Σ F₅', value: '', unit: '', color: 'cyan', decimal: 5 },
     { icon: 'pi-chart-line', headerName: 'D₅', value: '', unit: '', color: 'cyan' },
     { icon: 'pi-chart-pie', headerName: 'r₅', value: '', unit: '', color: 'cyan', decimal: 5 },
 ];
