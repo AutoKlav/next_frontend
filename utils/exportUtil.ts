@@ -7,7 +7,8 @@ export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOpt
     const chartInstance = chartRef.current?.getChart();
     if (chartInstance && chartOptions) {        
 
-        chartInstance.options = updateChartOptions("black", "black", chartInfo);
+        const tickCount = chartInstance.data?.labels?.length ?? 0;
+        chartInstance.options = updateChartOptions("black", "black", chartInfo, tickCount);
         chartInstance.update();
 
         await new Promise((resolve) => requestAnimationFrame(resolve));
