@@ -102,9 +102,17 @@ export const updateChartOptions = (
         font: { size: 16 },
         autoSkip: true,
         maxRotation: 0,
-        callback: (_value, index) => String(index + 1),
       },
       grid: { drawOnChartArea: false },
+      // Chart.js runs the user-supplied ticks.callback BEFORE autoSkip filters
+      // the array, so a (_, i) => String(i+1) callback yields 1, 6, 11, 16
+      // (original indices of the survivors). afterUpdate fires after autoSkip,
+      // when scale.ticks is the final post-filter array — renumber there.
+      afterUpdate: (scale: any) => {
+        scale.ticks.forEach((tick: { label?: string }, i: number) => {
+          tick.label = String(i + 1);
+        });
+      },
     },
     y: {
       ticks: { color: textColor, stepSize: 5 },
