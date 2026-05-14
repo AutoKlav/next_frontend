@@ -102,6 +102,7 @@ export const updateChartOptions = (
         font: { size: 16 },
         autoSkip: true,
         maxRotation: 0,
+        callback: (_value, index) => String(index + 1),
       },
       grid: { drawOnChartArea: false },
     },
