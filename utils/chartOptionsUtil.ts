@@ -18,7 +18,8 @@ export interface TitleInfo {
 export const updateChartOptions = (
   textColor: string,
   gridColor: string,
-  titleInfo: TitleInfo
+  titleInfo: TitleInfo,
+  tickCount: number = 0
 ): ChartOptions<"line"> => ({
   maintainAspectRatio: true,
   aspectRatio: 1.6,
@@ -90,6 +91,19 @@ export const updateChartOptions = (
     x: {
       ticks: { color: textColor, font: { size: 16 } },
       grid: { color: gridColor },
+    },
+    x2: {
+      position: "top",
+      type: "category",
+      labels: Array.from({ length: tickCount }, (_, i) => String(i + 1)),
+      offset: false,
+      ticks: {
+        color: textColor,
+        font: { size: 16 },
+        autoSkip: true,
+        maxRotation: 0,
+      },
+      grid: { drawOnChartArea: false },
     },
     y: {
       ticks: { color: textColor, stepSize: 5 },

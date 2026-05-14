@@ -43,8 +43,12 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
     
     useEffect(() => {
         refetch();
-        setChartOptions(updateChartOptions("white", "white", chartInfoProps)); // Initial white theme
     }, [chartInfoProps.id, refetch]);
+
+    useEffect(() => {
+        const labelCount = (chartData as { labels?: unknown[] })?.labels?.length ?? 0;
+        setChartOptions(updateChartOptions("white", "white", chartInfoProps, labelCount));
+    }, [chartInfoProps, chartData]);
 
     const handleExportToPdf = () => {        
         handleExportToPDF(chartRef, chartOptions, chartInfoProps);

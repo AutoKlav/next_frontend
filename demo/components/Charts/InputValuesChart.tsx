@@ -36,7 +36,7 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
         };
 
         data.processlogsList.forEach((log) => {
-            transformedData.timestamp?.push(log.timestamp);
+            transformedData.timestamp?.push(formatTime(log.timestamp));
             transformedData.temp?.push(log.sensorvalues.temp);
             transformedData.tempk?.push(log.sensorvalues.tempk);
             transformedData.pressure?.push(log.sensorvalues.pressure);
@@ -186,8 +186,9 @@ export const InputValuesChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo)
     });
 
     useEffect(() => {
-        setChartOptions(updateChartOptions("white", "white", chartInfoProps));
-    }, [chartInfoProps]);
+        const labelCount = (chartData as { labels?: unknown[] })?.labels?.length ?? 0;
+        setChartOptions(updateChartOptions("white", "white", chartInfoProps, labelCount));
+    }, [chartInfoProps, chartData]);
 
     const handleExportToPdf = () => {
         // handleExportToPDF(chartRef, chartOptions, chartInfoProps);
