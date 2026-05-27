@@ -17,6 +17,7 @@ interface ChartInfo {
     title: string;
     subtitle: string;
     refetchInterval?: number;
+    timeMode?: boolean;
 }
 
 export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) => {    
@@ -35,7 +36,7 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
                 };
             });
             
-            updateChartData(transformData({ processlogsList: parsedData }), setChartData);
+            updateChartData(transformData({ processlogsList: parsedData }), setChartData, chartInfoProps.timeMode);
             return parsedData; // Ensure the query function returns the parsed data
         },
         refetchInterval: chartInfoProps.refetchInterval ? chartInfoProps.refetchInterval : false,
@@ -47,11 +48,11 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
 
     useEffect(() => {
         const labelCount = (chartData as { labels?: unknown[] })?.labels?.length ?? 0;
-        setChartOptions(updateChartOptions("white", "white", chartInfoProps, labelCount));
+        setChartOptions(updateChartOptions("white", "white", chartInfoProps, labelCount, !!chartInfoProps.timeMode));
     }, [chartInfoProps, chartData]);
 
-    const handleExportToPdf = () => {        
-        handleExportToPDF(chartRef, chartOptions, chartInfoProps);
+    const handleExportToPdf = () => {
+        handleExportToPDF(chartRef, chartOptions, chartInfoProps, !!chartInfoProps.timeMode);
     }
     
     return (

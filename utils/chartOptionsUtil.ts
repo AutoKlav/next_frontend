@@ -19,7 +19,8 @@ export const updateChartOptions = (
   textColor: string,
   gridColor: string,
   titleInfo: TitleInfo,
-  tickCount: number = 0
+  tickCount: number = 0,
+  hideSecondaryAxis: boolean = false
 ): ChartOptions<"line"> => ({
   maintainAspectRatio: true,
   aspectRatio: 1.6,
@@ -120,7 +121,8 @@ export const updateChartOptions = (
       min: 0,
       max: 130,
     },
-    y2: { //TODO revert this
+    y2: {
+      display: !hideSecondaryAxis,
       position: "right",
       ticks: { color: textColor, stepSize: 0.5 },
       grid: { drawOnChartArea: false },

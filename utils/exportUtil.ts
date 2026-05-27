@@ -3,12 +3,12 @@ import { getCurrentDateTime } from "./dateUtil";
 import jsPDF from "jspdf";
 import { TitleInfo, updateChartOptions } from "./chartOptionsUtil";
 
-export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOptions: ChartOptions<"line">, chartInfo: TitleInfo) => {
+export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOptions: ChartOptions<"line">, chartInfo: TitleInfo, hideSecondaryAxis: boolean = false) => {
     const chartInstance = chartRef.current?.getChart();
-    if (chartInstance && chartOptions) {        
+    if (chartInstance && chartOptions) {
 
         const tickCount = chartInstance.data?.labels?.length ?? 0;
-        chartInstance.options = updateChartOptions("black", "black", chartInfo, tickCount);
+        chartInstance.options = updateChartOptions("black", "black", chartInfo, tickCount, hideSecondaryAxis);
         chartInstance.update();
 
         await new Promise((resolve) => requestAnimationFrame(resolve));

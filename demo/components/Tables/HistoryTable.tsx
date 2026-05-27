@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { getChartInfo, updateChartOptions } from "@/utils/chartOptionsUtil";
 import { transformData, updateChartData } from "@/utils/transformData";
 import { handleExportToPDF } from "@/utils/exportUtil";
-import { formatDateTime, secondsToHms } from "@/utils/dateUtil";
+import { formatDateTime, formatTime, secondsToHms } from "@/utils/dateUtil";
 import { delay } from "@/utils/delayUtil";
 import { generateTablePDF } from "@/utils/generateTableUtil";
 import { ProcessInfoList } from "@/types/grpc";
@@ -60,13 +60,19 @@ const HistoryTable = () => {
                 const process = selectedProcesses.find(p => p.id === processId);
                 if (!process) return;
 
-                updateChartData(transformData({ processlogsList: data?.processlogsList }), setChartData);
+                const parsedData = data?.processlogsList?.map((log, index) => ({
+                    ...log,
+                    timestamp: index === 0 ? formatTime(log.timestamp) : `+${index}min`,
+                }));
+
+                const timeMode = !Number(process.targetf);
+                updateChartData(transformData({ processlogsList: parsedData }), setChartData, timeMode);
 
                 await delay(3000);
 
                 if (chartRef.current && chartRef.current.getCanvas()) {
                     const chartInfo = getChartInfo(process); // Use the correct process
-                    handleExportToPDF(chartRef, chartOptions, chartInfo);
+                    handleExportToPDF(chartRef, chartOptions, chartInfo, timeMode);
                 } else {
                     console.error("Chart canvas is not available");
                 }

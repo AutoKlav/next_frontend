@@ -47,6 +47,7 @@ const ChartPage = () => {
     const process = filteredProcessQuery?.[0]; // Get the first matching process
     console.log(process);
     const chartInfo = getChartInfo(process);
+    const timeMode = !Number(process?.targetf);
 
     return (
         <div className="grid">            
@@ -56,7 +57,7 @@ const ChartPage = () => {
                     <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
                 </div>
             ) : 
-                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval}/>
+                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval} timeMode={timeMode}/>
             }
             </div>
         </div>
