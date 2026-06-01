@@ -9,7 +9,7 @@ export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOpt
 
         const tickCount = chartInstance.data?.labels?.length ?? 0;
         chartInstance.options = updateChartOptions("black", "black", chartInfo, tickCount, hideSecondaryAxis);
-        chartInstance.update();
+        chartInstance.update("none");
 
         await new Promise((resolve) => requestAnimationFrame(resolve));
 
@@ -24,7 +24,7 @@ export const handleExportToPDF = async (chartRef: React.RefObject<any>, chartOpt
         pdf.save(`${getCurrentDateTime()}.pdf`);
 
         chartInstance.options = chartOptions;
-        chartInstance.update();
+        chartInstance.update("none");
     } else {
         alert("Chart instance or options not found.");
     }
