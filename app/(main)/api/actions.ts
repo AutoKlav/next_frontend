@@ -109,7 +109,11 @@ export const stopProcessAction = async () => {
 }
 
 export const skipToCoolingAction = async () => {
+    // SKIP_DEBUG: remove after prod debug session
+    console.log('[SKIP_DEBUG] skipToCoolingAction invoked at', new Date().toISOString());
     const response = await skipToCooling();
+    // SKIP_DEBUG: remove after prod debug session
+    console.log('[SKIP_DEBUG] skipToCoolingAction response:', JSON.stringify(response));
     return response;
 }
 

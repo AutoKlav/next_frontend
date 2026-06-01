@@ -156,17 +156,28 @@ const DashboardPage = () => {
     const { mutate: skipToCooling } = useMutation({
         mutationFn: skipToCoolingAction,
         onError: (error) => {
+            // SKIP_DEBUG: remove after prod debug session
+            console.error('[SKIP_DEBUG] mutation onError fired:', error);
             console.error('Error skipping to cooling:', error);
             showError('Proces', 'Greška prilikom preskakanja na hlađenje');
         },
         onSuccess: (data) => {
+            // SKIP_DEBUG: remove after prod debug session
+            console.log('[SKIP_DEBUG] mutation onSuccess. raw=', data, 'code=', data?.code, 'errors=', data?.errors, 'errorsstring=', data?.errorsstring);
+
             if (checkForErrors(data)) {
+                // SKIP_DEBUG: remove after prod debug session
+                console.warn('[SKIP_DEBUG] checkForErrors==true (backend unavailable signature). Aborting.');
                 showError('Proces', 'Greška prilikom dohvaćanja podataka');
                 return;
             }
 
             const errors = responseParserUtil(data.errorsstring);
+            // SKIP_DEBUG: remove after prod debug session
+            console.log('[SKIP_DEBUG] parsed errors array:', errors);
             if (errors[0] !== '') {
+                // SKIP_DEBUG: remove after prod debug session
+                console.warn('[SKIP_DEBUG] non-empty error string from backend, surfacing toasts:', errors);
                 errors.forEach(error => showError('Proces', error, 5000));
                 return;
             }
@@ -517,13 +528,23 @@ const DashboardPage = () => {
     }
 
     const handleSkipToCooling = () => {
+        // SKIP_DEBUG: remove after prod debug session
+        console.log('[SKIP_DEBUG] handleSkipToCooling clicked. state=', state, 'stateMachineValues=', stateMachineValues);
         confirmDialog({
             message: 'Jeste li sigurni da želite preskočiti na hlađenje? Sterilizacija će biti prekinuta i započet će kontrolirano hlađenje.',
             header: 'Potvrda preskakanja',
             icon: 'pi pi-exclamation-triangle',
             rejectLabel: 'Odustani',
             acceptLabel: 'Preskoči',
-            accept: () => skipToCooling(),
+            accept: () => {
+                // SKIP_DEBUG: remove after prod debug session
+                console.log('[SKIP_DEBUG] confirm dialog accepted; firing mutation. state at accept=', state);
+                skipToCooling();
+            },
+            reject: () => {
+                // SKIP_DEBUG: remove after prod debug session
+                console.log('[SKIP_DEBUG] confirm dialog rejected by user');
+            },
         });
     }
 

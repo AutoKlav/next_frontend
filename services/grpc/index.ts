@@ -115,9 +115,15 @@ export const stopProcess = () => {
 };
 
 export const skipToCooling = () => {
+  // SKIP_DEBUG: remove after prod debug session
+  console.log('[SKIP_DEBUG] services/grpc skipToCooling: building Empty() and calling gRpcCall');
   const data = new Messages.Empty();
 
-  return gRpcCall<Status>("skipToCooling", data);
+  const p = gRpcCall<Status>("skipToCooling", data);
+  // SKIP_DEBUG: remove after prod debug session
+  p.then((r) => console.log('[SKIP_DEBUG] services/grpc skipToCooling resolved:', r))
+   .catch((e) => console.error('[SKIP_DEBUG] services/grpc skipToCooling rejected (should not happen):', e));
+  return p;
 };
 
 export const startManualProcess = () => {
