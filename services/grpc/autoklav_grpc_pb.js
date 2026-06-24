@@ -405,6 +405,17 @@ getAllProcesses: {
     responseSerialize: serialize_autoklav_Status,
     responseDeserialize: deserialize_autoklav_Status,
   },
+  skipToCooling: {
+    path: '/autoklav.Autoklav/skipToCooling',
+    requestStream: false,
+    responseStream: false,
+    requestType: services_grpc_autoklav_pb.Empty,
+    responseType: services_grpc_autoklav_pb.Status,
+    requestSerialize: serialize_autoklav_Empty,
+    requestDeserialize: deserialize_autoklav_Empty,
+    responseSerialize: serialize_autoklav_Status,
+    responseDeserialize: deserialize_autoklav_Status,
+  },
   // Sensor
 getSensorPinValues: {
     path: '/autoklav.Autoklav/getSensorPinValues',

@@ -9,9 +9,14 @@ const client = new AutoklavClient(
   credentials.createInsecure()
 );
 
-export const gRpcCall = <T>(method: string, data: any) => {  
+export const gRpcCall = <T>(method: string, data: any) => {
   // Reject is avoided to prevent the app from crashing, every error is handled in the response
   return new Promise<T>((resolve, reject) => {
+    if (typeof (client as any)[method] !== "function") {
+      // Missing method means the generated stubs are stale for this RPC — surface it as data
+      resolve({ errorsstring: `RPC '${method}' missing from generated client — run bun proto:generate` } as T);
+      return;
+    }
     client[method](data, (err: GrpcError, response: any) => {
       try {
         response = err ? { errorsstring: err.message } : response.toObject();

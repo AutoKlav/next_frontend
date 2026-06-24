@@ -90,30 +90,25 @@ export const updateChartOptions = (
   },
   scales: {
     x: {
+      offset: false,
       ticks: { color: textColor, font: { size: 16 } },
       grid: { color: gridColor },
     },
     x2: {
+      type: "linear",
       position: "top",
-      type: "category",
-      labels: Array.from({ length: tickCount }, (_, i) => String(i + 1)),
       offset: false,
+      min: 0,
+      max: Math.max(tickCount - 1, 0),
       ticks: {
         color: textColor,
         font: { size: 16 },
-        autoSkip: true,
+        stepSize: 1,    // one tick per line so every line is numbered at low point counts
+        precision: 0,   // integer labels only
+        autoSkip: true, // thin labels for long runs; survivors keep their true index
         maxRotation: 0,
       },
       grid: { drawOnChartArea: false },
-      // Chart.js runs the user-supplied ticks.callback BEFORE autoSkip filters
-      // the array, so a (_, i) => String(i+1) callback yields 1, 6, 11, 16
-      // (original indices of the survivors). afterUpdate fires after autoSkip,
-      // when scale.ticks is the final post-filter array — renumber there.
-      afterUpdate: (scale: any) => {
-        scale.ticks.forEach((tick: { label?: string }, i: number) => {
-          tick.label = String(i + 1);
-        });
-      },
     },
     y: {
       ticks: { color: textColor, stepSize: 5 },
