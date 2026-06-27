@@ -19,6 +19,7 @@ import { handleExportToPDF } from "@/utils/exportUtil";
 import { formatDateTime, formatTime, secondsToHms } from "@/utils/dateUtil";
 import { delay } from "@/utils/delayUtil";
 import { generateTablePDF } from "@/utils/generateTableUtil";
+import { getShowTimeGraphExtraSeries } from "@/utils/graphSettingsUtil";
 import { ProcessInfoList } from "@/types/grpc";
 
 const HistoryTable = () => {
@@ -66,13 +67,14 @@ const HistoryTable = () => {
                 }));
 
                 const timeMode = !Number(process.targetf);
-                updateChartData(transformData({ processlogsList: parsedData }), setChartData, timeMode);
+                const hideExtraSeries = timeMode && !getShowTimeGraphExtraSeries();
+                updateChartData(transformData({ processlogsList: parsedData }), setChartData, hideExtraSeries);
 
                 await delay(3000);
 
                 if (chartRef.current && chartRef.current.getCanvas()) {
                     const chartInfo = getChartInfo(process); // Use the correct process
-                    handleExportToPDF(chartRef, chartOptions, chartInfo, timeMode);
+                    handleExportToPDF(chartRef, chartOptions, chartInfo, hideExtraSeries);
                 } else {
                     console.error("Chart canvas is not available");
                 }

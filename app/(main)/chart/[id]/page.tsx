@@ -8,6 +8,7 @@ import { getProcessesAction } from '../../api/actions';
 import { useToast } from '@/layout/context/toastcontext';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { getChartInfo } from '@/utils/chartOptionsUtil';
+import { getShowTimeGraphExtraSeries } from '@/utils/graphSettingsUtil';
 
 const ChartPage = () => {
     const { showError } = useToast();
@@ -48,6 +49,7 @@ const ChartPage = () => {
     console.log(process);
     const chartInfo = getChartInfo(process);
     const timeMode = !Number(process?.targetf);
+    const hideExtraSeries = timeMode && !getShowTimeGraphExtraSeries();
 
     return (
         <div className="grid">            
@@ -57,7 +59,7 @@ const ChartPage = () => {
                     <ProgressSpinner style={{ width: '100px', height: '100px' }} strokeWidth="4" animationDuration=".5s" />
                 </div>
             ) : 
-                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval} timeMode={timeMode}/>
+                <MultiYAxisChart id={chartInfo.id} title={chartInfo.title} subtitle={chartInfo.subtitle} refetchInterval={refetchInterval} hideExtraSeries={hideExtraSeries}/>
             }
             </div>
         </div>

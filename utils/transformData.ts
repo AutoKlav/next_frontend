@@ -32,11 +32,11 @@ export const transformData = (data: { processlogsList: StateMachineValues[] }): 
  * Updates the chart data with the provided transformed data.
  * @param data - The transformed data to update the chart with.
  * @param setChartData - The function to set the chart data.
- * @param timeMode - When true (TIME-mode run), only Temperatura autoklava and Tlak are plotted;
- *                   Temperatura sredine, Fr and sumFr are omitted.
+ * @param hideExtraSeries - When true, only Temperatura autoklava and Tlak are plotted;
+ *                          Temperatura sredine, Fr and sumFr are omitted.
  */
 
-export const updateChartData = (data: TransformedData, setChartData: (data: any) => void, timeMode: boolean = false) => {
+export const updateChartData = (data: TransformedData, setChartData: (data: any) => void, hideExtraSeries: boolean = false) => {
     const datasets = [
         {
             label: "Temperatura autoklava ",
@@ -52,7 +52,7 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             tension: 1,
             yAxisID: "y",
         },
-        ...(timeMode ? [] : [{
+        ...(hideExtraSeries ? [] : [{
             label: "Temperatura sredine ",
             data: data.tempk,
             fill: false,
@@ -79,7 +79,7 @@ export const updateChartData = (data: TransformedData, setChartData: (data: any)
             tension: 1,
             yAxisID: "y",
         },
-        ...(timeMode ? [] : [{
+        ...(hideExtraSeries ? [] : [{
             label: "Fr  ",
             data: data.fr,
             fill: false,

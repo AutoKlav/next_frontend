@@ -54,6 +54,11 @@ const AppMenu = () => {
                                 icon: 'pi pi-fw pi-bolt',
                                 to: '/settings/bacteria'
                             },
+                            {
+                                label: 'Prikaz grafa',
+                                icon: 'pi pi-fw pi-chart-line',
+                                to: '/settings/graph'
+                            },
                         ]
                     }
                 ] : [])
