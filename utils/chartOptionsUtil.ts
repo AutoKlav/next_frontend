@@ -104,11 +104,22 @@ export const updateChartOptions = (
         color: textColor,
         font: { size: 16 },
         stepSize: 1,    // one tick per line so every line is numbered at low point counts
-        precision: 0,   // integer labels only
-        autoSkip: true, // thin labels for long runs; survivors keep their true index
+        precision: 0,   // integer fallback if afterUpdate ever doesn't run
+        autoSkip: true, // thin labels for long runs
         maxRotation: 0,
       },
       grid: { drawOnChartArea: false },
+      // The linear axis pins value k to the pixel of line k, so every tick stays aligned
+      // on its data line (this is what fixed the "numbers between lines" at low counts).
+      // But after autoSkip the survivors would otherwise render their *value* (0, 3, 6…),
+      // i.e. the data-point/minute index. afterUpdate runs after autoSkip, so scale.ticks
+      // holds only the visible survivors — relabel them sequentially (0, 1, 2 …) so the
+      // axis counts the shown gridlines instead of the underlying values.
+      afterUpdate: (scale: any) => {
+        scale.ticks.forEach((tick: { label?: string }, i: number) => {
+          tick.label = String(i);
+        });
+      },
     },
     y: {
       ticks: { color: textColor, stepSize: 5 },
