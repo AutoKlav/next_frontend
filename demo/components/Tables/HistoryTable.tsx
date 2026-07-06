@@ -61,9 +61,9 @@ const HistoryTable = () => {
                 const process = selectedProcesses.find(p => p.id === processId);
                 if (!process) return;
 
-                const parsedData = data?.processlogsList?.map((log, index) => ({
+                const parsedData = data?.processlogsList?.map((log) => ({
                     ...log,
-                    timestamp: index === 0 ? formatTime(log.timestamp) : `+${index}min`,
+                    timestamp: formatTime(log.timestamp),
                 }));
 
                 const timeMode = !Number(process.targetf);

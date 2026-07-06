@@ -29,10 +29,10 @@ export const MultiYAxisChart: React.FC<ChartInfo> = (chartInfoProps: ChartInfo) 
         queryKey: ["processLogs1"], // Unique key for the query
         queryFn: async () => {
             const { data } = await getProcessLogsAction({ id: chartInfoProps.id, source: "graph" });
-            const parsedData = data?.processlogsList?.map((process, index) => {
+            const parsedData = data?.processlogsList?.map((process) => {
                 return {
                     ...process,
-                    timestamp: index === 0 ? formatTime(process.timestamp) : `+${index}min`,
+                    timestamp: formatTime(process.timestamp),
                 };
             });
             
